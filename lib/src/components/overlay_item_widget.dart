@@ -5,7 +5,6 @@ import 'package:flutter_design_editor/src/constants/gradients.dart';
 import 'package:flutter_design_editor/src/constants/item_type.dart';
 import 'package:flutter_design_editor/src/extensions/context_extension.dart';
 import 'package:flutter_design_editor/src/models/editable_items.dart';
-import 'package:flutter_design_editor/src/utils/gradient_util.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 /// A widget for displaying an overlay item.
@@ -50,11 +49,20 @@ class OverlayItemWidget extends StatelessWidget {
     SingleChildRenderObjectWidget overlayWidget;
     switch (editableItem.type) {
       case ItemType.text:
-        overlayWidget = SizedBox(
-          width: context.width - 72,
-          child: Stack(
-            children: [
-              Center(
+        overlayWidget = Center(
+          child: Container(
+            padding: EdgeInsets.all(6),
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: gradientColors[editableItem.textStyle],
+                begin: Alignment.centerLeft,
+                end: Alignment.centerRight,
+              ),
+              borderRadius: BorderRadius.circular(6),
+            ),
+            child: Center(
+              child: GestureDetector(
+                onTap: onItemTap,
                 child: Text(
                   editableItem.value,
                   textAlign: TextAlign.center,
@@ -63,42 +71,10 @@ class OverlayItemWidget extends StatelessWidget {
                   ).copyWith(
                     color: editableItem.color,
                     fontSize: editableItem.fontSize,
-                    background:
-                        Paint()
-                          ..strokeWidth = 24
-                          ..shader = createShader(
-                            colors: gradientColors[editableItem.textStyle],
-                            width: context.width,
-                            height: context.height,
-                          )
-                          ..style = PaintingStyle.stroke
-                          ..strokeJoin = StrokeJoin.round,
                   ),
                 ),
               ),
-              Center(
-                child: GestureDetector(
-                  onTap: onItemTap,
-                  child: Text(
-                    editableItem.value,
-                    textAlign: TextAlign.center,
-                    style: GoogleFonts.getFont(
-                      fontFamilyList[editableItem.fontFamily],
-                    ).copyWith(
-                      color: editableItem.color,
-                      fontSize: editableItem.fontSize,
-                      background:
-                          Paint()
-                            ..shader = createShader(
-                              colors: gradientColors[editableItem.textStyle],
-                              width: context.width,
-                              height: context.height,
-                            ),
-                    ),
-                  ),
-                ),
-              ),
-            ],
+            ),
           ),
         );
       case ItemType.image:

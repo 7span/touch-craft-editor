@@ -64,6 +64,7 @@ class TextFieldWidget extends StatelessWidget {
           child: Center(
             child: IntrinsicWidth(
               child: Container(
+                padding: EdgeInsets.all(4),
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
                     colors: gradientColors[backgroundColorIndex],
