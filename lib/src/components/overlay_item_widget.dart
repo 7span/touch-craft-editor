@@ -1,12 +1,12 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter_design_editor/src/constants/font_styles.dart';
+import 'package:flutter_design_editor/src/constants/gradients.dart';
+import 'package:flutter_design_editor/src/constants/item_type.dart';
+import 'package:flutter_design_editor/src/extensions/context_extension.dart';
+import 'package:flutter_design_editor/src/models/editable_items.dart';
+import 'package:flutter_design_editor/src/utils/gradient_util.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../constants/font_styles.dart';
-import '../constants/gradients.dart';
-import '../constants/item_type.dart';
-import '../extensions/context_extension.dart';
-import '../models/editable_items.dart';
-import '../utils/gradient_util.dart';
 
 /// A widget for displaying an overlay item.
 ///

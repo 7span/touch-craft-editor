@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_design_editor/src/constants/font_styles.dart';
+import 'package:flutter_design_editor/src/extensions/context_extension.dart';
 import 'package:google_fonts/google_fonts.dart';
-
-import '../constants/font_styles.dart';
-import '../extensions/context_extension.dart';
 
 /// A widget for selecting a font family.
 ///

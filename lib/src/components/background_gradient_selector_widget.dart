@@ -1,8 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
-import '../constants/gradients.dart';
-import '../extensions/context_extension.dart';
+import 'package:flutter_design_editor/src/constants/gradients.dart';
+import 'package:flutter_design_editor/src/extensions/context_extension.dart';
 
 /// A widget for selecting a background gradient.
 ///

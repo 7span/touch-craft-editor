@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_design_editor/src/constants/font_styles.dart';
+import 'package:flutter_design_editor/src/constants/gradients.dart';
+import 'package:flutter_design_editor/src/extensions/context_extension.dart';
 import 'package:google_fonts/google_fonts.dart';
-
-import '../constants/font_styles.dart';
-import '../constants/gradients.dart';
-import '../extensions/context_extension.dart';
-import '../utils/gradient_util.dart';
 
 /// A widget for displaying a text field.
 ///
@@ -65,15 +63,13 @@ class TextFieldWidget extends StatelessWidget {
           ),
           child: Center(
             child: IntrinsicWidth(
-              child: ShaderMask(
-                blendMode: BlendMode.overlay,
-                shaderCallback: (bounds) {
-                  return createShader(
+              child: Container(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
                     colors: gradientColors[backgroundColorIndex],
-                    width: context.width,
-                    height: context.height,
-                  );
-                },
+                  ),
+                  borderRadius: BorderRadius.circular(8),
+                ),
                 child: TextField(
                   autofocus: true,
                   controller: controller,
@@ -86,7 +82,7 @@ class TextFieldWidget extends StatelessWidget {
                   keyboardType: TextInputType.multiline,
                   maxLines: null,
                   decoration: const InputDecoration(
-                    fillColor: Colors.white,
+                    fillColor: Colors.transparent,
                     filled: false,
                     border: UnderlineInputBorder(
                       borderSide: BorderSide(color: Colors.transparent),

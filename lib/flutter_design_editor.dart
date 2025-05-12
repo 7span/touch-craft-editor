@@ -102,8 +102,6 @@ class _FlutterDesignEditorState extends State<FlutterDesignEditor> {
   // The stack data for the editable items.
   final _stackData = <EditableItem>[];
 
-  bool isKeyboardOpen = false;
-
   /// Called when this object is inserted into the tree.
   ///
   /// The framework will call this method exactly once for each [State] object it creates.
@@ -140,7 +138,6 @@ class _FlutterDesignEditorState extends State<FlutterDesignEditor> {
 
   @override
   Widget build(BuildContext context) {
-    isKeyboardOpen = MediaQuery.of(context).viewInsets.bottom != 0.0;
     return DefaultTextHeightBehavior(
       textHeightBehavior: const TextHeightBehavior(
         leadingDistribution: TextLeadingDistribution.even,
@@ -150,14 +147,17 @@ class _FlutterDesignEditorState extends State<FlutterDesignEditor> {
         body: Stack(
           clipBehavior: Clip.antiAlias,
           children: [
-            Container(
-              height: context.height,
-              width: context.width,
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: gradientColors[_selectedBackgroundGradient],
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
+            GestureDetector(
+              onTap: _onScreenTap,
+              child: Container(
+                height: context.height,
+                width: context.width,
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: gradientColors[_selectedBackgroundGradient],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  ),
                 ),
               ),
             ),
