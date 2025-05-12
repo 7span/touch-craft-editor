@@ -57,7 +57,7 @@ class RemoveWidget extends StatelessWidget {
                           height: !isDeletePosition ? 60.0 : 72,
                           width: !isDeletePosition ? 60.0 : 72,
                           decoration: BoxDecoration(
-                            color: Colors.black.withOpacity(0.5),
+                            color: Colors.black.withValues(alpha: 0.5),
                             borderRadius: BorderRadius.all(
                               Radius.circular(!isDeletePosition ? 30 : 38),
                             ),

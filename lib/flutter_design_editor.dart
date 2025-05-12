@@ -1,11 +1,7 @@
-import 'dart:io';
-import 'dart:ui' as ui;
-
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:photo_view/photo_view.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 import 'src/components/background_gradient_selector_widget.dart';
 import 'src/components/font_family_select_widget.dart';
@@ -25,12 +21,10 @@ import 'src/models/editable_items.dart';
 class FlutterDesignEditor extends StatefulWidget {
   const FlutterDesignEditor({
     super.key,
-    required this.filePath,
     this.animationsDuration = const Duration(milliseconds: 300),
     this.doneButtonChild,
   });
 
-  final String filePath;
   final Duration animationsDuration;
   final Widget? doneButtonChild;
 
@@ -108,6 +102,8 @@ class _FlutterDesignEditorState extends State<FlutterDesignEditor> {
   // The stack data for the editable items.
   final _stackData = <EditableItem>[];
 
+  bool isKeyboardOpen = false;
+
   /// Called when this object is inserted into the tree.
   ///
   /// The framework will call this method exactly once for each [State] object it creates.
@@ -135,14 +131,8 @@ class _FlutterDesignEditorState extends State<FlutterDesignEditor> {
   /// Initializes the state of the widget.
   ///
   /// This method is called in [initState] to set up the initial state of the widget.
-  /// It initializes the [_stackData] with an [EditableItem] of type [ItemType.image] and the value of [widget.filePath].
   /// It also initializes the [_familyPageController], [_textColorsPageController], and [_gradientsPageController] with their respective viewport fractions.
   void _init() {
-    _stackData.add(
-      EditableItem()
-        ..type = ItemType.image
-        ..value = widget.filePath,
-    );
     _familyPageController = PageController(viewportFraction: .125);
     _textColorsPageController = PageController(viewportFraction: .1);
     _gradientsPageController = PageController(viewportFraction: .175);
@@ -150,23 +140,34 @@ class _FlutterDesignEditorState extends State<FlutterDesignEditor> {
 
   @override
   Widget build(BuildContext context) {
+    isKeyboardOpen = MediaQuery.of(context).viewInsets.bottom != 0.0;
     return DefaultTextHeightBehavior(
       textHeightBehavior: const TextHeightBehavior(
         leadingDistribution: TextLeadingDistribution.even,
       ),
       child: Scaffold(
         resizeToAvoidBottomInset: false,
-        backgroundColor: Colors.black,
         body: Stack(
           clipBehavior: Clip.antiAlias,
           children: [
+            Container(
+              height: context.height,
+              width: context.width,
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: gradientColors[_selectedBackgroundGradient],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ),
+              ),
+            ),
             Positioned(
               top: context.topPadding,
               left: 0,
               right: 0,
               child: ClipRect(
                 child: AspectRatio(
-                  aspectRatio: 9 / 16,
+                  aspectRatio: context.width / context.height,
                   child: GestureDetector(
                     onScaleStart: _onScaleStart,
                     onScaleUpdate: _onScaleUpdate,
@@ -177,27 +178,6 @@ class _FlutterDesignEditorState extends State<FlutterDesignEditor> {
                           key: previewContainer,
                           child: Stack(
                             children: [
-                              Visibility(
-                                visible: _stackData[0].type == ItemType.image,
-                                child: Center(
-                                  child: PhotoView(
-                                    enableRotation: true,
-                                    backgroundDecoration: BoxDecoration(
-                                      gradient: LinearGradient(
-                                        begin: FractionalOffset.topLeft,
-                                        end: FractionalOffset.centerRight,
-                                        colors:
-                                            gradientColors[_selectedBackgroundGradient],
-                                      ),
-                                    ),
-                                    maxScale: 2.0,
-                                    enablePanAlways: false,
-                                    imageProvider: FileImage(
-                                      File(_stackData[0].value),
-                                    ),
-                                  ),
-                                ),
-                              ),
                               ..._stackData.map(
                                 (editableItem) => OverlayItemWidget(
                                   editableItem: editableItem,
@@ -310,6 +290,7 @@ class _FlutterDesignEditorState extends State<FlutterDesignEditor> {
               onToggleTextColorPicker: _onToggleTextColorSelector,
               onChangeTextBackground: _onChangeTextBackground,
               activeItem: _activeItem,
+              onImagePickerTap: _onImagepickerTap,
             ),
             RemoveWidget(
               isTextInput: _isTextInput,
@@ -329,6 +310,20 @@ class _FlutterDesignEditorState extends State<FlutterDesignEditor> {
         ),
       ),
     );
+  }
+
+  Future<void> _onImagepickerTap() async {
+    await [Permission.photos, Permission.storage].request();
+    final picker = ImagePicker();
+    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+    if (pickedFile != null) {
+      _stackData.add(
+        EditableItem()
+          ..type = ItemType.image
+          ..value = pickedFile.path,
+      );
+      setState(() {});
+    }
   }
 
   /// Handles the submission of text input.
@@ -517,22 +512,22 @@ class _FlutterDesignEditorState extends State<FlutterDesignEditor> {
   /// The image is saved as a png file with the current date and time as the file name.
   /// After the image is saved, it navigates back and passes the image file as the result of the navigation.
   Future<void> _onDone() async {
-    final boundary =
-        previewContainer.currentContext!.findRenderObject()
-            as RenderRepaintBoundary?;
-    _isLoading = true;
-    setState(() {});
-    final image = await boundary!.toImage(pixelRatio: 3);
-    final directory = (await getApplicationDocumentsDirectory()).path;
-    final byteData = (await image.toByteData(format: ui.ImageByteFormat.png))!;
-    final pngBytes = byteData.buffer.asUint8List();
-    final imgFile = File('$directory/${DateTime.now()}.png');
-    await imgFile.writeAsBytes(pngBytes);
-    _isLoading = false;
-    setState(() {});
-    if (context.mounted) {
-      Navigator.of(context).pop(imgFile);
-    }
+    // final boundary =
+    //     previewContainer.currentContext!.findRenderObject()
+    //         as RenderRepaintBoundary?;
+    // _isLoading = true;
+    // setState(() {});
+    // final image = await boundary!.toImage(pixelRatio: 3);
+    // final directory = (await getApplicationDocumentsDirectory()).path;
+    // final byteData = (await image.toByteData(format: ui.ImageByteFormat.png))!;
+    // final pngBytes = byteData.buffer.asUint8List();
+    // final imgFile = File('$directory/${DateTime.now()}.png');
+    // await imgFile.writeAsBytes(pngBytes);
+    // _isLoading = false;
+    // setState(() {});
+    // if (context.mounted) {
+    //   Navigator.of(context).pop(imgFile);
+    // }
   }
 
   /// Handles the submission of text input.
@@ -615,17 +610,15 @@ class _FlutterDesignEditorState extends State<FlutterDesignEditor> {
   /// The [e] parameter is the [EditableItem] on which the gesture started.
   /// The [details] parameter contains the details of the pointer down gesture.
   void _onOverlayItemPointerDown(EditableItem e, PointerDownEvent details) {
-    if (e.type != ItemType.image) {
-      if (_inAction) {
-        return;
-      }
-      _inAction = true;
-      _activeItem = e;
-      _initPos = details.position;
-      _currentPos = e.position;
-      _currentScale = e.scale;
-      _currentRotation = e.rotation;
+    if (_inAction) {
+      return;
     }
+    _inAction = true;
+    _activeItem = e;
+    _initPos = details.position;
+    _currentPos = e.position;
+    _currentScale = e.scale;
+    _currentRotation = e.rotation;
   }
 
   /// Handles the pointer up event on an overlay item.

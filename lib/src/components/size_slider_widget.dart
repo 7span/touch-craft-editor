@@ -47,7 +47,7 @@ class SizeSliderWidget extends StatelessWidget {
             min: 14,
             max: 74,
             activeColor: Colors.white,
-            inactiveColor: Colors.white.withOpacity(0.4),
+            inactiveColor: Colors.white.withValues(alpha: 0.4),
             onChanged: onChanged,
           ),
         ),

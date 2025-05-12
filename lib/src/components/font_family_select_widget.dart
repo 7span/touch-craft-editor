@@ -72,7 +72,7 @@ class FontFamilySelectWidget extends StatelessWidget {
                   color:
                       index == selectedFamilyIndex
                           ? Colors.white
-                          : Colors.black.withOpacity(0.4),
+                          : Colors.black.withValues(alpha: 0.4),
                   borderRadius: const BorderRadius.all(Radius.circular(20)),
                   border: Border.all(color: Colors.white),
                 ),

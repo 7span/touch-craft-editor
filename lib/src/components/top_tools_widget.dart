@@ -38,6 +38,9 @@ class TopToolsWidget extends StatelessWidget {
   /// A callback function that is called when the text background is changed.
   final VoidCallback onChangeTextBackground;
 
+  /// To select image from gallery
+  final VoidCallback onImagePickerTap;
+
   /// Creates an instance of the widget.
   ///
   /// All parameters are required and must not be null.
@@ -51,6 +54,7 @@ class TopToolsWidget extends StatelessWidget {
     required this.onPickerTap,
     required this.onToggleTextColorPicker,
     required this.onChangeTextBackground,
+    required this.onImagePickerTap,
     this.activeItem,
   });
 
@@ -107,6 +111,7 @@ class TopToolsWidget extends StatelessWidget {
             activeItem != null
                 ? const SizedBox()
                 : Row(
+                  spacing: 8,
                   children: [
                     const BackButton(color: Colors.white),
                     const Spacer(),
@@ -118,7 +123,9 @@ class TopToolsWidget extends StatelessWidget {
                         decoration: BoxDecoration(
                           gradient: LinearGradient(
                             colors:
-                                gradientColors[selectedBackgroundGradientIndex],
+                                selectedBackgroundGradientIndex == 0
+                                    ? [Colors.black26, Colors.black26]
+                                    : gradientColors[selectedBackgroundGradientIndex],
                           ),
                           border: Border.all(color: Colors.white),
                           borderRadius: BorderRadius.circular(32),
@@ -130,7 +137,6 @@ class TopToolsWidget extends StatelessWidget {
                         ),
                       ),
                     ),
-                    const SizedBox(width: 8),
                     GestureDetector(
                       onTap: onScreenTap,
                       child: Container(
@@ -145,6 +151,25 @@ class TopToolsWidget extends StatelessWidget {
                           child: Text(
                             'Aa',
                             style: GoogleFonts.ubuntu(color: Colors.white),
+                          ),
+                        ),
+                      ),
+                    ),
+                    GestureDetector(
+                      onTap: onImagePickerTap,
+                      child: Container(
+                        padding: EdgeInsets.all(2),
+                        height: 36,
+                        width: 36,
+                        decoration: BoxDecoration(
+                          color: Colors.black26,
+                          border: Border.all(color: Colors.white),
+                          borderRadius: BorderRadius.circular(32),
+                        ),
+                        child: Center(
+                          child: Icon(
+                            Icons.photo_camera_back_outlined,
+                            color: Colors.white,
                           ),
                         ),
                       ),

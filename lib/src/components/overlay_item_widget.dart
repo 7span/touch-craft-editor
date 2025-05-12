@@ -1,6 +1,6 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-
 import '../constants/font_styles.dart';
 import '../constants/gradients.dart';
 import '../constants/item_type.dart';
@@ -102,7 +102,11 @@ class OverlayItemWidget extends StatelessWidget {
           ),
         );
       case ItemType.image:
-        overlayWidget = const Center();
+        overlayWidget = SizedBox(
+          width: context.width * 0.8,
+          height: context.height * 0.4,
+          child: Image.file(File(editableItem.value)),
+        );
       case ItemType.sticker:
         overlayWidget = const Center();
     }

@@ -46,13 +46,13 @@ class FooterToolsWidget extends StatelessWidget {
             ElevatedButton(
               onPressed: onDone,
               style: ButtonStyle(
-                shape: MaterialStateProperty.all(
+                shape: WidgetStateProperty.all(
                   const RoundedRectangleBorder(
                     borderRadius: BorderRadius.all(Radius.circular(18)),
                   ),
                 ),
-                shadowColor: MaterialStateProperty.all(Colors.white),
-                backgroundColor: MaterialStateProperty.all(Colors.white),
+                shadowColor: WidgetStateProperty.all(Colors.white),
+                backgroundColor: WidgetStateProperty.all(Colors.white),
               ),
               child:
                   isLoading
