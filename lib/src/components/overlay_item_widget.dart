@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_design_editor/src/constants/font_styles.dart';
 import 'package:flutter_design_editor/src/constants/gradients.dart';
 import 'package:flutter_design_editor/src/constants/item_type.dart';
+import 'package:flutter_design_editor/src/gif/image_view.dart';
 import 'package:flutter_design_editor/src/extensions/context_extension.dart';
 import 'package:flutter_design_editor/src/models/editable_items.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -88,6 +89,12 @@ class OverlayItemWidget extends StatelessWidget {
         );
       case ItemType.sticker:
         overlayWidget = const Center();
+      case ItemType.gif:
+        overlayWidget = SizedBox(
+          width: context.width * 0.8,
+          height: context.height * 0.4,
+          child: GiphyImageView(gif: editableItem.giphyImage!),
+        );
     }
 
     return Positioned(

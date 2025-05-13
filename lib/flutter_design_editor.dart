@@ -5,6 +5,8 @@ import 'package:crop_image/crop_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_design_editor/src/components/image_crop_view.dart';
+import 'package:flutter_design_editor/src/constants/giphy_keys.dart';
+import 'package:flutter_design_editor/src/gif/enough_giphy_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -318,6 +320,7 @@ class _FlutterDesignEditorState extends State<FlutterDesignEditor> {
               activeItem: _activeItem,
               onImagePickerTap: _onImagepickerTap,
               onCropTap: _onCropImagetap,
+              onAddGiphyTap: _onAddGifTap,
             ),
             RemoveWidget(
               animationsDuration: widget.animationsDuration,
@@ -712,5 +715,18 @@ class _FlutterDesignEditorState extends State<FlutterDesignEditor> {
       _activeItem!.value = croppedImage.path;
       _onScreenTap();
     });
+  }
+
+  void _onAddGifTap() async {
+    final gif = await Giphy.getGif(context: context, apiKey: giphyApiKey);
+    if (gif != null) {
+      setState(() {
+        _stackData.add(
+          EditableItem()
+            ..type = ItemType.gif
+            ..giphyImage = gif,
+        );
+      });
+    }
   }
 }

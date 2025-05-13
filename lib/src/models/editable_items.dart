@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_design_editor/src/gif/enough_giphy_flutter.dart';
 
 import '../constants/item_type.dart';
 
@@ -51,4 +52,6 @@ class EditableItem {
   ///
   /// This is an integer value that represents the index of the font family in a predefined list of font families.
   int fontFamily = 0;
+
+  GiphyGif? giphyImage;
 }
