@@ -1,6 +1,12 @@
+import 'dart:io';
+import 'dart:ui';
+
+import 'package:crop_image/crop_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_design_editor/src/components/image_crop_view.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 import 'src/components/background_gradient_selector_widget.dart';
@@ -54,8 +60,11 @@ class _FlutterDesignEditorState extends State<FlutterDesignEditor> {
   // Indicates whether the widget is in action.
   bool _inAction = false;
 
-  // Indicates whether the widget is in text input mode.
-  bool _isTextInput = false;
+  // Used to identify which item to add based on tap of TopToolsWidgets.
+  ItemType? _addNewItemOfType;
+
+  // Used to identify which item is getting edited.
+  ItemType? _currentlyEditingItemType;
 
   // The current text in the text input field.
   String _currentText = '';
@@ -101,6 +110,12 @@ class _FlutterDesignEditorState extends State<FlutterDesignEditor> {
 
   // The stack data for the editable items.
   final _stackData = <EditableItem>[];
+
+  // The controller for the crop functionality.
+  final _cropController = CropController(
+    aspectRatio: 1,
+    defaultCrop: Rect.fromLTRB(0.2, 0.2, 0.9, 0.9),
+  );
 
   /// Called when this object is inserted into the tree.
   ///
@@ -148,7 +163,7 @@ class _FlutterDesignEditorState extends State<FlutterDesignEditor> {
           clipBehavior: Clip.antiAlias,
           children: [
             GestureDetector(
-              onTap: _onScreenTap,
+              onTap: _showAddTextView,
               child: Container(
                 height: context.height,
                 width: context.width,
@@ -210,7 +225,7 @@ class _FlutterDesignEditorState extends State<FlutterDesignEditor> {
                         AnimatedSwitcher(
                           duration: widget.animationsDuration,
                           child:
-                              !_isTextInput
+                              _addNewItemOfType != ItemType.text
                                   ? const SizedBox()
                                   : Container(
                                     height: context.height,
@@ -242,13 +257,23 @@ class _FlutterDesignEditorState extends State<FlutterDesignEditor> {
                                     ),
                                   ),
                         ),
+                        AnimatedSwitcher(
+                          duration: widget.animationsDuration,
+                          child:
+                              _currentlyEditingItemType != ItemType.image
+                                  ? const SizedBox()
+                                  : ImageCropView(
+                                    imageValue: _activeItem!.value,
+                                    cropController: _cropController,
+                                  ),
+                        ),
                       ],
                     ),
                   ),
                 ),
               ),
             ),
-            if (_isTextInput)
+            if (_currentlyEditingItemType == ItemType.text)
               if (!_isColorPickerSelected)
                 FontFamilySelectWidget(
                   animationsDuration: widget.animationsDuration,
@@ -270,7 +295,7 @@ class _FlutterDesignEditorState extends State<FlutterDesignEditor> {
                   },
                 ),
             BackgroundGradientSelectorWidget(
-              isTextInput: _isTextInput,
+              isTextInput: _addNewItemOfType == ItemType.text,
               isBackgroundColorPickerSelected: _isBackgroundColorPickerSelected,
               inAction: _inAction,
               animationsDuration: widget.animationsDuration,
@@ -280,23 +305,25 @@ class _FlutterDesignEditorState extends State<FlutterDesignEditor> {
               selectedGradientIndex: _selectedBackgroundGradient,
             ),
             TopToolsWidget(
-              isTextInput: _isTextInput,
+              isTextInput: _currentlyEditingItemType == ItemType.text,
+              isImageInput: _currentlyEditingItemType == ItemType.image,
               selectedBackgroundGradientIndex: _selectedBackgroundGradient,
               animationsDuration: widget.animationsDuration,
               onPickerTap: _onToggleBackgroundGradientPicker,
-              onScreenTap: _onScreenTap,
+              onScreenTap: _showAddTextView,
               selectedTextBackgroundGradientIndex:
                   _selectedTextBackgroundGradient,
               onToggleTextColorPicker: _onToggleTextColorSelector,
               onChangeTextBackground: _onChangeTextBackground,
               activeItem: _activeItem,
               onImagePickerTap: _onImagepickerTap,
+              onCropTap: _onCropImagetap,
             ),
             RemoveWidget(
-              isTextInput: _isTextInput,
               animationsDuration: widget.animationsDuration,
               activeItem: _activeItem,
               isDeletePosition: _isDeletePosition,
+              shouldShowDeleteButton: _inAction,
             ),
             Align(
               alignment: Alignment.bottomCenter,
@@ -331,7 +358,6 @@ class _FlutterDesignEditorState extends State<FlutterDesignEditor> {
   /// This method is called when the user submits the text input field.
   /// If the input is not empty, it calls the [_onSubmitText] method to add the text to the stack data.
   /// If the input is empty, it resets the [_currentText] to an empty string.
-  /// In either case, it toggles the [_isTextInput] flag to exit the text input mode and sets the [_activeItem] to null.
   void _onTextSubmit(String input) {
     if (input.isNotEmpty) {
       setState(_onSubmitText);
@@ -342,7 +368,7 @@ class _FlutterDesignEditorState extends State<FlutterDesignEditor> {
     }
 
     setState(() {
-      _isTextInput = !_isTextInput;
+      _addNewItemOfType = null;
       _activeItem = null;
     });
   }
@@ -480,13 +506,13 @@ class _FlutterDesignEditorState extends State<FlutterDesignEditor> {
   /// Handles the screen tap event.
   ///
   /// This method is called when the user taps on the screen.
-  /// It toggles the [_isTextInput] flag to enter or exit the text input mode and sets the [_activeItem] to null.
   /// If the current text is not empty, it calls the [_onSubmitText] method to add the text to the stack data.
   /// It also initializes the [_familyPageController] and [_textColorsPageController] with their respective viewport fractions.
   void _onScreenTap() {
     setState(() {
-      _isTextInput = !_isTextInput;
+      _addNewItemOfType = null;
       _activeItem = null;
+      _currentlyEditingItemType = null;
       _isBackgroundColorPickerSelected = false;
     });
 
@@ -503,6 +529,13 @@ class _FlutterDesignEditorState extends State<FlutterDesignEditor> {
       ),
       viewportFraction: .1,
     );
+  }
+
+  void _showAddTextView() {
+    setState(() {
+      _addNewItemOfType = ItemType.text;
+      _currentlyEditingItemType = ItemType.text;
+    });
   }
 
   /// Handles the done event.
@@ -578,29 +611,36 @@ class _FlutterDesignEditorState extends State<FlutterDesignEditor> {
   /// Handles the tap event on an overlay item.
   ///
   /// This method is called when the user taps on an overlay item.
-  /// It toggles the [_isTextInput] flag to enter or exit the text input mode, sets the [_activeItem] to null, and updates the text and style properties based on the tapped item.
   /// It also removes the tapped item from the [_stackData] and initializes the [_familyPageController] and [_textColorsPageController] with their respective viewport fractions.
   /// The [e] parameter is the tapped [EditableItem].
   void _onOverlayItemTap(EditableItem e) {
     setState(() {
-      _isTextInput = !_isTextInput;
-      _activeItem = null;
-      _editingController.text = e.value;
-      _currentText = e.value;
-      _selectedFontFamily = e.fontFamily;
-      _selectedFontSize = e.fontSize;
-      _selectedTextBackgroundGradient = e.textStyle;
-      _selectedTextColor = e.color;
-      _stackData.removeAt(_stackData.indexOf(e));
+      _currentlyEditingItemType = e.type;
+      _activeItem = e;
+      _addNewItemOfType = null;
     });
-    _familyPageController = PageController(
-      initialPage: e.textStyle,
-      viewportFraction: .1,
-    );
-    _textColorsPageController = PageController(
-      initialPage: defaultColors.indexWhere((element) => element == e.color),
-      viewportFraction: .1,
-    );
+    if (_currentlyEditingItemType == ItemType.text) {
+      setState(() {
+        _addNewItemOfType =
+            _addNewItemOfType == ItemType.text ? null : ItemType.text;
+        _activeItem = null;
+        _editingController.text = e.value;
+        _currentText = e.value;
+        _selectedFontFamily = e.fontFamily;
+        _selectedFontSize = e.fontSize;
+        _selectedTextBackgroundGradient = e.textStyle;
+        _selectedTextColor = e.color;
+        _stackData.removeAt(_stackData.indexOf(e));
+      });
+      _familyPageController = PageController(
+        initialPage: e.textStyle,
+        viewportFraction: .1,
+      );
+      _textColorsPageController = PageController(
+        initialPage: defaultColors.indexWhere((element) => element == e.color),
+        viewportFraction: .1,
+      );
+    }
   }
 
   /// Handles the pointer down event on an overlay item.
@@ -636,7 +676,6 @@ class _FlutterDesignEditorState extends State<FlutterDesignEditor> {
         _activeItem = null;
       });
     }
-
     setState(() {
       _activeItem = null;
     });
@@ -658,5 +697,20 @@ class _FlutterDesignEditorState extends State<FlutterDesignEditor> {
         _isDeletePosition = false;
       });
     }
+  }
+
+  Future<void> _onCropImagetap() async {
+    final bitmap = await _cropController.croppedBitmap();
+    final data = await bitmap.toByteData(format: ImageByteFormat.png);
+    final bytes = data!.buffer.asUint8List();
+    final directory = await getApplicationDocumentsDirectory();
+    final timestamp = DateTime.now().millisecondsSinceEpoch;
+    final filePath = '${directory.path}/cropped_image_$timestamp.png';
+    final file = File(filePath);
+    final croppedImage = await file.writeAsBytes(bytes);
+    setState(() {
+      _activeItem!.value = croppedImage.path;
+      _onScreenTap();
+    });
   }
 }

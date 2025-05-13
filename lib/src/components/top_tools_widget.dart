@@ -40,12 +40,19 @@ class TopToolsWidget extends StatelessWidget {
   /// To select image from gallery
   final VoidCallback onImagePickerTap;
 
+  /// Indicates whether the widget is in image input mode.
+  final bool isImageInput;
+
+  /// A callback function that is called when the crop button is tapped.
+  final VoidCallback onCropTap;
+
   /// Creates an instance of the widget.
   ///
   /// All parameters are required and must not be null.
   const TopToolsWidget({
     super.key,
     required this.isTextInput,
+    required this.isImageInput,
     required this.animationsDuration,
     this.selectedBackgroundGradientIndex = 0,
     this.selectedTextBackgroundGradientIndex = 0,
@@ -55,6 +62,7 @@ class TopToolsWidget extends StatelessWidget {
     required this.onChangeTextBackground,
     required this.onImagePickerTap,
     this.activeItem,
+    required this.onCropTap,
   });
 
   /// Describes the part of the user interface represented by this widget.
@@ -95,6 +103,19 @@ class TopToolsWidget extends StatelessWidget {
                 onPressed: onChangeTextBackground,
               ),
             ],
+          ),
+        ),
+      );
+    }
+    if (isImageInput) {
+      return Positioned(
+        top: context.topPadding,
+        child: Container(
+          width: context.width,
+          padding: const EdgeInsets.all(8),
+          child: IconButton(
+            icon: const Icon(Icons.crop, color: Colors.white),
+            onPressed: onCropTap,
           ),
         ),
       );

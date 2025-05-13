@@ -81,7 +81,10 @@ class OverlayItemWidget extends StatelessWidget {
         overlayWidget = SizedBox(
           width: context.width * 0.8,
           height: context.height * 0.4,
-          child: Image.file(File(editableItem.value)),
+          child: GestureDetector(
+            onTap: onItemTap,
+            child: Image.file(File(editableItem.value)),
+          ),
         );
       case ItemType.sticker:
         overlayWidget = const Center();

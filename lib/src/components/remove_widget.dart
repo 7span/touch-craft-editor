@@ -8,9 +8,6 @@ import 'package:flutter_design_editor/src/models/editable_items.dart';
 /// It is a stateless widget that takes several parameters to control its behavior and appearance.
 /// It uses a Visibility widget to display the remove button, and the user can interact with it by tapping on it.
 class RemoveWidget extends StatelessWidget {
-  /// Indicates whether the widget is in text input mode.
-  final bool isTextInput;
-
   /// The active item that can be removed.
   final EditableItem? _activeItem;
 
@@ -20,17 +17,21 @@ class RemoveWidget extends StatelessWidget {
   /// The duration of animations within the widget.
   final Duration animationsDuration;
 
+  /// Indicates whether the remove button should be shown.
+  final bool _shouldShowDeleteButton;
+
   /// Creates an instance of the widget.
   ///
   /// The isTextInput, isDeletePosition, and animationsDuration parameters are required and must not be null.
   /// The activeItem parameter is optional.
   const RemoveWidget({
     super.key,
-    required this.isTextInput,
     required EditableItem? activeItem,
+    required shouldShowDeleteButton,
     required this.isDeletePosition,
     required this.animationsDuration,
-  }) : _activeItem = activeItem;
+  }) : _activeItem = activeItem,
+       _shouldShowDeleteButton = shouldShowDeleteButton;
 
   /// Describes the part of the user interface represented by this widget.
   ///
@@ -38,7 +39,7 @@ class RemoveWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Visibility(
-      visible: !isTextInput,
+      visible: _shouldShowDeleteButton,
       child: Positioned(
         bottom: 80 + context.bottomPadding,
         child: AnimatedSwitcher(
