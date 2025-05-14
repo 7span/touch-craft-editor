@@ -88,7 +88,11 @@ class OverlayItemWidget extends StatelessWidget {
           ),
         );
       case ItemType.sticker:
-        overlayWidget = const Center();
+        overlayWidget = SizedBox(
+          width: context.width * 0.8,
+          height: context.height * 0.4,
+          child: Image.file(File(editableItem.value)),
+        );
       case ItemType.gif:
         overlayWidget = SizedBox(
           width: context.width * 0.8,

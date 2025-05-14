@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_design_editor/src/constants/gradients.dart';
+import 'package:flutter_design_editor/src/constants/item_type.dart';
 import 'package:flutter_design_editor/src/extensions/context_extension.dart';
 import 'package:flutter_design_editor/src/models/editable_items.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -10,9 +11,6 @@ import 'package:google_fonts/google_fonts.dart';
 /// It is a stateless widget that takes several parameters to control its behavior and appearance.
 /// It uses a Positioned widget to display the top tools, and the user can interact with it by tapping on it.
 class TopToolsWidget extends StatelessWidget {
-  /// Indicates whether the widget is in text input mode.
-  final bool isTextInput;
-
   /// The duration of animations within the widget.
   final Duration animationsDuration;
 
@@ -40,14 +38,17 @@ class TopToolsWidget extends StatelessWidget {
   /// To select image from gallery
   final VoidCallback onImagePickerTap;
 
-  /// Indicates whether the widget is in image input mode.
-  final bool isImageInput;
-
   /// A callback function that is called when the crop button is tapped.
   final VoidCallback onCropTap;
 
   /// A callback function that is called when the add Giphy button is tapped
   final VoidCallback onAddGiphyTap;
+
+  final VoidCallback onCreateStickerTap;
+
+  final ItemType? currentlyEditingItemType;
+
+  final VoidCallback onCloseStickerOverlay;
 
   /// A callback function that is called when the add Giphy button is tapped
   /// Creates an instance of the widget.
@@ -55,8 +56,6 @@ class TopToolsWidget extends StatelessWidget {
   /// All parameters are required and must not be null.
   const TopToolsWidget({
     super.key,
-    required this.isTextInput,
-    required this.isImageInput,
     required this.animationsDuration,
     this.selectedBackgroundGradientIndex = 0,
     this.selectedTextBackgroundGradientIndex = 0,
@@ -68,6 +67,9 @@ class TopToolsWidget extends StatelessWidget {
     this.activeItem,
     required this.onCropTap,
     required this.onAddGiphyTap,
+    required this.onCreateStickerTap,
+    required this.currentlyEditingItemType,
+    required this.onCloseStickerOverlay,
   });
 
   /// Describes the part of the user interface represented by this widget.
@@ -75,7 +77,7 @@ class TopToolsWidget extends StatelessWidget {
   /// The framework calls this method when this widget is inserted into the tree in a given BuildContext and when the dependencies of this widget change.
   @override
   Widget build(BuildContext context) {
-    if (isTextInput) {
+    if (currentlyEditingItemType == ItemType.text) {
       return Positioned(
         top: context.topPadding,
         child: Container(
@@ -112,7 +114,7 @@ class TopToolsWidget extends StatelessWidget {
         ),
       );
     }
-    if (isImageInput) {
+    if (currentlyEditingItemType == ItemType.image) {
       return Positioned(
         top: context.topPadding,
         child: Container(
@@ -121,6 +123,19 @@ class TopToolsWidget extends StatelessWidget {
           child: IconButton(
             icon: const Icon(Icons.crop, color: Colors.white),
             onPressed: onCropTap,
+          ),
+        ),
+      );
+    }
+    if (currentlyEditingItemType == ItemType.sticker) {
+      return Positioned(
+        top: context.topPadding,
+        child: Container(
+          width: context.width,
+          padding: const EdgeInsets.all(8),
+          child: IconButton(
+            icon: const Icon(Icons.cancel_outlined, color: Colors.white),
+            onPressed: onCloseStickerOverlay,
           ),
         ),
       );
@@ -155,6 +170,10 @@ class TopToolsWidget extends StatelessWidget {
                       iconData: Icons.photo_camera_back_outlined,
                     ),
                     _TopToolBarIcon(onTap: onAddGiphyTap, iconData: Icons.gif),
+                    _TopToolBarIcon(
+                      onTap: onCreateStickerTap,
+                      iconData: Icons.cut,
+                    ),
                   ],
                 ),
       ),

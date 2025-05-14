@@ -4,7 +4,9 @@ import 'dart:ui';
 import 'package:crop_image/crop_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_design_editor/src/components/cutout_image_overlay_widget.dart';
 import 'package:flutter_design_editor/src/components/image_crop_view.dart';
+import 'package:flutter_design_editor/src/components/sticker_dialogue.dart';
 import 'package:flutter_design_editor/src/constants/giphy_keys.dart';
 import 'package:flutter_design_editor/src/gif/enough_giphy_flutter.dart';
 import 'package:image_picker/image_picker.dart';
@@ -97,6 +99,9 @@ class _FlutterDesignEditorState extends State<FlutterDesignEditor> {
 
   // Indicates whether the widget is in loading state.
   bool _isLoading = false;
+
+  // Used while creating stricker
+  String? imagePathForSticker;
 
   // The controller for the font family PageView.
   late PageController _familyPageController;
@@ -275,6 +280,7 @@ class _FlutterDesignEditorState extends State<FlutterDesignEditor> {
                 ),
               ),
             ),
+
             if (_currentlyEditingItemType == ItemType.text)
               if (!_isColorPickerSelected)
                 FontFamilySelectWidget(
@@ -296,6 +302,7 @@ class _FlutterDesignEditorState extends State<FlutterDesignEditor> {
                     _onColorChange(index);
                   },
                 ),
+
             BackgroundGradientSelectorWidget(
               isTextInput: _addNewItemOfType == ItemType.text,
               isBackgroundColorPickerSelected: _isBackgroundColorPickerSelected,
@@ -306,9 +313,24 @@ class _FlutterDesignEditorState extends State<FlutterDesignEditor> {
               onItemTap: _onBackgroundGradientTap,
               selectedGradientIndex: _selectedBackgroundGradient,
             ),
+            if (_currentlyEditingItemType == ItemType.sticker)
+              CutoutImageOverlayWidget(
+                imagePath: imagePathForSticker!,
+                onScreenTap: (stickerPath) {
+                  if (stickerPath != null) {
+                    setState(() {
+                      _stackData.add(
+                        EditableItem()
+                          ..type = ItemType.sticker
+                          ..value = stickerPath,
+                      );
+                    });
+                  }
+                  _onScreenTap();
+                },
+              ),
             TopToolsWidget(
-              isTextInput: _currentlyEditingItemType == ItemType.text,
-              isImageInput: _currentlyEditingItemType == ItemType.image,
+              currentlyEditingItemType: _currentlyEditingItemType,
               selectedBackgroundGradientIndex: _selectedBackgroundGradient,
               animationsDuration: widget.animationsDuration,
               onPickerTap: _onToggleBackgroundGradientPicker,
@@ -321,6 +343,8 @@ class _FlutterDesignEditorState extends State<FlutterDesignEditor> {
               onImagePickerTap: _onImagepickerTap,
               onCropTap: _onCropImagetap,
               onAddGiphyTap: _onAddGifTap,
+              onCreateStickerTap: _onCreateStickerTap,
+              onCloseStickerOverlay: _onScreenTap,
             ),
             RemoveWidget(
               animationsDuration: widget.animationsDuration,
@@ -328,14 +352,15 @@ class _FlutterDesignEditorState extends State<FlutterDesignEditor> {
               isDeletePosition: _isDeletePosition,
               shouldShowDeleteButton: _inAction,
             ),
-            Align(
-              alignment: Alignment.bottomCenter,
-              child: FooterToolsWidget(
-                onDone: _onDone,
-                doneButtonChild: widget.doneButtonChild,
-                isLoading: _isLoading,
+            if (_currentlyEditingItemType == null)
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: FooterToolsWidget(
+                  onDone: _onDone,
+                  doneButtonChild: widget.doneButtonChild,
+                  isLoading: _isLoading,
+                ),
               ),
-            ),
           ],
         ),
       ),
@@ -728,5 +753,32 @@ class _FlutterDesignEditorState extends State<FlutterDesignEditor> {
         );
       });
     }
+  }
+
+  void _onCreateStickerTap() async {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder:
+          (context) => StickerDialogue(
+            onCancleTap: () {
+              Navigator.maybePop(context);
+            },
+            onOpenGalleryTap: () async {
+              await [Permission.photos, Permission.storage].request();
+              final picker = ImagePicker();
+              final pickedFile = await picker.pickImage(
+                source: ImageSource.gallery,
+              );
+              await Navigator.maybePop(context);
+              if (pickedFile != null) {
+                setState(() {
+                  _currentlyEditingItemType = ItemType.sticker;
+                  imagePathForSticker = pickedFile.path;
+                });
+              }
+            },
+          ),
+    );
   }
 }
