@@ -33,10 +33,15 @@ class FlutterDesignEditor extends StatefulWidget {
     super.key,
     this.animationsDuration = const Duration(milliseconds: 300),
     this.doneButtonChild,
+    this.backgroundGradientColorList = gradientColors,
   });
 
   final Duration animationsDuration;
   final Widget? doneButtonChild;
+
+  // Provide custom gradient color list
+  // backgroundGradientColorList : [  [Color(0xFF1488CC), Color(0xFF2B32B2)],[Color(0xFFec008c), Color(0xFFfc6767)],];
+  final List<List<Color>> backgroundGradientColorList;
 
   @override
   State<FlutterDesignEditor> createState() => _FlutterDesignEditorState();
@@ -132,20 +137,8 @@ class _FlutterDesignEditorState extends State<FlutterDesignEditor> {
   @override
   void initState() {
     super.initState();
-    _init();
-  }
 
-  /// Called when this object is removed from the tree permanently.
-  ///
-  /// The framework calls this method when this [State] object will never build again.
-  /// This method is where you should unsubscribe or dispose any resources, streams, or animations that were created in [initState].
-  @override
-  void dispose() {
-    _editingController.dispose();
-    _familyPageController.dispose();
-    _textColorsPageController.dispose();
-    _gradientsPageController.dispose();
-    super.dispose();
+    _init();
   }
 
   /// Initializes the state of the widget.
@@ -176,7 +169,9 @@ class _FlutterDesignEditorState extends State<FlutterDesignEditor> {
                 width: context.width,
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
-                    colors: gradientColors[_selectedBackgroundGradient],
+                    colors:
+                        widget
+                            .backgroundGradientColorList[_selectedBackgroundGradient],
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
                   ),
@@ -203,6 +198,8 @@ class _FlutterDesignEditorState extends State<FlutterDesignEditor> {
                               ..._stackData.map(
                                 (editableItem) => OverlayItemWidget(
                                   editableItem: editableItem,
+                                  backgroundColorList:
+                                      widget.backgroundGradientColorList,
                                   onItemTap: () {
                                     _onOverlayItemTap(editableItem);
                                   },
@@ -249,6 +246,9 @@ class _FlutterDesignEditorState extends State<FlutterDesignEditor> {
                                           textColor: _selectedTextColor,
                                           backgroundColorIndex:
                                               _selectedTextBackgroundGradient,
+                                          backgroundColorList:
+                                              widget
+                                                  .backgroundGradientColorList,
                                         ),
                                         SizeSliderWidget(
                                           animationsDuration:
@@ -312,6 +312,7 @@ class _FlutterDesignEditorState extends State<FlutterDesignEditor> {
               onPageChanged: _onChangeBackgroundGradient,
               onItemTap: _onBackgroundGradientTap,
               selectedGradientIndex: _selectedBackgroundGradient,
+              backgroundColorList: widget.backgroundGradientColorList,
             ),
             if (_currentlyEditingItemType == ItemType.sticker)
               CutoutImageOverlayWidget(
@@ -345,6 +346,7 @@ class _FlutterDesignEditorState extends State<FlutterDesignEditor> {
               onAddGiphyTap: _onAddGifTap,
               onCreateStickerTap: _onCreateStickerTap,
               onCloseStickerOverlay: _onScreenTap,
+              backgroundColorList: widget.backgroundGradientColorList,
             ),
             RemoveWidget(
               animationsDuration: widget.animationsDuration,
@@ -414,10 +416,11 @@ class _FlutterDesignEditorState extends State<FlutterDesignEditor> {
   /// Changes the background of the text.
   ///
   /// This method is called when the user taps on the text background change button.
-  /// It increments the [_selectedTextBackgroundGradient] index if it's less than the length of [gradientColors] array.
+  /// It increments the [_selectedTextBackgroundGradient] index if it's less than the length of provided backgroundGradientColors array.
   /// If the index has reached the end of the array, it resets it to 0.
   void _onChangeTextBackground() {
-    if (_selectedTextBackgroundGradient < gradientColors.length - 1) {
+    if (_selectedTextBackgroundGradient <
+        widget.backgroundGradientColorList.length - 1) {
       setState(() {
         _selectedTextBackgroundGradient++;
       });
@@ -476,7 +479,7 @@ class _FlutterDesignEditorState extends State<FlutterDesignEditor> {
   ///
   /// This method is called when the user selects a new background gradient from the gradient picker.
   /// It updates the [_selectedBackgroundGradient] with the new gradient and jumps the [_gradientsPageController] to the selected page.
-  /// The [index] parameter is the index of the selected gradient in the [gradientColors] list.
+  /// The [index] parameter is the index of the selected gradient in the provided backgroundGradientColor list.
   void _onBackgroundGradientTap(index) {
     setState(() {
       _selectedBackgroundGradient = index;
@@ -488,7 +491,7 @@ class _FlutterDesignEditorState extends State<FlutterDesignEditor> {
   ///
   /// This method is called when the user selects a new background gradient from the gradient picker.
   /// It updates the [_selectedBackgroundGradient] with the new gradient.
-  /// The [index] parameter is the index of the selected gradient in the [gradientColors] list.
+  /// The [index] parameter is the index of the selected gradient in the provided backgroundGradientColor list.
   void _onChangeBackgroundGradient(index) {
     HapticFeedback.lightImpact();
     setState(() {
@@ -780,5 +783,18 @@ class _FlutterDesignEditorState extends State<FlutterDesignEditor> {
             },
           ),
     );
+  }
+
+  /// Called when this object is removed from the tree permanently.
+  ///
+  /// The framework calls this method when this [State] object will never build again.
+  /// This method is where you should unsubscribe or dispose any resources, streams, or animations that were created in [initState].
+  @override
+  void dispose() {
+    _editingController.dispose();
+    _familyPageController.dispose();
+    _textColorsPageController.dispose();
+    _gradientsPageController.dispose();
+    super.dispose();
   }
 }

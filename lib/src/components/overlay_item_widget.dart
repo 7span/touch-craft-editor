@@ -1,7 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_design_editor/src/constants/font_styles.dart';
-import 'package:flutter_design_editor/src/constants/gradients.dart';
 import 'package:flutter_design_editor/src/constants/item_type.dart';
 import 'package:flutter_design_editor/src/gif/image_view.dart';
 import 'package:flutter_design_editor/src/extensions/context_extension.dart';
@@ -29,6 +28,8 @@ class OverlayItemWidget extends StatelessWidget {
   /// A callback function that is called when a pointer has moved from one location on the screen to another.
   final Function(PointerMoveEvent)? onPointerMove;
 
+  final List<List<Color>> backgroundColorList;
+
   /// Creates an instance of the widget.
   ///
   /// The editableItem and onItemTap parameters are required and must not be null.
@@ -37,6 +38,7 @@ class OverlayItemWidget extends StatelessWidget {
     super.key,
     required this.editableItem,
     required this.onItemTap,
+    required this.backgroundColorList,
     this.onPointerDown,
     this.onPointerUp,
     this.onPointerMove,
@@ -55,7 +57,7 @@ class OverlayItemWidget extends StatelessWidget {
             padding: EdgeInsets.all(6),
             decoration: BoxDecoration(
               gradient: LinearGradient(
-                colors: gradientColors[editableItem.textStyle],
+                colors: backgroundColorList[editableItem.textStyle],
                 begin: Alignment.centerLeft,
                 end: Alignment.centerRight,
               ),
@@ -68,7 +70,7 @@ class OverlayItemWidget extends StatelessWidget {
                   editableItem.value,
                   textAlign: TextAlign.center,
                   style: GoogleFonts.getFont(
-                    fontFamilyList[editableItem.fontFamily],
+                    googleFontFamilyList[editableItem.fontFamily],
                   ).copyWith(
                     color: editableItem.color,
                     fontSize: editableItem.fontSize,

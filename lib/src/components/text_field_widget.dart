@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_design_editor/src/constants/font_styles.dart';
-import 'package:flutter_design_editor/src/constants/gradients.dart';
 import 'package:flutter_design_editor/src/extensions/context_extension.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -31,6 +30,8 @@ class TextFieldWidget extends StatelessWidget {
   /// The index of the background color to be used in the text field.
   final int backgroundColorIndex;
 
+  final List<List<Color>> backgroundColorList;
+
   /// Creates an instance of the widget.
   ///
   /// All parameters are required and must not be null.
@@ -43,6 +44,7 @@ class TextFieldWidget extends StatelessWidget {
     required this.fontFamilyIndex,
     required this.textColor,
     required this.backgroundColorIndex,
+    required this.backgroundColorList,
   });
 
   /// Describes the part of the user interface represented by this widget.
@@ -67,7 +69,7 @@ class TextFieldWidget extends StatelessWidget {
                 padding: EdgeInsets.all(4),
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
-                    colors: gradientColors[backgroundColorIndex],
+                    colors: backgroundColorList[backgroundColorIndex],
                   ),
                   borderRadius: BorderRadius.circular(8),
                 ),
@@ -76,7 +78,7 @@ class TextFieldWidget extends StatelessWidget {
                   controller: controller,
                   textAlign: TextAlign.center,
                   style: GoogleFonts.getFont(
-                    fontFamilyList[fontFamilyIndex],
+                    googleFontFamilyList[fontFamilyIndex],
                   ).copyWith(color: textColor, fontSize: fontSize),
                   cursorColor: textColor,
                   minLines: 1,

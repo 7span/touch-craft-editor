@@ -3,7 +3,7 @@
 /// This list is used throughout the application where a predefined set of font families is required.
 /// It includes a variety of font families such as 'Lato', 'Montserrat', 'Lobster', etc.
 /// The font families in this list can be used for various purposes, such as setting the font family of text.
-const fontFamilyList = [
+const googleFontFamilyList = [
   'Lato', // Lato font family
   'Montserrat', // Montserrat font family
   'Lobster', // Lobster font family

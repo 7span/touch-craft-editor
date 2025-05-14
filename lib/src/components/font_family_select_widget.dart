@@ -52,7 +52,7 @@ class FontFamilySelectWidget extends StatelessWidget {
         alignment: Alignment.center,
         child: PageView.builder(
           controller: pageController,
-          itemCount: fontFamilyList.length,
+          itemCount: googleFontFamilyList.length,
           onPageChanged: onPageChanged,
           physics: const BouncingScrollPhysics(),
           allowImplicitScrolling: true,
@@ -78,7 +78,9 @@ class FontFamilySelectWidget extends StatelessWidget {
                 child: Center(
                   child: Text(
                     'Aa',
-                    style: GoogleFonts.getFont(fontFamilyList[index]).copyWith(
+                    style: GoogleFonts.getFont(
+                      googleFontFamilyList[index],
+                    ).copyWith(
                       color:
                           index == selectedFamilyIndex
                               ? Colors.red

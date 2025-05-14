@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_design_editor/src/constants/gradients.dart';
 import 'package:flutter_design_editor/src/constants/item_type.dart';
 import 'package:flutter_design_editor/src/extensions/context_extension.dart';
 import 'package:flutter_design_editor/src/models/editable_items.dart';
@@ -50,6 +49,8 @@ class TopToolsWidget extends StatelessWidget {
 
   final VoidCallback onCloseStickerOverlay;
 
+  final List<List<Color>> backgroundColorList;
+
   /// A callback function that is called when the add Giphy button is tapped
   /// Creates an instance of the widget.
   ///
@@ -70,6 +71,7 @@ class TopToolsWidget extends StatelessWidget {
     required this.onCreateStickerTap,
     required this.currentlyEditingItemType,
     required this.onCloseStickerOverlay,
+    required this.backgroundColorList,
   });
 
   /// Describes the part of the user interface represented by this widget.
@@ -101,7 +103,7 @@ class TopToolsWidget extends StatelessWidget {
                       begin: FractionalOffset.topLeft,
                       end: FractionalOffset.bottomRight,
                       colors:
-                          gradientColors[selectedTextBackgroundGradientIndex],
+                          backgroundColorList[selectedTextBackgroundGradientIndex],
                     ),
                     borderRadius: const BorderRadius.all(Radius.circular(4)),
                   ),
@@ -160,7 +162,7 @@ class TopToolsWidget extends StatelessWidget {
                         colors:
                             selectedBackgroundGradientIndex == 0
                                 ? [Colors.black26, Colors.black26]
-                                : gradientColors[selectedBackgroundGradientIndex],
+                                : backgroundColorList[selectedBackgroundGradientIndex],
                       ),
                       iconData: Icons.auto_awesome,
                     ),
