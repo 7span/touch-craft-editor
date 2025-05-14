@@ -37,10 +37,30 @@ class FlutterDesignEditor extends StatefulWidget {
     this.backgroundGradientColorList = gradientColors,
     this.fontFamilyList = googleFontFamilyList,
     this.fontColorList = defaultColors,
+    this.enableStickerEditor = true,
+    this.enableTextEditor = true,
+    this.enableBackgroundGradientEditor = true,
+    this.enableGifEditor = true,
+    this.enableImageEditor = true,
   });
 
   final Duration animationsDuration;
   final Widget? doneButtonChild;
+
+  // This parameters is used to enable text editor
+  final bool enableTextEditor;
+
+  // This parameters is used to enable background-gradient editor.
+  final bool enableBackgroundGradientEditor;
+
+  // This parameters is used to enable image editor.
+  final bool enableImageEditor;
+
+  // This parameters is used to add GIF in design.
+  final bool enableGifEditor;
+
+  // This parameters is used to enable sticker creation.
+  final bool enableStickerEditor;
 
   // Provide custom gradient color list
   // backgroundGradientColorList : [  [Color(0xFF1488CC), Color(0xFF2B32B2)],[Color(0xFFec008c), Color(0xFFfc6767)],];
@@ -174,7 +194,7 @@ class _FlutterDesignEditorState extends State<FlutterDesignEditor> {
           clipBehavior: Clip.antiAlias,
           children: [
             GestureDetector(
-              onTap: _showAddTextView,
+              onTap: _showTextView,
               child: Container(
                 height: context.height,
                 width: context.width,
@@ -350,7 +370,7 @@ class _FlutterDesignEditorState extends State<FlutterDesignEditor> {
               selectedBackgroundGradientIndex: _selectedBackgroundGradient,
               animationsDuration: widget.animationsDuration,
               onPickerTap: _onToggleBackgroundGradientPicker,
-              onScreenTap: _showAddTextView,
+              onScreenTap: _showTextView,
               selectedTextBackgroundGradientIndex:
                   _selectedTextBackgroundGradient,
               onToggleTextColorPicker: _onToggleTextColorSelector,
@@ -362,6 +382,12 @@ class _FlutterDesignEditorState extends State<FlutterDesignEditor> {
               onCreateStickerTap: _onCreateStickerTap,
               onCloseStickerOverlay: _onScreenTap,
               backgroundColorList: widget.backgroundGradientColorList,
+              shouldShowBackgroundGradientButton:
+                  widget.enableBackgroundGradientEditor,
+              shouldShowGifButton: widget.enableGifEditor,
+              shouldShowImageButton: widget.enableImageEditor,
+              shouldShowStickerButton: widget.enableStickerEditor,
+              shouldShowTextButton: widget.enableTextEditor,
             ),
             RemoveWidget(
               animationsDuration: widget.animationsDuration,
@@ -577,7 +603,10 @@ class _FlutterDesignEditorState extends State<FlutterDesignEditor> {
     );
   }
 
-  void _showAddTextView() {
+  void _showTextView() {
+    if (!widget.enableTextEditor) {
+      return;
+    }
     setState(() {
       _addNewItemOfType = ItemType.text;
       _currentlyEditingItemType = ItemType.text;

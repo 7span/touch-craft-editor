@@ -51,6 +51,12 @@ class TopToolsWidget extends StatelessWidget {
 
   final List<List<Color>> backgroundColorList;
 
+  final bool shouldShowGifButton;
+  final bool shouldShowImageButton;
+  final bool shouldShowTextButton;
+  final bool shouldShowStickerButton;
+  final bool shouldShowBackgroundGradientButton;
+
   /// A callback function that is called when the add Giphy button is tapped
   /// Creates an instance of the widget.
   ///
@@ -72,6 +78,11 @@ class TopToolsWidget extends StatelessWidget {
     required this.currentlyEditingItemType,
     required this.onCloseStickerOverlay,
     required this.backgroundColorList,
+    required this.shouldShowGifButton,
+    required this.shouldShowImageButton,
+    required this.shouldShowTextButton,
+    required this.shouldShowStickerButton,
+    required this.shouldShowBackgroundGradientButton,
   });
 
   /// Describes the part of the user interface represented by this widget.
@@ -156,26 +167,34 @@ class TopToolsWidget extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.end,
                   spacing: 8,
                   children: [
-                    _TopToolBarIcon(
-                      onTap: onPickerTap,
-                      gradient: LinearGradient(
-                        colors:
-                            selectedBackgroundGradientIndex == 0
-                                ? [Colors.black26, Colors.black26]
-                                : backgroundColorList[selectedBackgroundGradientIndex],
+                    if (shouldShowBackgroundGradientButton)
+                      _TopToolBarIcon(
+                        onTap: onPickerTap,
+                        gradient: LinearGradient(
+                          colors:
+                              selectedBackgroundGradientIndex == 0
+                                  ? [Colors.black26, Colors.black26]
+                                  : backgroundColorList[selectedBackgroundGradientIndex],
+                        ),
+                        iconData: Icons.auto_awesome,
                       ),
-                      iconData: Icons.auto_awesome,
-                    ),
-                    _TopToolBarIcon(onTap: onScreenTap),
-                    _TopToolBarIcon(
-                      onTap: onImagePickerTap,
-                      iconData: Icons.photo_camera_back_outlined,
-                    ),
-                    _TopToolBarIcon(onTap: onAddGiphyTap, iconData: Icons.gif),
-                    _TopToolBarIcon(
-                      onTap: onCreateStickerTap,
-                      iconData: Icons.cut,
-                    ),
+                    if (shouldShowTextButton)
+                      _TopToolBarIcon(onTap: onScreenTap),
+                    if (shouldShowImageButton)
+                      _TopToolBarIcon(
+                        onTap: onImagePickerTap,
+                        iconData: Icons.photo_camera_back_outlined,
+                      ),
+                    if (shouldShowGifButton)
+                      _TopToolBarIcon(
+                        onTap: onAddGiphyTap,
+                        iconData: Icons.gif,
+                      ),
+                    if (shouldShowStickerButton)
+                      _TopToolBarIcon(
+                        onTap: onCreateStickerTap,
+                        iconData: Icons.cut,
+                      ),
                   ],
                 ),
       ),

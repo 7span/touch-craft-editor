@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_design_editor/flutter_design_editor.dart';
 
@@ -15,8 +13,6 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  File? image;
-
   @override
   Widget build(BuildContext context) {
     return Center(child: FlutterDesignEditor());
