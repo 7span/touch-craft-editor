@@ -8,16 +8,11 @@ import 'package:flutter_design_editor/src/gif/image_view.dart';
 import 'grid.dart';
 
 /// What predefined grid should be used
-enum GridType {
-  /// Square grid with the specified gridMinColumns
-  squareFixedColumns,
-
-  /// Square grid with as many columns as fit
-  squareFixedWidth,
-
-  /// A stacked columns grid with at least gridMinColumns
-  stackedColumns,
-}
+///
+/// Square grid with the specified gridMinColumns
+/// Square grid with as many columns as fit
+/// A stacked columns grid with at least gridMinColumns
+enum GridType { squareFixedColumns, squareFixedWidth, stackedColumns }
 
 /// Contains the GIPHY UI components
 class GiphySheet extends StatefulWidget {
@@ -168,12 +163,6 @@ class _GiphySheetState extends State<GiphySheet> {
   }
 
   @override
-  void dispose() {
-    _searchController.dispose();
-    super.dispose();
-  }
-
-  @override
   void didChangeDependencies() {
     _loaderFuture = widget.client.request(_currentRequest);
     _inputDecoration =
@@ -316,6 +305,11 @@ class _GiphySheetState extends State<GiphySheet> {
     );
   }
 
+  /// Handles GIF selection logic.
+  ///
+  /// If [showPreview] is true, it displays a preview dialog and waits for user confirmation.
+  /// If a callback is provided via [onSelected], it gets invoked with the selected [gif].
+  /// Otherwise, the selected [gif] is returned via Navigator.pop.
   Future<void> _onSelected(GiphyGif gif) async {
     if (widget.showPreview) {
       final approved = await _showPreview(gif);
@@ -331,6 +325,11 @@ class _GiphySheetState extends State<GiphySheet> {
     }
   }
 
+  /// Builds a platform-adaptive search field.
+  ///
+  /// Returns a [CupertinoSearchFlowTextField] for iOS, and a
+  /// [DecoratedPlatformTextField] for other platforms.
+  /// Disables input when the selected [GiphyType] is [emoji].
   Widget _buildSearchField(BuildContext context) {
     if (PlatformInfo.isCupertino) {
       return CupertinoSearchFlowTextField(
@@ -350,6 +349,10 @@ class _GiphySheetState extends State<GiphySheet> {
     );
   }
 
+  /// Handles search submission.
+  ///
+  /// If [text] is empty, clears the search query.
+  /// Otherwise, triggers a new request with the updated search query.
   void _onSearchSubmitted(String text) {
     final request =
         text.isEmpty
@@ -358,6 +361,10 @@ class _GiphySheetState extends State<GiphySheet> {
     _reload(request);
   }
 
+  /// Reloads GIPHY results with a new [request].
+  ///
+  /// Updates [_currentRequest], caches it if [keepState] is true,
+  /// and refreshes the UI with new results.
   void _reload(GiphyRequest request) {
     _currentRequest = request;
     if (widget.keepState) {
@@ -368,6 +375,10 @@ class _GiphySheetState extends State<GiphySheet> {
     });
   }
 
+  /// Builds the toggle buttons for switching GIPHY types (GIFs, Stickers, Emoji).
+  ///
+  /// Highlights the currently selected [GiphyType] and reloads results
+  /// when a new type is selected.
   Widget _buildTypeSwitcher(BuildContext context) => Center(
     child: Padding(
       padding: const EdgeInsets.all(8.0),
@@ -395,6 +406,12 @@ class _GiphySheetState extends State<GiphySheet> {
     ),
   );
 
+  /// Displays a preview dialog for the selected [GiphyGif].
+  ///
+  /// Shows the GIF with optional username attribution.
+  /// Returns `true` if approved, `false` if rejected, or `null` if dismissed.
+  /// Taps on username trigger a new search.
+  /// Platform-adaptive (Material/Cupertino).
   Future<bool?> _showPreview(GiphyGif gif) {
     final titleWidget = Text(gif.title);
     final username = gif.username;
@@ -488,77 +505,10 @@ class _GiphySheetState extends State<GiphySheet> {
         return widget.headerEmojiText ?? 'Emoji';
     }
   }
-}
 
-/// Provides the data for a transparent image
-class TransparentImage {
-  TransparentImage._();
-
-  /// Contains the binary data of the transparent image
-  static final Uint8List data = Uint8List.fromList([
-    0x89,
-    0x50,
-    0x4E,
-    0x47,
-    0x0D,
-    0x0A,
-    0x1A,
-    0x0A,
-    0x00,
-    0x00,
-    0x00,
-    0x0D,
-    0x49,
-    0x48,
-    0x44,
-    0x52,
-    0x00,
-    0x00,
-    0x00,
-    0x01,
-    0x00,
-    0x00,
-    0x00,
-    0x01,
-    0x08,
-    0x06,
-    0x00,
-    0x00,
-    0x00,
-    0x1F,
-    0x15,
-    0xC4,
-    0x89,
-    0x00,
-    0x00,
-    0x00,
-    0x0A,
-    0x49,
-    0x44,
-    0x41,
-    0x54,
-    0x78,
-    0x9C,
-    0x63,
-    0x00,
-    0x01,
-    0x00,
-    0x00,
-    0x05,
-    0x00,
-    0x01,
-    0x0D,
-    0x0A,
-    0x2D,
-    0xB4,
-    0x00,
-    0x00,
-    0x00,
-    0x00,
-    0x49,
-    0x45,
-    0x4E,
-    0x44,
-    0xAE,
-  ]);
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
 }

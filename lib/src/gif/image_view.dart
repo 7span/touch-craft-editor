@@ -1,6 +1,6 @@
 import 'package:enough_giphy/enough_giphy.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_design_editor/src/gif/sheet.dart';
+import 'package:flutter_design_editor/src/gif/transparent_image.dart';
 
 /// Displays a single GIPHY image
 class GiphyImageView extends StatelessWidget {
