@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_design_editor/src/constants/font_styles.dart';
 import 'package:flutter_design_editor/src/extensions/context_extension.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -32,6 +31,8 @@ class TextFieldWidget extends StatelessWidget {
 
   final List<List<Color>> backgroundColorList;
 
+  final List<String> fontFamilyList;
+
   /// Creates an instance of the widget.
   ///
   /// All parameters are required and must not be null.
@@ -45,6 +46,7 @@ class TextFieldWidget extends StatelessWidget {
     required this.textColor,
     required this.backgroundColorIndex,
     required this.backgroundColorList,
+    required this.fontFamilyList,
   });
 
   /// Describes the part of the user interface represented by this widget.
@@ -78,7 +80,7 @@ class TextFieldWidget extends StatelessWidget {
                   controller: controller,
                   textAlign: TextAlign.center,
                   style: GoogleFonts.getFont(
-                    googleFontFamilyList[fontFamilyIndex],
+                    fontFamilyList[fontFamilyIndex],
                   ).copyWith(color: textColor, fontSize: fontSize),
                   cursorColor: textColor,
                   minLines: 1,

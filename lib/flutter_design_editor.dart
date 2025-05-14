@@ -7,6 +7,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_design_editor/src/components/cutout_image_overlay_widget.dart';
 import 'package:flutter_design_editor/src/components/image_crop_view.dart';
 import 'package:flutter_design_editor/src/components/sticker_dialogue.dart';
+import 'package:flutter_design_editor/src/constants/font_styles.dart';
 import 'package:flutter_design_editor/src/constants/giphy_keys.dart';
 import 'package:flutter_design_editor/src/gif/enough_giphy_flutter.dart';
 import 'package:image_picker/image_picker.dart';
@@ -34,6 +35,7 @@ class FlutterDesignEditor extends StatefulWidget {
     this.animationsDuration = const Duration(milliseconds: 300),
     this.doneButtonChild,
     this.backgroundGradientColorList = gradientColors,
+    this.fontFamilyList = googleFontFamilyList,
   });
 
   final Duration animationsDuration;
@@ -42,6 +44,10 @@ class FlutterDesignEditor extends StatefulWidget {
   // Provide custom gradient color list
   // backgroundGradientColorList : [  [Color(0xFF1488CC), Color(0xFF2B32B2)],[Color(0xFFec008c), Color(0xFFfc6767)],];
   final List<List<Color>> backgroundGradientColorList;
+
+  // Provide custom GoogleFonts family list for font-style.
+  // fontFamilyList : [ 'Lato', 'Montserrat', 'Lobster'];
+  final List<String> fontFamilyList;
 
   @override
   State<FlutterDesignEditor> createState() => _FlutterDesignEditorState();
@@ -200,6 +206,7 @@ class _FlutterDesignEditorState extends State<FlutterDesignEditor> {
                                   editableItem: editableItem,
                                   backgroundColorList:
                                       widget.backgroundGradientColorList,
+                                  fontFamilyList: widget.fontFamilyList,
                                   onItemTap: () {
                                     _onOverlayItemTap(editableItem);
                                   },
@@ -244,6 +251,7 @@ class _FlutterDesignEditorState extends State<FlutterDesignEditor> {
                                           fontSize: _selectedFontSize,
                                           fontFamilyIndex: _selectedFontFamily,
                                           textColor: _selectedTextColor,
+                                          fontFamilyList: widget.fontFamilyList,
                                           backgroundColorIndex:
                                               _selectedTextBackgroundGradient,
                                           backgroundColorList:
@@ -287,6 +295,7 @@ class _FlutterDesignEditorState extends State<FlutterDesignEditor> {
                   animationsDuration: widget.animationsDuration,
                   pageController: _familyPageController,
                   selectedFamilyIndex: _selectedFontFamily,
+                  fontFamilyList: widget.fontFamilyList,
                   onPageChanged: _onFamilyChange,
                   onTap: (index) {
                     _onStyleChange(index);

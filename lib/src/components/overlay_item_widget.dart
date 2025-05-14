@@ -1,6 +1,5 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:flutter_design_editor/src/constants/font_styles.dart';
 import 'package:flutter_design_editor/src/constants/item_type.dart';
 import 'package:flutter_design_editor/src/gif/image_view.dart';
 import 'package:flutter_design_editor/src/extensions/context_extension.dart';
@@ -30,6 +29,8 @@ class OverlayItemWidget extends StatelessWidget {
 
   final List<List<Color>> backgroundColorList;
 
+  final List<String> fontFamilyList;
+
   /// Creates an instance of the widget.
   ///
   /// The editableItem and onItemTap parameters are required and must not be null.
@@ -39,6 +40,7 @@ class OverlayItemWidget extends StatelessWidget {
     required this.editableItem,
     required this.onItemTap,
     required this.backgroundColorList,
+    required this.fontFamilyList,
     this.onPointerDown,
     this.onPointerUp,
     this.onPointerMove,
@@ -70,7 +72,7 @@ class OverlayItemWidget extends StatelessWidget {
                   editableItem.value,
                   textAlign: TextAlign.center,
                   style: GoogleFonts.getFont(
-                    googleFontFamilyList[editableItem.fontFamily],
+                    fontFamilyList[editableItem.fontFamily],
                   ).copyWith(
                     color: editableItem.color,
                     fontSize: editableItem.fontSize,
