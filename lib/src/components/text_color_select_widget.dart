@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_design_editor/src/constants/font_colors.dart';
 import 'package:flutter_design_editor/src/extensions/context_extension.dart';
 
 /// A widget for selecting a text color.
@@ -24,6 +23,8 @@ class TextColorSelectWidget extends StatelessWidget {
   /// A callback function that is called when an item is tapped.
   final Function(int index) onTap;
 
+  final List<Color> fontColorList;
+
   /// Creates an instance of the widget.
   ///
   /// All parameters are required and must not be null.
@@ -34,6 +35,7 @@ class TextColorSelectWidget extends StatelessWidget {
     required this.selectedTextColor,
     required this.onPageChanged,
     required this.onTap,
+    required this.fontColorList,
   });
 
   /// Describes the part of the user interface represented by this widget.
@@ -52,7 +54,7 @@ class TextColorSelectWidget extends StatelessWidget {
         alignment: Alignment.center,
         child: PageView.builder(
           controller: pageController,
-          itemCount: defaultColors.length,
+          itemCount: fontColorList.length,
           onPageChanged: onPageChanged,
           physics: const BouncingScrollPhysics(),
           allowImplicitScrolling: true,
@@ -67,7 +69,7 @@ class TextColorSelectWidget extends StatelessWidget {
                 width: 28,
                 margin: const EdgeInsets.only(right: 8),
                 decoration: BoxDecoration(
-                  color: defaultColors[index],
+                  color: fontColorList[index],
                   borderRadius: const BorderRadius.all(Radius.circular(20)),
                   border: Border.all(color: Colors.white),
                 ),
@@ -75,7 +77,7 @@ class TextColorSelectWidget extends StatelessWidget {
                   child: AnimatedSwitcher(
                     duration: animationsDuration,
                     child:
-                        defaultColors[index] == selectedTextColor
+                        fontColorList[index] == selectedTextColor
                             ? Icon(
                               CupertinoIcons.checkmark_alt,
                               color:

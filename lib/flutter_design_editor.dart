@@ -36,6 +36,7 @@ class FlutterDesignEditor extends StatefulWidget {
     this.doneButtonChild,
     this.backgroundGradientColorList = gradientColors,
     this.fontFamilyList = googleFontFamilyList,
+    this.fontColorList = defaultColors,
   });
 
   final Duration animationsDuration;
@@ -48,6 +49,10 @@ class FlutterDesignEditor extends StatefulWidget {
   // Provide custom GoogleFonts family list for font-style.
   // fontFamilyList : [ 'Lato', 'Montserrat', 'Lobster'];
   final List<String> fontFamilyList;
+
+  // Provide custom color list for font colors
+  // fontColorList : [ Colors.white, Colors.black, Colors.red];
+  final List<Color> fontColorList;
 
   @override
   State<FlutterDesignEditor> createState() => _FlutterDesignEditorState();
@@ -307,6 +312,7 @@ class _FlutterDesignEditorState extends State<FlutterDesignEditor> {
                   pageController: _textColorsPageController,
                   selectedTextColor: _selectedTextColor,
                   onPageChanged: _onTextColorChange,
+                  fontColorList: widget.fontColorList,
                   onTap: (index) {
                     _onColorChange(index);
                   },
@@ -454,11 +460,11 @@ class _FlutterDesignEditorState extends State<FlutterDesignEditor> {
   ///
   /// This method is called when the user selects a new text color from the color picker.
   /// It updates the [_selectedTextColor] with the new color.
-  /// The [index] parameter is the index of the selected color in the [defaultColors] list.
+  /// The [index] parameter is the index of the selected color in the provided fontColorList list.
   void _onTextColorChange(index) {
     HapticFeedback.lightImpact();
     setState(() {
-      _selectedTextColor = defaultColors[index];
+      _selectedTextColor = widget.fontColorList[index];
     });
   }
 
@@ -564,7 +570,7 @@ class _FlutterDesignEditorState extends State<FlutterDesignEditor> {
       viewportFraction: .125,
     );
     _textColorsPageController = PageController(
-      initialPage: defaultColors.indexWhere(
+      initialPage: widget.fontColorList.indexWhere(
         (element) => element == _selectedTextColor,
       ),
       viewportFraction: .1,
@@ -639,11 +645,11 @@ class _FlutterDesignEditorState extends State<FlutterDesignEditor> {
   ///
   /// This method is called when the user selects a new text color from the color picker.
   /// It updates the [_selectedTextColor] with the new color and jumps the [_textColorsPageController] to the selected page.
-  /// The [index] parameter is the index of the selected color in the [defaultColors] list.
+  /// The [index] parameter is the index of the selected color in the  provided fontColorList list.
   void _onColorChange(int index) {
     HapticFeedback.lightImpact();
     setState(() {
-      _selectedTextColor = defaultColors[index];
+      _selectedTextColor = widget.fontColorList[index];
     });
     _textColorsPageController.jumpToPage(index);
   }
@@ -677,7 +683,9 @@ class _FlutterDesignEditorState extends State<FlutterDesignEditor> {
         viewportFraction: .1,
       );
       _textColorsPageController = PageController(
-        initialPage: defaultColors.indexWhere((element) => element == e.color),
+        initialPage: widget.fontColorList.indexWhere(
+          (element) => element == e.color,
+        ),
         viewportFraction: .1,
       );
     }
