@@ -9,15 +9,6 @@ import 'package:flutter_design_editor/src/extensions/context_extension.dart';
 /// It is a stateless widget that takes several parameters to control its behavior and appearance.
 /// It uses an ElevatedButton to display a done button, and the user can interact with it by tapping on it.
 class FooterToolsWidget extends StatelessWidget {
-  /// A callback function that is called when the done button is pressed.
-  final AsyncCallback onDone;
-
-  /// The child widget of the done button.
-  final Widget? doneButtonChild;
-
-  /// Indicates whether the widget is in loading state.
-  final bool isLoading;
-
   /// Creates an instance of the widget.
   ///
   /// The onDone parameter is required and must not be null.
@@ -28,6 +19,15 @@ class FooterToolsWidget extends StatelessWidget {
     this.doneButtonChild,
     this.isLoading = false,
   });
+
+  /// A callback function that is called when the done button is pressed.
+  final AsyncCallback onDone;
+
+  /// The child widget of the done button.
+  final Widget? doneButtonChild;
+
+  /// Indicates whether the widget is in loading state.
+  final bool isLoading;
 
   /// Describes the part of the user interface represented by this widget.
   ///

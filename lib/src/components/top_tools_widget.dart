@@ -34,23 +34,28 @@ class TopToolsWidget extends StatelessWidget {
   /// A callback function that is called when the text background is changed.
   final VoidCallback onChangeTextBackground;
 
-  /// To select image from gallery
+  /// To select image from gallery.
   final VoidCallback onImagePickerTap;
 
   /// A callback function that is called when the crop button is tapped.
   final VoidCallback onCropTap;
 
-  /// A callback function that is called when the add Giphy button is tapped
+  /// A callback function that is called when the Add-Giphy button is tapped.
   final VoidCallback onAddGiphyTap;
 
+  /// A callback function that is called when the user taps on sticker button.
   final VoidCallback onCreateStickerTap;
 
+  // Current ItemType that is getting edditing.
   final ItemType? currentlyEditingItemType;
 
+  // A callback function that is called when the user taps on blank screen to close overlay.
   final VoidCallback onCloseStickerOverlay;
 
+  // list of background gradient colors.
   final List<List<Color>> backgroundColorList;
 
+  // These variables are used to hide and show buttons for Design Editor features.
   final bool shouldShowGifButton;
   final bool shouldShowImageButton;
   final bool shouldShowTextButton;

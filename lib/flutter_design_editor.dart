@@ -29,6 +29,10 @@ import 'src/constants/item_type.dart';
 import 'src/extensions/context_extension.dart';
 import 'src/models/editable_items.dart';
 
+/// A customizable Flutter-based design editor widget.
+///
+/// Provides options to enable/disable features like text, sticker, image, gif, and background gradient editing.
+/// Includes customization for fonts, colors, and animation behavior.
 class FlutterDesignEditor extends StatefulWidget {
   const FlutterDesignEditor({
     super.key,
@@ -44,7 +48,10 @@ class FlutterDesignEditor extends StatefulWidget {
     this.enableImageEditor = true,
   });
 
+  /// The duration for all animated transitions within the widget.
   final Duration animationsDuration;
+
+  /// The widget to display as the "Done" button.
   final Widget? doneButtonChild;
 
   // This parameters is used to enable text editor
@@ -168,7 +175,6 @@ class _FlutterDesignEditorState extends State<FlutterDesignEditor> {
   @override
   void initState() {
     super.initState();
-
     _init();
   }
 
@@ -410,6 +416,11 @@ class _FlutterDesignEditorState extends State<FlutterDesignEditor> {
     );
   }
 
+  /// Handles the image picker tap action.
+  ///
+  /// Handles image picker tap, requests permissions, and adds selected image to stack data.
+  /// Opens gallery for image selection; if an image is picked, it's added as an editable item.
+  /// Calls setState to update UI after adding the image.
   Future<void> _onImagepickerTap() async {
     await [Permission.photos, Permission.storage].request();
     final picker = ImagePicker();
@@ -603,6 +614,10 @@ class _FlutterDesignEditorState extends State<FlutterDesignEditor> {
     );
   }
 
+  /// Shows the text editor view if enabled.
+  ///
+  /// Sets the item type to text for adding or editing.
+  /// Calls setState to update the UI with the selected item type.
   void _showTextView() {
     if (!widget.enableTextEditor) {
       return;
@@ -765,7 +780,10 @@ class _FlutterDesignEditorState extends State<FlutterDesignEditor> {
   /// The [e] parameter is the [EditableItem] on which the pointer is moving.
   /// The [details] parameter contains the details of the pointer move gesture.
   void _onOverlayItemPointerMove(EditableItem e, PointerMoveEvent details) {
-    if (e.position.dy >= 0.65 && e.position.dx >= 0.0 && e.position.dx <= 1.0) {
+    final dyValue = e.type == ItemType.text ? 0.65 : 0.30;
+    if (e.position.dy >= dyValue &&
+        e.position.dx >= 0.0 &&
+        e.position.dx <= 1.0) {
       setState(() {
         _isDeletePosition = true;
       });
@@ -776,6 +794,11 @@ class _FlutterDesignEditorState extends State<FlutterDesignEditor> {
     }
   }
 
+  /// Crops the image and updates the image in stack.
+  ///
+  /// First fetces the image information from [_cropController] and convert it to File type.
+  /// updates the [_activeItem] image path value.
+  /// Closes the overlay by calling [_onScreenTap].
   Future<void> _onCropImagetap() async {
     final bitmap = await _cropController.croppedBitmap();
     final data = await bitmap.toByteData(format: ImageByteFormat.png);
@@ -791,6 +814,11 @@ class _FlutterDesignEditorState extends State<FlutterDesignEditor> {
     });
   }
 
+  /// Opens Giphy to select a gif and adds it to the stack.
+  ///
+  /// Fetches a gif using the Giphy API through [Giphy.getGif]
+  /// if a gif is selected, it's added as an editable item to the stack data.
+  /// Updates the state to reflect the new gif addition.
   void _onAddGifTap() async {
     final gif = await Giphy.getGif(context: context, apiKey: giphyApiKey);
     if (gif != null) {
@@ -804,6 +832,11 @@ class _FlutterDesignEditorState extends State<FlutterDesignEditor> {
     }
   }
 
+  /// Opens a dialog to create a sticker and allows image selection from gallery.
+  ///
+  /// Displays a dialog with options to cancel or open the gallery. If the gallery is opened,
+  /// requests permissions, selects an image, and sets it as the current sticker path.
+  /// Updates the state to reflect the selected sticker image.
   void _onCreateStickerTap() async {
     showDialog(
       context: context,

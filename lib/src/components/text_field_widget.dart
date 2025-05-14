@@ -8,6 +8,22 @@ import 'package:google_fonts/google_fonts.dart';
 /// It is a stateless widget that takes several parameters to control its behavior and appearance.
 /// It uses a TextField widget to display the text field, and the user can interact with it by typing into it.
 class TextFieldWidget extends StatelessWidget {
+  /// Creates an instance of the widget.
+  ///
+  /// All parameters are required and must not be null.
+  const TextFieldWidget({
+    super.key,
+    required this.controller,
+    required this.onChanged,
+    required this.onSubmit,
+    required this.fontSize,
+    required this.fontFamilyIndex,
+    required this.textColor,
+    required this.backgroundColorIndex,
+    required this.backgroundColorList,
+    required this.fontFamilyList,
+  });
+
   /// The controller for the TextField.
   final TextEditingController controller;
 
@@ -29,25 +45,11 @@ class TextFieldWidget extends StatelessWidget {
   /// The index of the background color to be used in the text field.
   final int backgroundColorIndex;
 
+  /// The list of colors for background gradient.
   final List<List<Color>> backgroundColorList;
 
+  /// The list of google fontfamily names for fontstyle.
   final List<String> fontFamilyList;
-
-  /// Creates an instance of the widget.
-  ///
-  /// All parameters are required and must not be null.
-  const TextFieldWidget({
-    super.key,
-    required this.controller,
-    required this.onChanged,
-    required this.onSubmit,
-    required this.fontSize,
-    required this.fontFamilyIndex,
-    required this.textColor,
-    required this.backgroundColorIndex,
-    required this.backgroundColorList,
-    required this.fontFamilyList,
-  });
 
   /// Describes the part of the user interface represented by this widget.
   ///

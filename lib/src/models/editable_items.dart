@@ -53,5 +53,8 @@ class EditableItem {
   /// This is an integer value that represents the index of the font family in a predefined list of font families.
   int fontFamily = 0;
 
+  /// The giphyImage for GIF.
+  ///
+  /// This is an GiphyGif value that represents the GIF value.
   GiphyGif? giphyImage;
 }

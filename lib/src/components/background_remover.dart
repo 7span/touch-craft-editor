@@ -2,11 +2,20 @@ import 'dart:io';
 import 'package:image/image.dart' as img;
 import 'package:tflite_flutter/tflite_flutter.dart';
 
+/// A utility class to remove background from an image using DeepLabV3 model.
+///
+/// Loads and runs a TensorFlow Lite model to segment the subject
+/// and apply transparency to the background.
 class BackgroundRemover {
+  /// Interpreter for the TFLite DeepLabV3 model.
   final Interpreter _interpreter;
 
+  /// Private constructor.
   BackgroundRemover._(this._interpreter);
 
+  /// Loads the TFLite model from assets.
+  ///
+  /// Returns an instance of [BackgroundRemover] with loaded interpreter.
   static Future<BackgroundRemover> loadModel() async {
     final interpreter = await Interpreter.fromAsset(
       'assets/models/deeplabv3_257_mv_gpu.tflite',
@@ -14,14 +23,17 @@ class BackgroundRemover {
     return BackgroundRemover._(interpreter);
   }
 
+  /// Removes background from the provided [imageFile].
+  ///
+  /// Returns a transparent [img.Image] with only the subject visible.
   Future<img.Image> removeBackground(File imageFile) async {
     final bytes = await imageFile.readAsBytes();
     img.Image original = img.decodeImage(bytes)!;
 
-    // Resize to model input size (257x257)
+    // Resize input image to model's expected size (257x257)
     img.Image inputImage = img.copyResize(original, width: 257, height: 257);
 
-    // Create input tensor: [1, 257, 257, 3]
+    // Create input tensor of shape [1, 257, 257, 3] with normalized RGB values
     final input = List.generate(
       1,
       (_) => List.generate(
@@ -37,7 +49,7 @@ class BackgroundRemover {
       ),
     );
 
-    // Prepare output: [1, 257, 257, 21]
+    // Output tensor shape: [1, 257, 257, 21] — 21 classes
     final output = List.generate(
       1,
       (_) => List.generate(
@@ -46,9 +58,10 @@ class BackgroundRemover {
       ),
     );
 
+    // Run model inference
     _interpreter.run(input, output);
 
-    // First get the argmax class for each pixel
+    // Generate class map with highest scoring label (argmax) per pixel
     final classMap = List.generate(257, (y) {
       return List.generate(257, (x) {
         final scores = output[0][y][x];
@@ -66,7 +79,7 @@ class BackgroundRemover {
       });
     });
 
-    // Check if class 15 is being detected at all
+    // Check if class 15 (person) is detected
     bool hasPersonClass = false;
     for (int y = 0; y < 257 && !hasPersonClass; y++) {
       for (int x = 0; x < 257 && !hasPersonClass; x++) {
@@ -77,33 +90,29 @@ class BackgroundRemover {
       }
     }
 
-    // If no person class detected, try a different class index
-    // DeepLabV3 models often use class 0 for background and 15 for person,
-    // but other models might use different indices
-    final personClassIndex =
-        hasPersonClass ? 15 : 1; // Try class 1 if 15 isn't found
+    // Fallback to class 1 if class 15 not found
+    final personClassIndex = hasPersonClass ? 15 : 1;
 
-    // Create output image with transparent background
+    // Initialize final output image with alpha channel
     img.Image result = img.Image(
       width: original.width,
       height: original.height,
-      numChannels: 4, // RGBA (with alpha channel for transparency)
+      numChannels: 4,
     );
 
-    // Create binary mask with slightly improved edges
+    // Generate soft-edged binary mask and apply transparency
     for (int y = 0; y < result.height; y++) {
       for (int x = 0; x < result.width; x++) {
-        // Map the coordinates from original image to mask
+        // Map pixel coordinates to mask dimensions
         int mx = (x * 257 / result.width).floor();
         int my = (y * 257 / result.height).floor();
         mx = mx.clamp(0, 256);
         my = my.clamp(0, 256);
 
-        // Count neighboring pixels to smooth edges a bit
+        // Count neighboring person pixels for edge smoothing
         int personPixelsCount = 0;
         int totalChecked = 0;
 
-        // Check a small window around the pixel for edge smoothing
         for (int offsetY = -1; offsetY <= 1; offsetY++) {
           for (int offsetX = -1; offsetX <= 1; offsetX++) {
             int checkX = mx + offsetX;
@@ -120,15 +129,15 @@ class BackgroundRemover {
 
         final origPixel = original.getPixel(x, y);
 
-        // Use a ratio for soft edges
+        // Calculate alpha value based on neighborhood match ratio
         double ratio = personPixelsCount / totalChecked;
         int alpha = (ratio * 255).round().clamp(0, 255);
 
-        // Apply a threshold to keep definite foreground fully opaque
+        // Apply thresholds for hard mask edges
         if (ratio > 0.6) alpha = 255;
         if (ratio < 0.2) alpha = 0;
 
-        // Apply the alpha
+        // Write pixel with computed alpha
         if (classMap[my][mx] == personClassIndex || alpha > 10) {
           result.setPixelRgba(
             x,

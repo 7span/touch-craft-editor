@@ -12,6 +12,21 @@ import 'package:google_fonts/google_fonts.dart';
 /// It is a stateless widget that takes several parameters to control its behavior and appearance.
 /// It uses a Positioned widget to display the overlay item, and the user can interact with it by tapping on it.
 class OverlayItemWidget extends StatelessWidget {
+  /// Creates an instance of the widget.
+  ///
+  /// The editableItem and onItemTap parameters are required and must not be null.
+  /// The onPointerDown, onPointerUp, and onPointerMove parameters are optional.
+  const OverlayItemWidget({
+    super.key,
+    required this.editableItem,
+    required this.onItemTap,
+    required this.backgroundColorList,
+    required this.fontFamilyList,
+    this.onPointerDown,
+    this.onPointerUp,
+    this.onPointerMove,
+  });
+
   /// The editable item to be displayed.
   final EditableItem editableItem;
 
@@ -27,24 +42,11 @@ class OverlayItemWidget extends StatelessWidget {
   /// A callback function that is called when a pointer has moved from one location on the screen to another.
   final Function(PointerMoveEvent)? onPointerMove;
 
+  /// The list of colors for background gradient.
   final List<List<Color>> backgroundColorList;
 
+  /// The list of google fontfamily names for fontstyle.
   final List<String> fontFamilyList;
-
-  /// Creates an instance of the widget.
-  ///
-  /// The editableItem and onItemTap parameters are required and must not be null.
-  /// The onPointerDown, onPointerUp, and onPointerMove parameters are optional.
-  const OverlayItemWidget({
-    super.key,
-    required this.editableItem,
-    required this.onItemTap,
-    required this.backgroundColorList,
-    required this.fontFamilyList,
-    this.onPointerDown,
-    this.onPointerUp,
-    this.onPointerMove,
-  });
 
   /// Describes the part of the user interface represented by this widget.
   ///

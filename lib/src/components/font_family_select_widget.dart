@@ -8,6 +8,19 @@ import 'package:google_fonts/google_fonts.dart';
 /// It is a stateless widget that takes several parameters to control its behavior and appearance.
 /// It uses a PageView.builder to display a list of available font families, and the user can select one by tapping on it.
 class FontFamilySelectWidget extends StatelessWidget {
+  /// Creates an instance of the widget.
+  ///
+  /// All parameters are required and must not be null.
+  const FontFamilySelectWidget({
+    super.key,
+    required this.animationsDuration,
+    required this.pageController,
+    required this.selectedFamilyIndex,
+    required this.onPageChanged,
+    required this.onTap,
+    required this.fontFamilyList,
+  });
+
   /// The duration of animations within the widget.
   final Duration animationsDuration;
 
@@ -24,19 +37,6 @@ class FontFamilySelectWidget extends StatelessWidget {
   final Function(int index) onTap;
 
   final List<String> fontFamilyList;
-
-  /// Creates an instance of the widget.
-  ///
-  /// All parameters are required and must not be null.
-  const FontFamilySelectWidget({
-    super.key,
-    required this.animationsDuration,
-    required this.pageController,
-    required this.selectedFamilyIndex,
-    required this.onPageChanged,
-    required this.onTap,
-    required this.fontFamilyList,
-  });
 
   /// Describes the part of the user interface represented by this widget.
   ///

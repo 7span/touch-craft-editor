@@ -7,6 +7,9 @@ import 'package:flutter_design_editor/src/extensions/context_extension.dart';
 import 'package:image/image.dart' as img;
 import 'package:path_provider/path_provider.dart';
 
+/// A widget that overlays the screen to preview and create a cutout sticker.
+///
+/// It removes the background from a selected image and allows users to confirm and create the sticker.
 class CutoutImageOverlayWidget extends StatefulWidget {
   const CutoutImageOverlayWidget({
     super.key,
@@ -23,7 +26,10 @@ class CutoutImageOverlayWidget extends StatefulWidget {
 }
 
 class _CutoutImageOverlayWidgetState extends State<CutoutImageOverlayWidget> {
+  /// Indicates if the background removal process is running.
   bool isLoading = false;
+
+  /// Holds the generated sticker image file after background removal.
   File? stickerImage;
 
   @override
@@ -32,6 +38,7 @@ class _CutoutImageOverlayWidgetState extends State<CutoutImageOverlayWidget> {
     _removeBackground(widget.imagePath);
   }
 
+  /// Handles background removal using ML model and saves result as a PNG.
   Future<void> _removeBackground(String imagePath) async {
     try {
       setState(() {
@@ -56,12 +63,16 @@ class _CutoutImageOverlayWidgetState extends State<CutoutImageOverlayWidget> {
     }
   }
 
+  /// Saves the cropped image bytes as a file in the temporary directory.
   Future<File> _saveUint8ListToFile(Uint8List bytes, String filename) async {
     final directory = await getTemporaryDirectory();
     final file = File('${directory.path}/$filename');
     return await file.writeAsBytes(bytes);
   }
 
+  /// Describes the part of the user interface represented by this widget.
+  ///
+  /// Builds the UI with a loading state and preview of generated sticker.
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -78,19 +89,15 @@ class _CutoutImageOverlayWidgetState extends State<CutoutImageOverlayWidget> {
             spacing: 24,
             children: [
               if (isLoading)
-                Stack(
-                  children: [
-                    SizedBox(
-                      width: context.width * 0.8,
-                      height: context.height * 0.4,
-                      child: Stack(
-                        children: [
-                          Center(child: Image.file(File(widget.imagePath))),
-                          Center(child: CircularProgressIndicator()),
-                        ],
-                      ),
-                    ),
-                  ],
+                SizedBox(
+                  width: context.width * 0.8,
+                  height: context.height * 0.4,
+                  child: Stack(
+                    children: [
+                      Center(child: Image.file(File(widget.imagePath))),
+                      Center(child: CircularProgressIndicator()),
+                    ],
+                  ),
                 ),
               if (stickerImage != null && !isLoading)
                 SizedBox(
@@ -107,6 +114,7 @@ class _CutoutImageOverlayWidgetState extends State<CutoutImageOverlayWidget> {
   }
 }
 
+/// A reusable button-style container used in the overlay.
 class _ButtonConatainer extends StatelessWidget {
   const _ButtonConatainer({required this.label});
 

@@ -38,6 +38,7 @@ class BackgroundGradientSelectorWidget extends StatelessWidget {
   bool get isVisible =>
       isBackgroundColorPickerSelected && !isTextInput && !inAction;
 
+  /// The list of colors for background gradients.
   final List<List<Color>> backgroundColorList;
 
   /// Creates an instance of the widget.

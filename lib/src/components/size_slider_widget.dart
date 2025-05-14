@@ -8,15 +8,6 @@ import '../extensions/context_extension.dart';
 /// It is a stateless widget that takes several parameters to control its behavior and appearance.
 /// It uses a Slider widget to display the size control, and the user can interact with it by sliding it.
 class SizeSliderWidget extends StatelessWidget {
-  /// The duration of animations within the widget.
-  final Duration animationsDuration;
-
-  /// The currently selected value of the slider.
-  final double selectedValue;
-
-  /// A callback function that is called when the slider value changes.
-  final Function(double value) onChanged;
-
   /// Creates an instance of the widget.
   ///
   /// The animationsDuration, onChanged, and selectedValue parameters are required and must not be null.
@@ -26,6 +17,15 @@ class SizeSliderWidget extends StatelessWidget {
     required this.onChanged,
     required this.selectedValue,
   });
+
+  /// The duration of animations within the widget.
+  final Duration animationsDuration;
+
+  /// The currently selected value of the slider.
+  final double selectedValue;
+
+  /// A callback function that is called when the slider value changes.
+  final Function(double value) onChanged;
 
   /// Describes the part of the user interface represented by this widget.
   ///
