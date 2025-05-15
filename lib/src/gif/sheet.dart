@@ -321,6 +321,7 @@ class _GiphySheetState extends State<GiphySheet> {
     if (callback != null) {
       callback(gif);
     } else {
+      if (!mounted) return;
       Navigator.of(context).pop(gif);
     }
   }

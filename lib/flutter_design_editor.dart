@@ -872,7 +872,9 @@ class _FlutterDesignEditorState extends State<FlutterDesignEditor> {
               final pickedFile = await picker.pickImage(
                 source: ImageSource.gallery,
               );
-              await Navigator.maybePop(context);
+              if (context.mounted) {
+                await Navigator.maybePop(context);
+              }
               if (pickedFile != null) {
                 setState(() {
                   _currentlyEditingItemType = ItemType.sticker;
