@@ -18,6 +18,7 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return Center(
       child: FlutterDesignEditor(
+        imageFormatType: ImageFormatType.jpg,
         onDesignReady: (
           designFile,
           backgroundGradientColorList,

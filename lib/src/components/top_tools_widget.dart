@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_design_editor/src/constants/item_type.dart';
+import 'package:flutter_design_editor/src/constants/enums.dart';
 import 'package:flutter_design_editor/src/extensions/context_extension.dart';
 import 'package:flutter_design_editor/src/models/canvas_element.dart';
 import 'package:google_fonts/google_fonts.dart';

@@ -12,6 +12,7 @@ import 'package:flutter_design_editor/src/components/sticker_dialogue.dart';
 import 'package:flutter_design_editor/src/constants/font_styles.dart';
 import 'package:flutter_design_editor/src/constants/giphy_keys.dart';
 import 'package:flutter_design_editor/src/gif/enough_giphy_flutter.dart';
+import 'package:image/image.dart' as img;
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -28,11 +29,12 @@ import 'src/components/text_field_widget.dart';
 import 'src/components/top_tools_widget.dart';
 import 'src/constants/font_colors.dart';
 import 'src/constants/gradients.dart';
-import 'src/constants/item_type.dart';
+import 'src/constants/enums.dart';
 import 'src/extensions/context_extension.dart';
 import 'src/models/canvas_element.dart';
 
 export 'src/models/canvas_element.dart';
+export 'src/constants/enums.dart';
 
 /// A customizable Flutter-based design editor widget.
 ///
@@ -52,6 +54,7 @@ class FlutterDesignEditor extends StatefulWidget {
     this.enableBackgroundGradientEditor = true,
     this.enableGifEditor = true,
     this.enableImageEditor = true,
+    this.imageFormatType = ImageFormatType.png,
   });
 
   /// The duration for all animated transitions within the widget.
@@ -86,6 +89,8 @@ class FlutterDesignEditor extends StatefulWidget {
   // Provide custom color list for font colors
   // fontColorList : [ Colors.white, Colors.black, Colors.red];
   final List<Color> fontColorList;
+
+  final ImageFormatType imageFormatType;
 
   // Called when design export is complete
   // Returns image file or GIF as per design
@@ -795,7 +800,7 @@ class _FlutterDesignEditorState extends State<FlutterDesignEditor> {
   /// The [e] parameter is the [CanvasElement] on which the pointer is moving.
   /// The [details] parameter contains the details of the pointer move gesture.
   void _onOverlayItemPointerMove(CanvasElement e, PointerMoveEvent details) {
-    final dyValue = e.type == ItemType.text ? 0.65 : 0.30;
+    final dyValue = e.type == ItemType.text ? 0.75 : 0.30;
     if (e.position.dy >= dyValue &&
         e.position.dx >= 0.0 &&
         e.position.dx <= 1.0) {
@@ -899,7 +904,10 @@ class _FlutterDesignEditorState extends State<FlutterDesignEditor> {
       if (isGIFContained == true) {
         imageFile = await _saveGifToTemporaryDirectory();
       } else {
-        imageFile = await _saveImageToTemporaryDirectory();
+        //
+        imageFile = await _saveImageToTemporaryDirectory(
+          widget.imageFormatType,
+        );
       }
       _isLoading = false;
       setState(() {});
@@ -932,18 +940,33 @@ class _FlutterDesignEditorState extends State<FlutterDesignEditor> {
 
   /// Captures widget image from previewContainer
   ///
-  /// Converts to PNG bytes
+  /// Converts to PNG or JPG
   /// Saves image in documents directory with timestamp name
-  Future<File> _saveImageToTemporaryDirectory() async {
+  Future<File> _saveImageToTemporaryDirectory(ImageFormatType format) async {
     final boundary =
         previewContainer.currentContext!.findRenderObject()
             as RenderRepaintBoundary?;
     final image = await boundary!.toImage(pixelRatio: 3);
+
+    final byteData = await image.toByteData(format: ui.ImageByteFormat.png);
+    final pngBytes = byteData!.buffer.asUint8List();
+
     final directory = (await getApplicationDocumentsDirectory()).path;
-    final byteData = (await image.toByteData(format: ui.ImageByteFormat.png))!;
-    final pngBytes = byteData.buffer.asUint8List();
-    final imgFile = File('$directory/${DateTime.now()}.png');
-    return await imgFile.writeAsBytes(pngBytes);
+
+    if (format == ImageFormatType.jpg) {
+      // Convert PNG bytes to JPG using image package
+      final decodedImage = img.decodeImage(pngBytes);
+      final jpgBytes = img.encodeJpg(decodedImage!);
+      final file = File(
+        '$directory/${DateTime.now().millisecondsSinceEpoch}.jpg',
+      );
+      return await file.writeAsBytes(jpgBytes);
+    } else {
+      final file = File(
+        '$directory/${DateTime.now().millisecondsSinceEpoch}.png',
+      );
+      return await file.writeAsBytes(pngBytes);
+    }
   }
 
   /// Saves raw bytes as a local file in the app documents directory
