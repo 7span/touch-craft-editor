@@ -14,7 +14,7 @@ class RemoveWidget extends StatelessWidget {
   /// The activeItem parameter is optional.
   const RemoveWidget({
     super.key,
-    required EditableItem? activeItem,
+    required CanvasElement? activeItem,
     required shouldShowDeleteButton,
     required this.isDeletePosition,
     required this.animationsDuration,
@@ -22,7 +22,7 @@ class RemoveWidget extends StatelessWidget {
        _shouldShowDeleteButton = shouldShowDeleteButton;
 
   /// The active item that can be removed.
-  final EditableItem? _activeItem;
+  final CanvasElement? _activeItem;
 
   /// Indicates whether the widget is in delete position.
   final bool isDeletePosition;

@@ -14,11 +14,11 @@ import 'package:google_fonts/google_fonts.dart';
 class OverlayItemWidget extends StatelessWidget {
   /// Creates an instance of the widget.
   ///
-  /// The editableItem and onItemTap parameters are required and must not be null.
+  /// The canvasElement and onItemTap parameters are required and must not be null.
   /// The onPointerDown, onPointerUp, and onPointerMove parameters are optional.
   const OverlayItemWidget({
     super.key,
-    required this.editableItem,
+    required this.canvasElement,
     required this.onItemTap,
     required this.backgroundColorList,
     required this.fontFamilyList,
@@ -28,7 +28,7 @@ class OverlayItemWidget extends StatelessWidget {
   });
 
   /// The editable item to be displayed.
-  final EditableItem editableItem;
+  final CanvasElement canvasElement;
 
   /// A callback function that is called when the item is tapped.
   final VoidCallback onItemTap;
@@ -54,14 +54,14 @@ class OverlayItemWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     SingleChildRenderObjectWidget overlayWidget;
-    switch (editableItem.type) {
+    switch (canvasElement.type) {
       case ItemType.text:
         overlayWidget = Center(
           child: Container(
             padding: EdgeInsets.all(6),
             decoration: BoxDecoration(
               gradient: LinearGradient(
-                colors: backgroundColorList[editableItem.textStyle],
+                colors: backgroundColorList[canvasElement.textStyle],
                 begin: Alignment.centerLeft,
                 end: Alignment.centerRight,
               ),
@@ -71,13 +71,13 @@ class OverlayItemWidget extends StatelessWidget {
               child: GestureDetector(
                 onTap: onItemTap,
                 child: Text(
-                  editableItem.value,
+                  canvasElement.value,
                   textAlign: TextAlign.center,
                   style: GoogleFonts.getFont(
-                    fontFamilyList[editableItem.fontFamily],
+                    fontFamilyList[canvasElement.fontFamily],
                   ).copyWith(
-                    color: editableItem.color,
-                    fontSize: editableItem.fontSize,
+                    color: canvasElement.color,
+                    fontSize: canvasElement.fontSize,
                   ),
                 ),
               ),
@@ -90,30 +90,30 @@ class OverlayItemWidget extends StatelessWidget {
           height: context.height * 0.4,
           child: GestureDetector(
             onTap: onItemTap,
-            child: Image.file(File(editableItem.value)),
+            child: Image.file(File(canvasElement.value)),
           ),
         );
       case ItemType.sticker:
         overlayWidget = SizedBox(
           width: context.width * 0.8,
           height: context.height * 0.4,
-          child: Image.file(File(editableItem.value)),
+          child: Image.file(File(canvasElement.value)),
         );
       case ItemType.gif:
         overlayWidget = SizedBox(
           width: context.width * 0.8,
           height: context.height * 0.4,
-          child: GiphyImageView(gif: editableItem.giphyImage!),
+          child: GiphyImageView(gif: canvasElement.giphyImage!),
         );
     }
 
     return Positioned(
-      top: editableItem.position.dy * context.height,
-      left: editableItem.position.dx * context.width,
+      top: canvasElement.position.dy * context.height,
+      left: canvasElement.position.dx * context.width,
       child: Transform.scale(
-        scale: editableItem.scale,
+        scale: canvasElement.scale,
         child: Transform.rotate(
-          angle: editableItem.rotation,
+          angle: canvasElement.rotation,
           child: Listener(
             onPointerDown: onPointerDown,
             onPointerUp: onPointerUp,

@@ -14,7 +14,7 @@ class TopToolsWidget extends StatelessWidget {
   final Duration animationsDuration;
 
   /// The active item that can be interacted with.
-  final EditableItem? activeItem;
+  final CanvasElement? activeItem;
 
   /// The index of the currently selected background gradient.
   final int selectedBackgroundGradientIndex;

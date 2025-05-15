@@ -93,7 +93,7 @@ class _FlutterDesignEditorState extends State<FlutterDesignEditor> {
   GlobalKey previewContainer = GlobalKey();
 
   // The currently active editable item.
-  EditableItem? _activeItem;
+  CanvasElement? _activeItem;
 
   // The initial position of the active item.
   Offset _initPos = Offset.zero;
@@ -162,7 +162,7 @@ class _FlutterDesignEditorState extends State<FlutterDesignEditor> {
   final _editingController = TextEditingController();
 
   // The stack data for the editable items.
-  final _stackData = <EditableItem>[];
+  final _stackData = <CanvasElement>[];
 
   // The controller for the crop functionality.
   final _cropController = CropController(
@@ -258,29 +258,29 @@ class _FlutterDesignEditorState extends State<FlutterDesignEditor> {
                               child: Stack(
                                 children: [
                                   ..._stackData.map(
-                                    (editableItem) => OverlayItemWidget(
-                                      editableItem: editableItem,
+                                    (canvasElement) => OverlayItemWidget(
+                                      canvasElement: canvasElement,
                                       backgroundColorList:
                                           widget.backgroundGradientColorList,
                                       fontFamilyList: widget.fontFamilyList,
                                       onItemTap: () {
-                                        _onOverlayItemTap(editableItem);
+                                        _onOverlayItemTap(canvasElement);
                                       },
                                       onPointerDown: (details) {
                                         _onOverlayItemPointerDown(
-                                          editableItem,
+                                          canvasElement,
                                           details,
                                         );
                                       },
                                       onPointerUp: (details) {
                                         _onOverlayItemPointerUp(
-                                          editableItem,
+                                          canvasElement,
                                           details,
                                         );
                                       },
                                       onPointerMove: (details) {
                                         _onOverlayItemPointerMove(
-                                          editableItem,
+                                          canvasElement,
                                           details,
                                         );
                                       },
@@ -389,7 +389,7 @@ class _FlutterDesignEditorState extends State<FlutterDesignEditor> {
                   if (stickerPath != null) {
                     setState(() {
                       _stackData.add(
-                        EditableItem()
+                        CanvasElement()
                           ..type = ItemType.sticker
                           ..value = stickerPath,
                       );
@@ -454,7 +454,7 @@ class _FlutterDesignEditorState extends State<FlutterDesignEditor> {
     final pickedFile = await picker.pickImage(source: ImageSource.gallery);
     if (pickedFile != null) {
       _stackData.add(
-        EditableItem()
+        CanvasElement()
           ..type = ItemType.image
           ..value = pickedFile.path,
       );
@@ -658,11 +658,11 @@ class _FlutterDesignEditorState extends State<FlutterDesignEditor> {
   /// Handles the submission of text input.
   ///
   /// This method is called when the user submits the text input field.
-  /// It adds a new [EditableItem] of type [ItemType.text] to the [_stackData] with the current text, text color, text style, font size, and font family.
+  /// It adds a new [CanvasElement] of type [ItemType.text] to the [_stackData] with the current text, text color, text style, font size, and font family.
   /// It then resets the [_editingController] and [_currentText] to an empty string.
   void _onSubmitText() {
     _stackData.add(
-      EditableItem()
+      CanvasElement()
         ..type = ItemType.text
         ..value = _currentText
         ..color = _selectedTextColor
@@ -704,8 +704,8 @@ class _FlutterDesignEditorState extends State<FlutterDesignEditor> {
   ///
   /// This method is called when the user taps on an overlay item.
   /// It also removes the tapped item from the [_stackData] and initializes the [_familyPageController] and [_textColorsPageController] with their respective viewport fractions.
-  /// The [e] parameter is the tapped [EditableItem].
-  void _onOverlayItemTap(EditableItem e) {
+  /// The [e] parameter is the tapped [CanvasElement].
+  void _onOverlayItemTap(CanvasElement e) {
     setState(() {
       _currentlyEditingItemType = e.type;
       _activeItem = e;
@@ -741,9 +741,9 @@ class _FlutterDesignEditorState extends State<FlutterDesignEditor> {
   ///
   /// This method is called when the user starts a pointer down gesture on an overlay item.
   /// If the item is not an image and the widget is not in action, it sets the [_inAction] flag to true and updates the initial values of the gesture.
-  /// The [e] parameter is the [EditableItem] on which the gesture started.
+  /// The [e] parameter is the [CanvasElement] on which the gesture started.
   /// The [details] parameter contains the details of the pointer down gesture.
-  void _onOverlayItemPointerDown(EditableItem e, PointerDownEvent details) {
+  void _onOverlayItemPointerDown(CanvasElement e, PointerDownEvent details) {
     if (_inAction) {
       return;
     }
@@ -760,9 +760,9 @@ class _FlutterDesignEditorState extends State<FlutterDesignEditor> {
   /// This method is called when the user ends a pointer up gesture on an overlay item.
   /// It sets the [_inAction] flag to false and checks if the item is in the delete position.
   /// If the item is in the delete position, it removes the item from the [_stackData] and sets the [_activeItem] to null.
-  /// The [e] parameter is the [EditableItem] on which the gesture ended.
+  /// The [e] parameter is the [CanvasElement] on which the gesture ended.
   /// The [details] parameter contains the details of the pointer up gesture.
-  void _onOverlayItemPointerUp(EditableItem e, PointerUpEvent details) {
+  void _onOverlayItemPointerUp(CanvasElement e, PointerUpEvent details) {
     _inAction = false;
     if (e.position.dy >= 0.65 && e.position.dx >= 0.0 && e.position.dx <= 1.0) {
       setState(() {
@@ -779,9 +779,9 @@ class _FlutterDesignEditorState extends State<FlutterDesignEditor> {
   ///
   /// This method is called when the user moves a pointer on an overlay item.
   /// It checks if the item is in the delete position and updates the [_isDeletePosition] flag accordingly.
-  /// The [e] parameter is the [EditableItem] on which the pointer is moving.
+  /// The [e] parameter is the [CanvasElement] on which the pointer is moving.
   /// The [details] parameter contains the details of the pointer move gesture.
-  void _onOverlayItemPointerMove(EditableItem e, PointerMoveEvent details) {
+  void _onOverlayItemPointerMove(CanvasElement e, PointerMoveEvent details) {
     final dyValue = e.type == ItemType.text ? 0.65 : 0.30;
     if (e.position.dy >= dyValue &&
         e.position.dx >= 0.0 &&
@@ -826,7 +826,7 @@ class _FlutterDesignEditorState extends State<FlutterDesignEditor> {
     if (gif != null) {
       setState(() {
         _stackData.add(
-          EditableItem()
+          CanvasElement()
             ..type = ItemType.gif
             ..giphyImage = gif,
         );

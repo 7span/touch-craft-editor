@@ -7,7 +7,7 @@ import '../constants/item_type.dart';
 ///
 /// An editable item can be a text or an image that can be manipulated by the user.
 /// It has several properties that define its state, such as position, scale, rotation, type, value, color, textStyle, fontSize, and fontFamily.
-class EditableItem {
+class CanvasElement {
   /// The position of the item on the screen.
   ///
   /// This is represented as an Offset, where the x and y values are the horizontal and vertical distances from the top left corner of the screen.
