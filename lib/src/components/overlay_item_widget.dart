@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_design_editor/src/constants/item_type.dart';
 import 'package:flutter_design_editor/src/gif/image_view.dart';
 import 'package:flutter_design_editor/src/extensions/context_extension.dart';
-import 'package:flutter_design_editor/src/models/editable_items.dart';
+import 'package:flutter_design_editor/src/models/canvas_element.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 /// A widget for displaying an overlay item.

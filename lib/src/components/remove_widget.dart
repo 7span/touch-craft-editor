@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_design_editor/src/extensions/context_extension.dart';
-import 'package:flutter_design_editor/src/models/editable_items.dart';
+import 'package:flutter_design_editor/src/models/canvas_element.dart';
 
 /// A widget for removing an item.
 ///

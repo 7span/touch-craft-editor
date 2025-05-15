@@ -30,7 +30,9 @@ import 'src/constants/font_colors.dart';
 import 'src/constants/gradients.dart';
 import 'src/constants/item_type.dart';
 import 'src/extensions/context_extension.dart';
-import 'src/models/editable_items.dart';
+import 'src/models/canvas_element.dart';
+
+export 'src/models/canvas_element.dart';
 
 /// A customizable Flutter-based design editor widget.
 ///
@@ -39,6 +41,7 @@ import 'src/models/editable_items.dart';
 class FlutterDesignEditor extends StatefulWidget {
   const FlutterDesignEditor({
     super.key,
+    required this.onDesignReady,
     this.animationsDuration = const Duration(milliseconds: 300),
     this.doneButtonChild,
     this.backgroundGradientColorList = gradientColors,
@@ -83,6 +86,16 @@ class FlutterDesignEditor extends StatefulWidget {
   // Provide custom color list for font colors
   // fontColorList : [ Colors.white, Colors.black, Colors.red];
   final List<Color> fontColorList;
+
+  // Called when design export is complete
+  // Returns image file or GIF as per design
+  // Also Returns list of CanvasElement included in design
+  final void Function(
+    File? designFile,
+    List<Color> backgroundGradientColorList,
+    List<CanvasElement> canvasElementList,
+  )
+  onDesignReady;
 
   @override
   State<FlutterDesignEditor> createState() => _FlutterDesignEditorState();
@@ -890,6 +903,11 @@ class _FlutterDesignEditorState extends State<FlutterDesignEditor> {
       }
       _isLoading = false;
       setState(() {});
+      widget.onDesignReady(
+        imageFile,
+        widget.backgroundGradientColorList[_selectedBackgroundGradient],
+        _stackData,
+      );
     } catch (e) {
       if (kDebugMode) {
         print('Some error occured while saving design');
