@@ -1,8 +1,10 @@
 import 'dart:io';
 import 'dart:ui';
-
+import 'dart:ui' as ui;
 import 'package:crop_image/crop_image.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_design_editor/src/components/cutout_image_overlay_widget.dart';
 import 'package:flutter_design_editor/src/components/image_crop_view.dart';
@@ -13,6 +15,7 @@ import 'package:flutter_design_editor/src/gif/enough_giphy_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:screen_recorder/screen_recorder.dart';
 
 import 'src/components/background_gradient_selector_widget.dart';
 import 'src/components/font_family_select_widget.dart';
@@ -167,6 +170,12 @@ class _FlutterDesignEditorState extends State<FlutterDesignEditor> {
     defaultCrop: Rect.fromLTRB(0.2, 0.2, 0.9, 0.9),
   );
 
+  // The controller to record and get widget as GIF
+  final _screenRecordingController = ScreenRecorderController(
+    pixelRatio: 1,
+    skipFramesBetweenCaptures: 2,
+  );
+
   /// Called when this object is inserted into the tree.
   ///
   /// The framework will call this method exactly once for each [State] object it creates.
@@ -230,38 +239,56 @@ class _FlutterDesignEditorState extends State<FlutterDesignEditor> {
                       children: [
                         RepaintBoundary(
                           key: previewContainer,
-                          child: Stack(
-                            children: [
-                              ..._stackData.map(
-                                (editableItem) => OverlayItemWidget(
-                                  editableItem: editableItem,
-                                  backgroundColorList:
-                                      widget.backgroundGradientColorList,
-                                  fontFamilyList: widget.fontFamilyList,
-                                  onItemTap: () {
-                                    _onOverlayItemTap(editableItem);
-                                  },
-                                  onPointerDown: (details) {
-                                    _onOverlayItemPointerDown(
-                                      editableItem,
-                                      details,
-                                    );
-                                  },
-                                  onPointerUp: (details) {
-                                    _onOverlayItemPointerUp(
-                                      editableItem,
-                                      details,
-                                    );
-                                  },
-                                  onPointerMove: (details) {
-                                    _onOverlayItemPointerMove(
-                                      editableItem,
-                                      details,
-                                    );
-                                  },
+                          child: ScreenRecorder(
+                            width: context.width,
+                            height: context.height,
+                            controller: _screenRecordingController,
+                            child: Container(
+                              height: double.infinity,
+                              width: double.infinity,
+                              decoration: BoxDecoration(
+                                gradient: LinearGradient(
+                                  colors:
+                                      widget
+                                          .backgroundGradientColorList[_selectedBackgroundGradient],
+                                  begin: Alignment.topLeft,
+                                  end: Alignment.bottomRight,
                                 ),
                               ),
-                            ],
+                              child: Stack(
+                                children: [
+                                  ..._stackData.map(
+                                    (editableItem) => OverlayItemWidget(
+                                      editableItem: editableItem,
+                                      backgroundColorList:
+                                          widget.backgroundGradientColorList,
+                                      fontFamilyList: widget.fontFamilyList,
+                                      onItemTap: () {
+                                        _onOverlayItemTap(editableItem);
+                                      },
+                                      onPointerDown: (details) {
+                                        _onOverlayItemPointerDown(
+                                          editableItem,
+                                          details,
+                                        );
+                                      },
+                                      onPointerUp: (details) {
+                                        _onOverlayItemPointerUp(
+                                          editableItem,
+                                          details,
+                                        );
+                                      },
+                                      onPointerMove: (details) {
+                                        _onOverlayItemPointerMove(
+                                          editableItem,
+                                          details,
+                                        );
+                                      },
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
                           ),
                         ),
                         AnimatedSwitcher(
@@ -628,31 +655,6 @@ class _FlutterDesignEditorState extends State<FlutterDesignEditor> {
     });
   }
 
-  /// Handles the done event.
-  ///
-  /// This method is called when the user taps on the done button.
-  /// It captures the current state of the widget as an image and saves it to the application documents directory.
-  /// The image is saved as a png file with the current date and time as the file name.
-  /// After the image is saved, it navigates back and passes the image file as the result of the navigation.
-  Future<void> _onDone() async {
-    // final boundary =
-    //     previewContainer.currentContext!.findRenderObject()
-    //         as RenderRepaintBoundary?;
-    // _isLoading = true;
-    // setState(() {});
-    // final image = await boundary!.toImage(pixelRatio: 3);
-    // final directory = (await getApplicationDocumentsDirectory()).path;
-    // final byteData = (await image.toByteData(format: ui.ImageByteFormat.png))!;
-    // final pngBytes = byteData.buffer.asUint8List();
-    // final imgFile = File('$directory/${DateTime.now()}.png');
-    // await imgFile.writeAsBytes(pngBytes);
-    // _isLoading = false;
-    // setState(() {});
-    // if (context.mounted) {
-    //   Navigator.of(context).pop(imgFile);
-    // }
-  }
-
   /// Handles the submission of text input.
   ///
   /// This method is called when the user submits the text input field.
@@ -862,6 +864,78 @@ class _FlutterDesignEditorState extends State<FlutterDesignEditor> {
             },
           ),
     );
+  }
+
+  /// Handles the done event.
+  ///
+  /// This method is called when the user taps on the done button.
+  /// It captures the current state of the widget and checks if GIF is included in design.
+  /// Based on items on stack it returns image or GIF.
+  Future<void> _onDone() async {
+    try {
+      _isLoading = true;
+      setState(() {});
+      bool isGIFContained = false;
+      for (final element in _stackData) {
+        if (element.type == ItemType.gif) {
+          isGIFContained = true;
+          break;
+        }
+      }
+      final File? imageFile;
+      if (isGIFContained == true) {
+        imageFile = await _saveGifToTemporaryDirectory();
+      } else {
+        imageFile = await _saveImageToTemporaryDirectory();
+      }
+      _isLoading = false;
+      setState(() {});
+    } catch (e) {
+      if (kDebugMode) {
+        print('Some error occured while saving design');
+      }
+    }
+  }
+
+  /// Record screen and return GIF formate
+  ///
+  /// Waits for 3 seconds, stops recording and exports GIF and saves GIF to local storage
+  Future<File?> _saveGifToTemporaryDirectory() async {
+    _screenRecordingController.start();
+    await Future.delayed(Duration(seconds: 3));
+    _screenRecordingController.stop();
+    final gif = await _screenRecordingController.exporter.exportGif();
+    if (gif != null) {
+      Uint8List bytes = Uint8List.fromList(gif);
+      return _saveToLocal(bytes);
+    }
+    return null;
+  }
+
+  /// Captures widget image from previewContainer
+  ///
+  /// Converts to PNG bytes
+  /// Saves image in documents directory with timestamp name
+  Future<File> _saveImageToTemporaryDirectory() async {
+    final boundary =
+        previewContainer.currentContext!.findRenderObject()
+            as RenderRepaintBoundary?;
+    final image = await boundary!.toImage(pixelRatio: 3);
+    final directory = (await getApplicationDocumentsDirectory()).path;
+    final byteData = (await image.toByteData(format: ui.ImageByteFormat.png))!;
+    final pngBytes = byteData.buffer.asUint8List();
+    final imgFile = File('$directory/${DateTime.now()}.png');
+    return await imgFile.writeAsBytes(pngBytes);
+  }
+
+  /// Saves raw bytes as a local file in the app documents directory
+  ///
+  /// Uses current timestamp as filename
+  /// Returns the saved File instance
+  Future<File> _saveToLocal(Uint8List bytes) async {
+    final dir = await getApplicationDocumentsDirectory();
+    final file = File('${dir.path}/${DateTime.now().millisecondsSinceEpoch}');
+    return await file.writeAsBytes(bytes);
   }
 
   /// Called when this object is removed from the tree permanently.
