@@ -76,7 +76,7 @@ class OverlayItemWidget extends StatelessWidget {
                   style: GoogleFonts.getFont(
                     fontFamilyList[canvasElement.fontFamily],
                   ).copyWith(
-                    color: canvasElement.color,
+                    color: canvasElement.textColor,
                     fontSize: canvasElement.fontSize,
                   ),
                 ),

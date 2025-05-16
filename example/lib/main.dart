@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_design_editor/flutter_design_editor.dart';
@@ -15,12 +14,9 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return FlutterDesignEditor(
       imageFormatType: ImageFormatType.jpg,
-      onDesignReady: (
-        File? designFile,
-        Map<String, dynamic> canvasElementJson,
-      ) {
+      onDesignReady: (File? designFile, Map<String, dynamic> canvasDesignJson) {
         if (kDebugMode) {
-          print('canvasElementJson : $canvasElementJson');
+          print('canvasElementJson : $canvasDesignJson');
         }
       },
     );

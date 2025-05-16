@@ -13,7 +13,6 @@ import 'package:flutter_design_editor/src/components/no_internert_widget.dart';
 import 'package:flutter_design_editor/src/components/sticker_dialogue.dart';
 import 'package:flutter_design_editor/src/constants/font_styles.dart';
 import 'package:flutter_design_editor/src/constants/giphy_keys.dart';
-import 'package:flutter_design_editor/src/extensions/helpers.dart';
 import 'package:flutter_design_editor/src/gif/enough_giphy_flutter.dart';
 import 'package:flutter_design_editor/src/services/connectivity_service.dart';
 import 'package:image/image.dart' as img;
@@ -62,6 +61,7 @@ class FlutterDesignEditor extends StatefulWidget {
     this.internetConnectionWidget = const NoInternetWidget(
       title: 'Please Check Internet Connection',
     ),
+    this.editDesignJson,
   });
 
   /// The duration for all animated transitions within the widget.
@@ -103,11 +103,15 @@ class FlutterDesignEditor extends StatefulWidget {
   // Called when design export is complete
   // Returns image file or GIF as per design
   // Also Returns list of CanvasElement included in design
-  final void Function(File? designFile, Map<String, dynamic> canvasElementJson)
+  final void Function(File? designFile, Map<String, dynamic> canvasDesignJson)
   onDesignReady;
 
   // A widget to show when there is no internet connection.
   final Widget internetConnectionWidget;
+
+  /// Map having info to re-edit the previous made design.
+  /// Note : return [canvasDesignJson] which was previously returned on Done tap.
+  final Map<String, dynamic>? editDesignJson;
 
   @override
   State<FlutterDesignEditor> createState() => _FlutterDesignEditorState();
@@ -187,7 +191,7 @@ class _FlutterDesignEditorState extends State<FlutterDesignEditor> {
   final _editingController = TextEditingController();
 
   // The stack data for the editable items.
-  final _stackData = <CanvasElement>[];
+  late final List<CanvasElement> _stackData;
 
   // The controller for the crop functionality.
   final _cropController = CropController(
@@ -226,6 +230,13 @@ class _FlutterDesignEditorState extends State<FlutterDesignEditor> {
     _connectivityService = ConnectivityService(
       noInternetWidget: widget.internetConnectionWidget,
     );
+    if (widget.editDesignJson != null) {
+      _createImageToEdit(widget.editDesignJson!);
+    } else {
+      setState(() {
+        _stackData = [];
+      });
+    }
   }
 
   @override
@@ -247,6 +258,7 @@ class _FlutterDesignEditorState extends State<FlutterDesignEditor> {
                     clipBehavior: Clip.antiAlias,
                     children: [
                       GestureDetector(
+                        behavior: HitTestBehavior.translucent,
                         onTap: _showTextView,
                         child: Container(
                           height: context.height,
@@ -504,6 +516,26 @@ class _FlutterDesignEditorState extends State<FlutterDesignEditor> {
     );
   }
 
+  void _createImageToEdit(Map<String, dynamic> editDesignJson) {
+    final backgroundGradientColorList = editDesignJson['backgroundColor'];
+    final List<CanvasElement> canvasElementList = [];
+    for (final json
+        in (editDesignJson['designItems'] as List<Map<String, dynamic>>)) {
+      canvasElementList.add(
+        CanvasElement.fromJson(
+          json: json,
+          fontFamilyList: widget.fontFamilyList,
+          textDecorationColorList: widget.backgroundGradientColorList,
+        ),
+      );
+    }
+    _selectedBackgroundGradient = widget.backgroundGradientColorList.indexWhere(
+      (element) => element == backgroundGradientColorList,
+    );
+    _stackData = canvasElementList;
+    setState(() {});
+  }
+
   /// Handles the image picker tap action.
   ///
   /// Handles image picker tap, requests permissions, and adds selected image to stack data.
@@ -726,7 +758,7 @@ class _FlutterDesignEditorState extends State<FlutterDesignEditor> {
       CanvasElement()
         ..type = ItemType.text
         ..value = _currentText
-        ..color = _selectedTextColor
+        ..textColor = _selectedTextColor
         ..textDecorationColor = _selectedTextBackgroundGradient
         ..fontSize = _selectedFontSize
         ..fontFamily = _selectedFontFamily,
@@ -782,7 +814,7 @@ class _FlutterDesignEditorState extends State<FlutterDesignEditor> {
         _selectedFontFamily = e.fontFamily;
         _selectedFontSize = e.fontSize;
         _selectedTextBackgroundGradient = e.textDecorationColor;
-        _selectedTextColor = e.color;
+        _selectedTextColor = e.textColor;
         _stackData.removeAt(_stackData.indexOf(e));
       });
       _familyPageController = PageController(
@@ -791,7 +823,7 @@ class _FlutterDesignEditorState extends State<FlutterDesignEditor> {
       );
       _textColorsPageController = PageController(
         initialPage: widget.fontColorList.indexWhere(
-          (element) => element == e.color,
+          (element) => element == e.textColor,
         ),
         viewportFraction: .1,
       );
@@ -959,7 +991,7 @@ class _FlutterDesignEditorState extends State<FlutterDesignEditor> {
       widget.onDesignReady(imageFile, _computeDesignConfigJson());
     } catch (e) {
       if (kDebugMode) {
-        print('Some error occured while saving design');
+        print('Some error occured while saving design $e');
       }
     }
   }
@@ -969,18 +1001,17 @@ class _FlutterDesignEditorState extends State<FlutterDesignEditor> {
     for (final item in _stackData) {
       stackDataToJson.add(
         item.toJson(
-          fontBackgroundColorValue: colorToHex(
-            widget.fontColorList[item.textDecorationColor],
-          ),
+          fontBackgroundColorValue:
+              widget.backgroundGradientColorList[item.textDecorationColor],
           fontFamilyValue: widget.fontFamilyList[item.fontFamily],
         ),
       );
     }
-    List<String> hexColors =
-        widget.backgroundGradientColorList[_selectedBackgroundGradient]
-            .map((color) => colorToHex(color))
-            .toList();
-    return {'backgroundColor': hexColors, 'designItems': stackDataToJson};
+    return {
+      'backgroundColor':
+          widget.backgroundGradientColorList[_selectedBackgroundGradient],
+      'designItems': stackDataToJson,
+    };
   }
 
   /// Record screen and return GIF formate
