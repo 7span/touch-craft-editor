@@ -6,12 +6,14 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_design_editor/src/components/connectivity_wrapper.dart';
 import 'package:flutter_design_editor/src/components/cutout_image_overlay_widget.dart';
 import 'package:flutter_design_editor/src/components/image_crop_view.dart';
 import 'package:flutter_design_editor/src/components/sticker_dialogue.dart';
 import 'package:flutter_design_editor/src/constants/font_styles.dart';
 import 'package:flutter_design_editor/src/constants/giphy_keys.dart';
 import 'package:flutter_design_editor/src/gif/enough_giphy_flutter.dart';
+import 'package:flutter_design_editor/src/services/connectivity_service.dart';
 import 'package:image/image.dart' as img;
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
@@ -194,6 +196,8 @@ class _FlutterDesignEditorState extends State<FlutterDesignEditor> {
     skipFramesBetweenCaptures: 2,
   );
 
+  final _connectivityService = ConnectivityService();
+
   /// Called when this object is inserted into the tree.
   ///
   /// The framework will call this method exactly once for each [State] object it creates.
@@ -221,242 +225,272 @@ class _FlutterDesignEditorState extends State<FlutterDesignEditor> {
       textHeightBehavior: const TextHeightBehavior(
         leadingDistribution: TextLeadingDistribution.even,
       ),
-      child: Scaffold(
-        resizeToAvoidBottomInset: false,
-        body: Stack(
-          clipBehavior: Clip.antiAlias,
-          children: [
-            GestureDetector(
-              onTap: _showTextView,
-              child: Container(
-                height: context.height,
-                width: context.width,
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors:
-                        widget
-                            .backgroundGradientColorList[_selectedBackgroundGradient],
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                  ),
-                ),
-              ),
-            ),
-            Positioned(
-              top: context.topPadding,
-              left: 0,
-              right: 0,
-              child: ClipRect(
-                child: AspectRatio(
-                  aspectRatio: context.width / context.height,
-                  child: GestureDetector(
-                    onScaleStart: _onScaleStart,
-                    onScaleUpdate: _onScaleUpdate,
-                    onTap: _onScreenTap,
-                    child: Stack(
-                      children: [
-                        RepaintBoundary(
-                          key: previewContainer,
-                          child: ScreenRecorder(
-                            width: context.width,
-                            height: context.height,
-                            controller: _screenRecordingController,
-                            child: Container(
-                              height: double.infinity,
-                              width: double.infinity,
-                              decoration: BoxDecoration(
-                                gradient: LinearGradient(
-                                  colors:
-                                      widget
-                                          .backgroundGradientColorList[_selectedBackgroundGradient],
-                                  begin: Alignment.topLeft,
-                                  end: Alignment.bottomRight,
-                                ),
-                              ),
+      child: Overlay(
+        key: _connectivityService.overlayKey,
+        initialEntries: [
+          OverlayEntry(
+            builder: (context) {
+              return ConnectivityWrapper(
+                connectivityService: _connectivityService,
+                child: Scaffold(
+                  resizeToAvoidBottomInset: false,
+                  body: Stack(
+                    clipBehavior: Clip.antiAlias,
+                    children: [
+                      GestureDetector(
+                        onTap: _showTextView,
+                        child: Container(
+                          height: context.height,
+                          width: context.width,
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              colors:
+                                  widget
+                                      .backgroundGradientColorList[_selectedBackgroundGradient],
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                            ),
+                          ),
+                        ),
+                      ),
+                      Positioned(
+                        top: context.topPadding,
+                        left: 0,
+                        right: 0,
+                        child: ClipRect(
+                          child: AspectRatio(
+                            aspectRatio: context.width / context.height,
+                            child: GestureDetector(
+                              onScaleStart: _onScaleStart,
+                              onScaleUpdate: _onScaleUpdate,
+                              onTap: _onScreenTap,
                               child: Stack(
                                 children: [
-                                  ..._stackData.map(
-                                    (canvasElement) => OverlayItemWidget(
-                                      canvasElement: canvasElement,
-                                      backgroundColorList:
-                                          widget.backgroundGradientColorList,
-                                      fontFamilyList: widget.fontFamilyList,
-                                      onItemTap: () {
-                                        _onOverlayItemTap(canvasElement);
-                                      },
-                                      onPointerDown: (details) {
-                                        _onOverlayItemPointerDown(
-                                          canvasElement,
-                                          details,
-                                        );
-                                      },
-                                      onPointerUp: (details) {
-                                        _onOverlayItemPointerUp(
-                                          canvasElement,
-                                          details,
-                                        );
-                                      },
-                                      onPointerMove: (details) {
-                                        _onOverlayItemPointerMove(
-                                          canvasElement,
-                                          details,
-                                        );
-                                      },
+                                  RepaintBoundary(
+                                    key: previewContainer,
+                                    child: ScreenRecorder(
+                                      width: context.width,
+                                      height: context.height,
+                                      controller: _screenRecordingController,
+                                      child: Container(
+                                        height: double.infinity,
+                                        width: double.infinity,
+                                        decoration: BoxDecoration(
+                                          gradient: LinearGradient(
+                                            colors:
+                                                widget
+                                                    .backgroundGradientColorList[_selectedBackgroundGradient],
+                                            begin: Alignment.topLeft,
+                                            end: Alignment.bottomRight,
+                                          ),
+                                        ),
+                                        child: Stack(
+                                          children: [
+                                            ..._stackData.map(
+                                              (
+                                                canvasElement,
+                                              ) => OverlayItemWidget(
+                                                canvasElement: canvasElement,
+                                                backgroundColorList:
+                                                    widget
+                                                        .backgroundGradientColorList,
+                                                fontFamilyList:
+                                                    widget.fontFamilyList,
+                                                onItemTap: () {
+                                                  _onOverlayItemTap(
+                                                    canvasElement,
+                                                  );
+                                                },
+                                                onPointerDown: (details) {
+                                                  _onOverlayItemPointerDown(
+                                                    canvasElement,
+                                                    details,
+                                                  );
+                                                },
+                                                onPointerUp: (details) {
+                                                  _onOverlayItemPointerUp(
+                                                    canvasElement,
+                                                    details,
+                                                  );
+                                                },
+                                                onPointerMove: (details) {
+                                                  _onOverlayItemPointerMove(
+                                                    canvasElement,
+                                                    details,
+                                                  );
+                                                },
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
                                     ),
+                                  ),
+                                  AnimatedSwitcher(
+                                    duration: widget.animationsDuration,
+                                    child:
+                                        _addNewItemOfType != ItemType.text
+                                            ? const SizedBox()
+                                            : Container(
+                                              height: context.height,
+                                              width: context.width,
+                                              color: Colors.black.withValues(
+                                                alpha: 0.4,
+                                              ),
+                                              child: Stack(
+                                                children: [
+                                                  TextFieldWidget(
+                                                    controller:
+                                                        _editingController,
+                                                    onChanged: _onTextChange,
+                                                    onSubmit: _onTextSubmit,
+                                                    fontSize: _selectedFontSize,
+                                                    fontFamilyIndex:
+                                                        _selectedFontFamily,
+                                                    textColor:
+                                                        _selectedTextColor,
+                                                    fontFamilyList:
+                                                        widget.fontFamilyList,
+                                                    backgroundColorIndex:
+                                                        _selectedTextBackgroundGradient,
+                                                    backgroundColorList:
+                                                        widget
+                                                            .backgroundGradientColorList,
+                                                  ),
+                                                  SizeSliderWidget(
+                                                    animationsDuration:
+                                                        widget
+                                                            .animationsDuration,
+                                                    selectedValue:
+                                                        _selectedFontSize,
+                                                    onChanged: (input) {
+                                                      setState(() {
+                                                        _selectedFontSize =
+                                                            input;
+                                                      });
+                                                    },
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                  ),
+                                  AnimatedSwitcher(
+                                    duration: widget.animationsDuration,
+                                    child:
+                                        _currentlyEditingItemType !=
+                                                ItemType.image
+                                            ? const SizedBox()
+                                            : ImageCropView(
+                                              imageValue: _activeItem!.value,
+                                              cropController: _cropController,
+                                            ),
                                   ),
                                 ],
                               ),
                             ),
                           ),
                         ),
-                        AnimatedSwitcher(
-                          duration: widget.animationsDuration,
-                          child:
-                              _addNewItemOfType != ItemType.text
-                                  ? const SizedBox()
-                                  : Container(
-                                    height: context.height,
-                                    width: context.width,
-                                    color: Colors.black.withValues(alpha: 0.4),
-                                    child: Stack(
-                                      children: [
-                                        TextFieldWidget(
-                                          controller: _editingController,
-                                          onChanged: _onTextChange,
-                                          onSubmit: _onTextSubmit,
-                                          fontSize: _selectedFontSize,
-                                          fontFamilyIndex: _selectedFontFamily,
-                                          textColor: _selectedTextColor,
-                                          fontFamilyList: widget.fontFamilyList,
-                                          backgroundColorIndex:
-                                              _selectedTextBackgroundGradient,
-                                          backgroundColorList:
-                                              widget
-                                                  .backgroundGradientColorList,
-                                        ),
-                                        SizeSliderWidget(
-                                          animationsDuration:
-                                              widget.animationsDuration,
-                                          selectedValue: _selectedFontSize,
-                                          onChanged: (input) {
-                                            setState(() {
-                                              _selectedFontSize = input;
-                                            });
-                                          },
-                                        ),
-                                      ],
-                                    ),
-                                  ),
+                      ),
+
+                      if (_currentlyEditingItemType == ItemType.text)
+                        if (!_isColorPickerSelected)
+                          FontFamilySelectWidget(
+                            animationsDuration: widget.animationsDuration,
+                            pageController: _familyPageController,
+                            selectedFamilyIndex: _selectedFontFamily,
+                            fontFamilyList: widget.fontFamilyList,
+                            onPageChanged: _onFamilyChange,
+                            onTap: (index) {
+                              _onStyleChange(index);
+                            },
+                          )
+                        else
+                          TextColorSelectWidget(
+                            animationsDuration: widget.animationsDuration,
+                            pageController: _textColorsPageController,
+                            selectedTextColor: _selectedTextColor,
+                            onPageChanged: _onTextColorChange,
+                            fontColorList: widget.fontColorList,
+                            onTap: (index) {
+                              _onColorChange(index);
+                            },
+                          ),
+
+                      BackgroundGradientSelectorWidget(
+                        isTextInput: _addNewItemOfType == ItemType.text,
+                        isBackgroundColorPickerSelected:
+                            _isBackgroundColorPickerSelected,
+                        inAction: _inAction,
+                        animationsDuration: widget.animationsDuration,
+                        gradientsPageController: _gradientsPageController,
+                        onPageChanged: _onChangeBackgroundGradient,
+                        onItemTap: _onBackgroundGradientTap,
+                        selectedGradientIndex: _selectedBackgroundGradient,
+                        backgroundColorList: widget.backgroundGradientColorList,
+                      ),
+                      if (_currentlyEditingItemType == ItemType.sticker)
+                        CutoutImageOverlayWidget(
+                          imagePath: imagePathForSticker!,
+                          onScreenTap: (stickerPath) {
+                            if (stickerPath != null) {
+                              setState(() {
+                                _stackData.add(
+                                  CanvasElement()
+                                    ..type = ItemType.sticker
+                                    ..value = stickerPath,
+                                );
+                              });
+                            }
+                            _onScreenTap();
+                          },
                         ),
-                        AnimatedSwitcher(
-                          duration: widget.animationsDuration,
-                          child:
-                              _currentlyEditingItemType != ItemType.image
-                                  ? const SizedBox()
-                                  : ImageCropView(
-                                    imageValue: _activeItem!.value,
-                                    cropController: _cropController,
-                                  ),
+                      TopToolsWidget(
+                        currentlyEditingItemType: _currentlyEditingItemType,
+                        selectedBackgroundGradientIndex:
+                            _selectedBackgroundGradient,
+                        animationsDuration: widget.animationsDuration,
+                        onPickerTap: _onToggleBackgroundGradientPicker,
+                        onScreenTap: _showTextView,
+                        selectedTextBackgroundGradientIndex:
+                            _selectedTextBackgroundGradient,
+                        onToggleTextColorPicker: _onToggleTextColorSelector,
+                        onChangeTextBackground: _onChangeTextBackground,
+                        activeItem: _activeItem,
+                        onImagePickerTap: _onImagepickerTap,
+                        onCropTap: _onCropImagetap,
+                        onAddGiphyTap: _onAddGifTap,
+                        onCreateStickerTap: _onCreateStickerTap,
+                        onCloseStickerOverlay: _onScreenTap,
+                        backgroundColorList: widget.backgroundGradientColorList,
+                        shouldShowBackgroundGradientButton:
+                            widget.enableBackgroundGradientEditor,
+                        shouldShowGifButton: widget.enableGifEditor,
+                        shouldShowImageButton: widget.enableImageEditor,
+                        shouldShowStickerButton: widget.enableStickerEditor,
+                        shouldShowTextButton: widget.enableTextEditor,
+                      ),
+                      RemoveWidget(
+                        animationsDuration: widget.animationsDuration,
+                        activeItem: _activeItem,
+                        isDeletePosition: _isDeletePosition,
+                        shouldShowDeleteButton: _inAction,
+                      ),
+                      if (_currentlyEditingItemType == null)
+                        Align(
+                          alignment: Alignment.bottomCenter,
+                          child: FooterToolsWidget(
+                            onDone: _onDone,
+                            doneButtonChild: widget.doneButtonChild,
+                            isLoading: _isLoading,
+                          ),
                         ),
-                      ],
-                    ),
+                    ],
                   ),
                 ),
-              ),
-            ),
-
-            if (_currentlyEditingItemType == ItemType.text)
-              if (!_isColorPickerSelected)
-                FontFamilySelectWidget(
-                  animationsDuration: widget.animationsDuration,
-                  pageController: _familyPageController,
-                  selectedFamilyIndex: _selectedFontFamily,
-                  fontFamilyList: widget.fontFamilyList,
-                  onPageChanged: _onFamilyChange,
-                  onTap: (index) {
-                    _onStyleChange(index);
-                  },
-                )
-              else
-                TextColorSelectWidget(
-                  animationsDuration: widget.animationsDuration,
-                  pageController: _textColorsPageController,
-                  selectedTextColor: _selectedTextColor,
-                  onPageChanged: _onTextColorChange,
-                  fontColorList: widget.fontColorList,
-                  onTap: (index) {
-                    _onColorChange(index);
-                  },
-                ),
-
-            BackgroundGradientSelectorWidget(
-              isTextInput: _addNewItemOfType == ItemType.text,
-              isBackgroundColorPickerSelected: _isBackgroundColorPickerSelected,
-              inAction: _inAction,
-              animationsDuration: widget.animationsDuration,
-              gradientsPageController: _gradientsPageController,
-              onPageChanged: _onChangeBackgroundGradient,
-              onItemTap: _onBackgroundGradientTap,
-              selectedGradientIndex: _selectedBackgroundGradient,
-              backgroundColorList: widget.backgroundGradientColorList,
-            ),
-            if (_currentlyEditingItemType == ItemType.sticker)
-              CutoutImageOverlayWidget(
-                imagePath: imagePathForSticker!,
-                onScreenTap: (stickerPath) {
-                  if (stickerPath != null) {
-                    setState(() {
-                      _stackData.add(
-                        CanvasElement()
-                          ..type = ItemType.sticker
-                          ..value = stickerPath,
-                      );
-                    });
-                  }
-                  _onScreenTap();
-                },
-              ),
-            TopToolsWidget(
-              currentlyEditingItemType: _currentlyEditingItemType,
-              selectedBackgroundGradientIndex: _selectedBackgroundGradient,
-              animationsDuration: widget.animationsDuration,
-              onPickerTap: _onToggleBackgroundGradientPicker,
-              onScreenTap: _showTextView,
-              selectedTextBackgroundGradientIndex:
-                  _selectedTextBackgroundGradient,
-              onToggleTextColorPicker: _onToggleTextColorSelector,
-              onChangeTextBackground: _onChangeTextBackground,
-              activeItem: _activeItem,
-              onImagePickerTap: _onImagepickerTap,
-              onCropTap: _onCropImagetap,
-              onAddGiphyTap: _onAddGifTap,
-              onCreateStickerTap: _onCreateStickerTap,
-              onCloseStickerOverlay: _onScreenTap,
-              backgroundColorList: widget.backgroundGradientColorList,
-              shouldShowBackgroundGradientButton:
-                  widget.enableBackgroundGradientEditor,
-              shouldShowGifButton: widget.enableGifEditor,
-              shouldShowImageButton: widget.enableImageEditor,
-              shouldShowStickerButton: widget.enableStickerEditor,
-              shouldShowTextButton: widget.enableTextEditor,
-            ),
-            RemoveWidget(
-              animationsDuration: widget.animationsDuration,
-              activeItem: _activeItem,
-              isDeletePosition: _isDeletePosition,
-              shouldShowDeleteButton: _inAction,
-            ),
-            if (_currentlyEditingItemType == null)
-              Align(
-                alignment: Alignment.bottomCenter,
-                child: FooterToolsWidget(
-                  onDone: _onDone,
-                  doneButtonChild: widget.doneButtonChild,
-                  isLoading: _isLoading,
-                ),
-              ),
-          ],
-        ),
+              );
+            },
+          ),
+        ],
       ),
     );
   }
