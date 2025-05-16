@@ -2,15 +2,18 @@ import 'dart:async';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_design_editor/src/components/no_internert_widget.dart';
 
 class ConnectivityService {
-  factory ConnectivityService() => _instance;
+  factory ConnectivityService({required Widget noInternetWidget}) {
+    _instance.noInternetWidget = noInternetWidget;
+    return _instance;
+  }
 
   ConnectivityService._internal();
 
   static final ConnectivityService _instance = ConnectivityService._internal();
 
+  late Widget noInternetWidget;
   final _connectivity = Connectivity();
   final _controller = StreamController<bool>.broadcast();
   bool _isDialogVisible = false;
@@ -39,11 +42,7 @@ class ConnectivityService {
     }
 
     _isDialogVisible = true;
-    _overlayEntry = OverlayEntry(
-      builder:
-          (context) =>
-              NoInternetWidget(title: 'Please Check Internet Connection'),
-    );
+    _overlayEntry = OverlayEntry(builder: (context) => noInternetWidget);
 
     overlayKey.currentState!.insert(_overlayEntry!);
   }

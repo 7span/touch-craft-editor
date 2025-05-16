@@ -9,6 +9,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_design_editor/src/components/connectivity_wrapper.dart';
 import 'package:flutter_design_editor/src/components/cutout_image_overlay_widget.dart';
 import 'package:flutter_design_editor/src/components/image_crop_view.dart';
+import 'package:flutter_design_editor/src/components/no_internert_widget.dart';
 import 'package:flutter_design_editor/src/components/sticker_dialogue.dart';
 import 'package:flutter_design_editor/src/constants/font_styles.dart';
 import 'package:flutter_design_editor/src/constants/giphy_keys.dart';
@@ -57,6 +58,9 @@ class FlutterDesignEditor extends StatefulWidget {
     this.enableGifEditor = true,
     this.enableImageEditor = true,
     this.imageFormatType = ImageFormatType.png,
+    this.internetConnectionWidget = const NoInternetWidget(
+      title: 'Please Check Internet Connection',
+    ),
   });
 
   /// The duration for all animated transitions within the widget.
@@ -92,6 +96,7 @@ class FlutterDesignEditor extends StatefulWidget {
   // fontColorList : [ Colors.white, Colors.black, Colors.red];
   final List<Color> fontColorList;
 
+  // An enum to handle final image generation formate by package user.
   final ImageFormatType imageFormatType;
 
   // Called when design export is complete
@@ -103,6 +108,9 @@ class FlutterDesignEditor extends StatefulWidget {
     List<CanvasElement> canvasElementList,
   )
   onDesignReady;
+
+  // A widget to show when there is no internet connection.
+  final Widget internetConnectionWidget;
 
   @override
   State<FlutterDesignEditor> createState() => _FlutterDesignEditorState();
@@ -190,13 +198,14 @@ class _FlutterDesignEditorState extends State<FlutterDesignEditor> {
     defaultCrop: Rect.fromLTRB(0.2, 0.2, 0.9, 0.9),
   );
 
-  // The controller to record and get widget as GIF
+  // The controller to record and get widget as GIF.
   final _screenRecordingController = ScreenRecorderController(
     pixelRatio: 1,
     skipFramesBetweenCaptures: 2,
   );
 
-  final _connectivityService = ConnectivityService();
+  // An instance of ConnectivityService class.
+  late final ConnectivityService _connectivityService;
 
   /// Called when this object is inserted into the tree.
   ///
@@ -217,6 +226,9 @@ class _FlutterDesignEditorState extends State<FlutterDesignEditor> {
     _familyPageController = PageController(viewportFraction: .125);
     _textColorsPageController = PageController(viewportFraction: .1);
     _gradientsPageController = PageController(viewportFraction: .175);
+    _connectivityService = ConnectivityService(
+      noInternetWidget: widget.internetConnectionWidget,
+    );
   }
 
   @override
