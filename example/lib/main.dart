@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_design_editor/flutter_design_editor.dart';
@@ -11,20 +13,16 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: FlutterDesignEditor(
-        imageFormatType: ImageFormatType.jpg,
-        onDesignReady: (
-          designFile,
-          backgroundGradientColorList,
-          canvasElementList,
-        ) {
-          // show image/GIF
-          if (kDebugMode) {
-            print('canvasElement list length : ${canvasElementList.length}');
-          }
-        },
-      ),
+    return FlutterDesignEditor(
+      imageFormatType: ImageFormatType.jpg,
+      onDesignReady: (
+        File? designFile,
+        Map<String, dynamic> canvasElementJson,
+      ) {
+        if (kDebugMode) {
+          print('canvasElementJson : $canvasElementJson');
+        }
+      },
     );
   }
 }

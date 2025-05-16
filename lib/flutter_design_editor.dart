@@ -13,6 +13,7 @@ import 'package:flutter_design_editor/src/components/no_internert_widget.dart';
 import 'package:flutter_design_editor/src/components/sticker_dialogue.dart';
 import 'package:flutter_design_editor/src/constants/font_styles.dart';
 import 'package:flutter_design_editor/src/constants/giphy_keys.dart';
+import 'package:flutter_design_editor/src/extensions/helpers.dart';
 import 'package:flutter_design_editor/src/gif/enough_giphy_flutter.dart';
 import 'package:flutter_design_editor/src/services/connectivity_service.dart';
 import 'package:image/image.dart' as img;
@@ -102,11 +103,7 @@ class FlutterDesignEditor extends StatefulWidget {
   // Called when design export is complete
   // Returns image file or GIF as per design
   // Also Returns list of CanvasElement included in design
-  final void Function(
-    File? designFile,
-    List<Color> backgroundGradientColorList,
-    List<CanvasElement> canvasElementList,
-  )
+  final void Function(File? designFile, Map<String, dynamic> canvasElementJson)
   onDesignReady;
 
   // A widget to show when there is no internet connection.
@@ -730,7 +727,7 @@ class _FlutterDesignEditorState extends State<FlutterDesignEditor> {
         ..type = ItemType.text
         ..value = _currentText
         ..color = _selectedTextColor
-        ..textStyle = _selectedTextBackgroundGradient
+        ..textDecorationColor = _selectedTextBackgroundGradient
         ..fontSize = _selectedFontSize
         ..fontFamily = _selectedFontFamily,
     );
@@ -784,12 +781,12 @@ class _FlutterDesignEditorState extends State<FlutterDesignEditor> {
         _currentText = e.value;
         _selectedFontFamily = e.fontFamily;
         _selectedFontSize = e.fontSize;
-        _selectedTextBackgroundGradient = e.textStyle;
+        _selectedTextBackgroundGradient = e.textDecorationColor;
         _selectedTextColor = e.color;
         _stackData.removeAt(_stackData.indexOf(e));
       });
       _familyPageController = PageController(
-        initialPage: e.textStyle,
+        initialPage: e.textDecorationColor,
         viewportFraction: .1,
       );
       _textColorsPageController = PageController(
@@ -959,16 +956,31 @@ class _FlutterDesignEditorState extends State<FlutterDesignEditor> {
       }
       _isLoading = false;
       setState(() {});
-      widget.onDesignReady(
-        imageFile,
-        widget.backgroundGradientColorList[_selectedBackgroundGradient],
-        _stackData,
-      );
+      widget.onDesignReady(imageFile, _computeDesignConfigJson());
     } catch (e) {
       if (kDebugMode) {
         print('Some error occured while saving design');
       }
     }
+  }
+
+  Map<String, dynamic> _computeDesignConfigJson() {
+    final List<Map<String, dynamic>> stackDataToJson = [];
+    for (final item in _stackData) {
+      stackDataToJson.add(
+        item.toJson(
+          fontBackgroundColorValue: colorToHex(
+            widget.fontColorList[item.textDecorationColor],
+          ),
+          fontFamilyValue: widget.fontFamilyList[item.fontFamily],
+        ),
+      );
+    }
+    List<String> hexColors =
+        widget.backgroundGradientColorList[_selectedBackgroundGradient]
+            .map((color) => colorToHex(color))
+            .toList();
+    return {'backgroundColor': hexColors, 'designItems': stackDataToJson};
   }
 
   /// Record screen and return GIF formate

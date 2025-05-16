@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_design_editor/src/constants/enums.dart';
+import 'package:flutter_design_editor/src/extensions/helpers.dart';
 import 'package:flutter_design_editor/src/gif/enough_giphy_flutter.dart';
 
 /// A class representing an editable item.
@@ -40,7 +41,7 @@ class CanvasElement {
   /// The style of the text.
   ///
   /// This is an integer value that represents the index of the text style in a predefined list of text styles.
-  int textStyle = 0;
+  int textDecorationColor = 0;
 
   /// The font size of the text.
   ///
@@ -56,4 +57,23 @@ class CanvasElement {
   ///
   /// This is an GiphyGif value that represents the GIF value.
   GiphyGif? giphyImage;
+
+  /// Returns information about all widgets in design.
+  ///
+  /// This methos returns config for all the CanvasElement used to return design json on image/GIF creation.
+  Map<String, dynamic> toJson({
+    required String fontFamilyValue,
+    required String fontBackgroundColorValue,
+  }) => {
+    "position": {"x": position.dx, "y": position.dy},
+    "scale": scale,
+    "rotation": rotation,
+    "type": type.name,
+    "value": value,
+    "color": colorToHex(color),
+    "fontDecorationColor": fontBackgroundColorValue,
+    "fontSize": fontSize,
+    "fontFamily": fontFamilyValue,
+    "giphyImage": giphyImage?.toJson(),
+  };
 }

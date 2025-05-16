@@ -61,7 +61,7 @@ class OverlayItemWidget extends StatelessWidget {
             padding: EdgeInsets.all(6),
             decoration: BoxDecoration(
               gradient: LinearGradient(
-                colors: backgroundColorList[canvasElement.textStyle],
+                colors: backgroundColorList[canvasElement.textDecorationColor],
                 begin: Alignment.centerLeft,
                 end: Alignment.centerRight,
               ),
