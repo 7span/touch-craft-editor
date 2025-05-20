@@ -19,6 +19,7 @@ import 'package:image/image.dart' as img;
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:saver_gallery/saver_gallery.dart';
 import 'package:screen_recorder/screen_recorder.dart';
 
 import 'src/components/background_gradient_selector_widget.dart';
@@ -57,6 +58,7 @@ class FlutterDesignEditor extends StatefulWidget {
     this.enableBackgroundGradientEditor = true,
     this.enableGifEditor = true,
     this.enableImageEditor = true,
+    this.enableDownloadDesignButton = true,
     this.imageFormatType = ImageFormatType.png,
     this.internetConnectionWidget = const NoInternetWidget(
       title: 'Please Check Internet Connection',
@@ -84,6 +86,9 @@ class FlutterDesignEditor extends StatefulWidget {
 
   // This parameters is used to enable sticker creation.
   final bool enableStickerEditor;
+
+  // This parameters is used to enable button to download and save design created.
+  final bool enableDownloadDesignButton;
 
   // Provide custom gradient color list
   // backgroundGradientColorList : [  [Color(0xFF1488CC), Color(0xFF2B32B2)],[Color(0xFFec008c), Color(0xFFfc6767)],];
@@ -482,6 +487,12 @@ class _FlutterDesignEditorState extends State<FlutterDesignEditor> {
                         onAddGiphyTap: _onAddGifTap,
                         onCreateStickerTap: _onCreateStickerTap,
                         onCloseStickerOverlay: _onScreenTap,
+                        onDownloadTap: () async {
+                          await _onDone(
+                            shouldSaveToGallery: true,
+                            buildContext: context,
+                          );
+                        },
                         backgroundColorList: widget.backgroundGradientColorList,
                         shouldShowBackgroundGradientButton:
                             widget.enableBackgroundGradientEditor,
@@ -489,6 +500,10 @@ class _FlutterDesignEditorState extends State<FlutterDesignEditor> {
                         shouldShowImageButton: widget.enableImageEditor,
                         shouldShowStickerButton: widget.enableStickerEditor,
                         shouldShowTextButton: widget.enableTextEditor,
+                        shouldShowDownloadButton:
+                            _isLoading
+                                ? false
+                                : widget.enableDownloadDesignButton,
                       ),
                       RemoveWidget(
                         animationsDuration: widget.animationsDuration,
@@ -496,14 +511,24 @@ class _FlutterDesignEditorState extends State<FlutterDesignEditor> {
                         isDeletePosition: _isDeletePosition,
                         shouldShowDeleteButton: _inAction,
                       ),
-                      if (_currentlyEditingItemType == null)
+                      if (_currentlyEditingItemType == null && !_isLoading)
                         Align(
                           alignment: Alignment.bottomCenter,
                           child: FooterToolsWidget(
-                            onDone: _onDone,
+                            onDone: () async {
+                              await _onDone(
+                                shouldSaveToGallery: false,
+                                buildContext: context,
+                              );
+                            },
                             doneButtonChild: widget.doneButtonChild,
                             isLoading: _isLoading,
                           ),
+                        ),
+                      if (_isLoading)
+                        Align(
+                          alignment: Alignment.center,
+                          child: CircularProgressIndicator(color: Colors.white),
                         ),
                     ],
                   ),
@@ -512,6 +537,24 @@ class _FlutterDesignEditorState extends State<FlutterDesignEditor> {
             },
           ),
         ],
+      ),
+    );
+  }
+
+  void _showSnackbar({
+    required BuildContext buildContext,
+    required String content,
+  }) {
+    ScaffoldMessenger.of(buildContext).showSnackBar(
+      SnackBar(
+        content: Center(
+          child: Text(
+            content,
+            style: TextStyle(color: Colors.white, fontSize: 18),
+          ),
+        ),
+        backgroundColor: Colors.black,
+        behavior: SnackBarBehavior.floating,
       ),
     );
   }
@@ -966,7 +1009,10 @@ class _FlutterDesignEditorState extends State<FlutterDesignEditor> {
   /// This method is called when the user taps on the done button.
   /// It captures the current state of the widget and checks if GIF is included in design.
   /// Based on items on stack it returns image or GIF.
-  Future<void> _onDone() async {
+  Future<void> _onDone({
+    required bool shouldSaveToGallery,
+    required BuildContext buildContext,
+  }) async {
     try {
       _isLoading = true;
       setState(() {});
@@ -979,15 +1025,23 @@ class _FlutterDesignEditorState extends State<FlutterDesignEditor> {
       }
       final File? imageFile;
       if (isGIFContained == true) {
-        imageFile = await _saveGifToTemporaryDirectory();
+        imageFile = await _saveGif(
+          shouldSaveToGallery: shouldSaveToGallery,
+          buildContext: buildContext,
+        );
       } else {
         //
-        imageFile = await _saveImageToTemporaryDirectory(
-          widget.imageFormatType,
+        imageFile = await _saveImage(
+          format: widget.imageFormatType,
+          buildContext: buildContext,
+          shouldSaveToGallery: shouldSaveToGallery,
         );
       }
       _isLoading = false;
       setState(() {});
+      if (shouldSaveToGallery) {
+        return;
+      }
       widget.onDesignReady(imageFile, _computeDesignConfigJson());
     } catch (e) {
       if (kDebugMode) {
@@ -1017,14 +1071,38 @@ class _FlutterDesignEditorState extends State<FlutterDesignEditor> {
   /// Record screen and return GIF formate
   ///
   /// Waits for 3 seconds, stops recording and exports GIF and saves GIF to local storage
-  Future<File?> _saveGifToTemporaryDirectory() async {
+  Future<File?> _saveGif({
+    required bool shouldSaveToGallery,
+    required BuildContext buildContext,
+  }) async {
     _screenRecordingController.start();
     await Future.delayed(Duration(seconds: 3));
     _screenRecordingController.stop();
     final gif = await _screenRecordingController.exporter.exportGif();
     if (gif != null) {
       Uint8List bytes = Uint8List.fromList(gif);
-      return _saveToLocal(bytes);
+      final fileName = '${DateTime.now().millisecondsSinceEpoch}';
+      if (!shouldSaveToGallery) {
+        final dir = await getApplicationDocumentsDirectory();
+        final file = File('${dir.path}/$fileName');
+        return await file.writeAsBytes(bytes);
+      } else {
+        final result = await SaverGallery.saveImage(
+          bytes,
+          quality: 100,
+          fileName: '$fileName.gif',
+          skipIfExists: false,
+        );
+        final String content =
+            result.isSuccess
+                ? 'GIF saved successfully'
+                : 'Could not save GIF. Please try again later.';
+        if (!buildContext.mounted) {
+          return null;
+        }
+        _showSnackbar(buildContext: buildContext, content: content);
+        return null;
+      }
     }
     return null;
   }
@@ -1032,42 +1110,54 @@ class _FlutterDesignEditorState extends State<FlutterDesignEditor> {
   /// Captures widget image from previewContainer
   ///
   /// Converts to PNG or JPG
-  /// Saves image in documents directory with timestamp name
-  Future<File> _saveImageToTemporaryDirectory(ImageFormatType format) async {
+  /// Saves image in documents directory with timestamp name based on the parameter value shouldSaveToGallery
+  Future<File?> _saveImage({
+    required ImageFormatType format,
+    required bool shouldSaveToGallery,
+    required BuildContext buildContext,
+  }) async {
     final boundary =
         previewContainer.currentContext!.findRenderObject()
             as RenderRepaintBoundary?;
     final image = await boundary!.toImage(pixelRatio: 3);
 
     final byteData = await image.toByteData(format: ui.ImageByteFormat.png);
+
+    final Uint8List imageBytes;
+    final String imageExtension;
     final pngBytes = byteData!.buffer.asUint8List();
-
-    final directory = (await getApplicationDocumentsDirectory()).path;
-
     if (format == ImageFormatType.jpg) {
       // Convert PNG bytes to JPG using image package
       final decodedImage = img.decodeImage(pngBytes);
-      final jpgBytes = img.encodeJpg(decodedImage!);
-      final file = File(
-        '$directory/${DateTime.now().millisecondsSinceEpoch}.jpg',
-      );
-      return await file.writeAsBytes(jpgBytes);
+      imageBytes = img.encodeJpg(decodedImage!);
+      imageExtension = '.jpg';
     } else {
-      final file = File(
-        '$directory/${DateTime.now().millisecondsSinceEpoch}.png',
-      );
-      return await file.writeAsBytes(pngBytes);
+      imageBytes = pngBytes;
+      imageExtension = '.png';
     }
-  }
-
-  /// Saves raw bytes as a local file in the app documents directory
-  ///
-  /// Uses current timestamp as filename
-  /// Returns the saved File instance
-  Future<File> _saveToLocal(Uint8List bytes) async {
-    final dir = await getApplicationDocumentsDirectory();
-    final file = File('${dir.path}/${DateTime.now().millisecondsSinceEpoch}');
-    return await file.writeAsBytes(bytes);
+    final directory = (await getApplicationDocumentsDirectory()).path;
+    final fileName = '${DateTime.now().millisecondsSinceEpoch}';
+    if (!shouldSaveToGallery) {
+      // save to temporary directory
+      final file = File('$directory/$fileName$imageExtension');
+      return await file.writeAsBytes(imageBytes);
+    } else {
+      final result = await SaverGallery.saveImage(
+        imageBytes,
+        quality: 100,
+        fileName: '$fileName$imageExtension',
+        skipIfExists: false,
+      );
+      final String content =
+          result.isSuccess
+              ? 'Image saved successfully'
+              : 'Could not save image. Please try again later.';
+      if (!buildContext.mounted) {
+        return null;
+      }
+      _showSnackbar(buildContext: buildContext, content: content);
+      return null;
+    }
   }
 
   /// Called when this object is removed from the tree permanently.

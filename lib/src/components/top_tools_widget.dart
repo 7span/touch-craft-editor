@@ -46,14 +46,17 @@ class TopToolsWidget extends StatelessWidget {
   /// A callback function that is called when the user taps on sticker button.
   final VoidCallback onCreateStickerTap;
 
-  // Current ItemType that is getting edditing.
+  /// Current ItemType that is getting edditing.
   final ItemType? currentlyEditingItemType;
 
-  // A callback function that is called when the user taps on blank screen to close overlay.
+  /// A callback function that is called when the user taps on blank screen to close overlay.
   final VoidCallback onCloseStickerOverlay;
 
-  // list of background gradient colors.
+  /// list of background gradient colors.
   final List<List<Color>> backgroundColorList;
+
+  /// A callback function that is called when the user taps the download button.
+  final VoidCallback onDownloadTap;
 
   // These variables are used to hide and show buttons for Design Editor features.
   final bool shouldShowGifButton;
@@ -61,6 +64,7 @@ class TopToolsWidget extends StatelessWidget {
   final bool shouldShowTextButton;
   final bool shouldShowStickerButton;
   final bool shouldShowBackgroundGradientButton;
+  final bool shouldShowDownloadButton;
 
   /// A callback function that is called when the add Giphy button is tapped
   /// Creates an instance of the widget.
@@ -76,6 +80,7 @@ class TopToolsWidget extends StatelessWidget {
     required this.onToggleTextColorPicker,
     required this.onChangeTextBackground,
     required this.onImagePickerTap,
+    required this.onDownloadTap,
     this.activeItem,
     required this.onCropTap,
     required this.onAddGiphyTap,
@@ -88,6 +93,7 @@ class TopToolsWidget extends StatelessWidget {
     required this.shouldShowTextButton,
     required this.shouldShowStickerButton,
     required this.shouldShowBackgroundGradientButton,
+    required this.shouldShowDownloadButton,
   });
 
   /// Describes the part of the user interface represented by this widget.
@@ -172,6 +178,13 @@ class TopToolsWidget extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.end,
                   spacing: 8,
                   children: [
+                    if (shouldShowDownloadButton) ...[
+                      _TopToolBarIcon(
+                        onTap: onDownloadTap,
+                        iconData: Icons.download_sharp,
+                      ),
+                      Spacer(),
+                    ],
                     if (shouldShowBackgroundGradientButton)
                       _TopToolBarIcon(
                         onTap: onPickerTap,
