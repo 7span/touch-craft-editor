@@ -156,9 +156,9 @@ class TopToolsWidget extends StatelessWidget {
         top: context.topPadding,
         child: Container(
           width: context.width,
-          padding: const EdgeInsets.all(8),
+          padding: const EdgeInsets.all(4),
           child: IconButton(
-            icon: const Icon(Icons.cancel_outlined, color: Colors.white),
+            icon: const Icon(Icons.cancel, color: Colors.white, size: 30),
             onPressed: onCloseStickerOverlay,
           ),
         ),
@@ -237,8 +237,7 @@ class _TopToolBarIcon extends StatelessWidget {
         width: 40,
         decoration: BoxDecoration(
           gradient: gradient,
-          color: gradient != null ? null : Colors.black26,
-          border: Border.all(color: Colors.white),
+          color: gradient != null ? null : Colors.black38,
           borderRadius: BorderRadius.circular(32),
         ),
         child: Center(

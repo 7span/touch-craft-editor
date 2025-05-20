@@ -139,7 +139,7 @@ class _FlutterDesignEditorState extends State<FlutterDesignEditor> {
   double _currentScale = 1;
 
   // The current rotation of the active item.
-  double _currentRotation = 0;
+  double _currentRotation = 1;
 
   // Indicates whether the widget is in action.
   bool _inAction = false;

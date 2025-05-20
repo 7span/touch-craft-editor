@@ -46,6 +46,7 @@ class SizeSliderWidget extends StatelessWidget {
             value: selectedValue,
             min: 14,
             max: 74,
+            thumbColor: Colors.white60,
             activeColor: Colors.white,
             inactiveColor: Colors.white.withValues(alpha: 0.4),
             onChanged: onChanged,

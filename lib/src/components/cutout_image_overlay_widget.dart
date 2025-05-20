@@ -4,6 +4,7 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter_design_editor/src/components/background_remover.dart';
 import 'package:flutter_design_editor/src/extensions/context_extension.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:image/image.dart' as img;
 import 'package:path_provider/path_provider.dart';
 
@@ -106,7 +107,7 @@ class _CutoutImageOverlayWidgetState extends State<CutoutImageOverlayWidget> {
                   height: context.height * 0.4,
                   child: Image.file(stickerImage!),
                 ),
-              _ButtonConatainer(label: 'Create Sticker'),
+              _ButtonConatainer(label: 'Add Sticker'),
             ],
           ),
         ),
@@ -124,12 +125,19 @@ class _ButtonConatainer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.all(8),
+      padding: EdgeInsets.all(16),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(8),
-        gradient: LinearGradient(colors: [Colors.blue, Colors.green]),
+        borderRadius: BorderRadius.circular(32),
+        color: Colors.grey.shade200,
       ),
-      child: Text(label, style: TextStyle(fontSize: 16, color: Colors.white)),
+      child: Text(
+        label,
+        style: GoogleFonts.inter(
+          color: Colors.black,
+          fontWeight: FontWeight.w600,
+          fontSize: 16,
+        ),
+      ),
     );
   }
 }

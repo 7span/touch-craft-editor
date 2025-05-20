@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 /// A widget that displays an alert dialog for sticker creation.
 ///
@@ -26,28 +27,49 @@ class StickerDialogue extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      backgroundColor: Colors.black54,
+      backgroundColor: Colors.white,
       title: Text(
         'Create a cutout sticker',
-        style: TextStyle(color: Colors.white, fontSize: 18),
+        style: GoogleFonts.inter(
+          color: Colors.black,
+          fontSize: 18,
+          fontWeight: FontWeight.bold,
+        ),
       ),
       content: Text(
-        'Select a photo with a clear subject',
-        style: TextStyle(color: Colors.grey, fontSize: 16),
+        'Select a photo with a clear subject to create sticker.',
+        style: GoogleFonts.inter(color: Colors.black54, fontSize: 16),
+        //  TextStyle(color: Colors.grey, fontSize: 16),
       ),
       actions: [
         TextButton(
+          style: ButtonStyle(
+            shape: WidgetStatePropertyAll(
+              RoundedRectangleBorder(
+                side: BorderSide(
+                  color: Colors.grey, // your color here
+                  width: 1,
+                ),
+                borderRadius: BorderRadius.circular(40),
+              ),
+            ),
+          ),
           onPressed: onCancleTap,
           child: Text(
             'Cancle',
-            style: TextStyle(color: Colors.white, fontSize: 14),
+            style: GoogleFonts.inter(color: Colors.black, fontSize: 14),
           ),
         ),
+        SizedBox(width: 4),
         TextButton(
           onPressed: onOpenGalleryTap,
+          style: ButtonStyle(
+            backgroundColor: WidgetStatePropertyAll(Colors.grey.shade200),
+            overlayColor: WidgetStatePropertyAll(Colors.white70),
+          ),
           child: Text(
             'Open Gallery',
-            style: TextStyle(color: Colors.white, fontSize: 14),
+            style: GoogleFonts.inter(color: Colors.black, fontSize: 14),
           ),
         ),
       ],
