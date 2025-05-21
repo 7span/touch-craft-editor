@@ -72,6 +72,7 @@ class FlutterDesignEditor extends StatefulWidget {
     this.gifIconWidget,
     this.stickerIconWidget,
     this.textIconWidget,
+    this.snackbarContent,
   });
 
   /// The duration for all animated transitions within the widget.
@@ -97,6 +98,8 @@ class FlutterDesignEditor extends StatefulWidget {
 
   /// The widget to display as the add sticker button.
   final Widget? stickerIconWidget;
+
+  final Widget? snackbarContent;
 
   // This parameters is used to enable text editor
   final bool enableTextEditor;
@@ -594,12 +597,14 @@ class _FlutterDesignEditorState extends State<FlutterDesignEditor> {
   }) {
     ScaffoldMessenger.of(buildContext).showSnackBar(
       SnackBar(
-        content: Center(
-          child: Text(
-            content,
-            style: TextStyle(color: Colors.white, fontSize: 16),
-          ),
-        ),
+        content:
+            widget.snackbarContent ??
+            Center(
+              child: Text(
+                content,
+                style: TextStyle(color: Colors.white, fontSize: 16),
+              ),
+            ),
         backgroundColor: primaryThemeColor.withAlpha(128),
         behavior: SnackBarBehavior.floating,
       ),

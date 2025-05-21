@@ -96,7 +96,12 @@ class BackgroundGradientSelectorWidget extends StatelessWidget {
                     borderRadius: BorderRadius.all(
                       Radius.circular(context.width * .175),
                     ),
-                    border: Border.all(color: Colors.white),
+                    border: Border.all(
+                      color:
+                          (index == 0 || index == 1)
+                              ? Colors.grey
+                              : Colors.white,
+                    ),
                   ),
                   child: Center(
                     child: AnimatedSwitcher(
