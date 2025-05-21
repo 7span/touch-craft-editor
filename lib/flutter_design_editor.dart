@@ -289,7 +289,15 @@ class _FlutterDesignEditorState extends State<FlutterDesignEditor> {
                             child: GestureDetector(
                               onScaleStart: _onScaleStart,
                               onScaleUpdate: _onScaleUpdate,
-                              onTap: _onScreenTap,
+                              onTap: () {
+                                if (_activeItem == null &&
+                                    _addNewItemOfType == null &&
+                                    _currentlyEditingItemType == null) {
+                                  _showTextView();
+                                } else {
+                                  _onScreenTap();
+                                }
+                              },
                               child: Stack(
                                 children: [
                                   RepaintBoundary(
@@ -550,10 +558,10 @@ class _FlutterDesignEditorState extends State<FlutterDesignEditor> {
         content: Center(
           child: Text(
             content,
-            style: TextStyle(color: Colors.white, fontSize: 18),
+            style: TextStyle(color: Colors.white, fontSize: 16),
           ),
         ),
-        backgroundColor: Colors.black,
+        backgroundColor: Colors.blue.shade700,
         behavior: SnackBarBehavior.floating,
       ),
     );
