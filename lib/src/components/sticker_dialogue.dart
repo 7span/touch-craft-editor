@@ -38,8 +38,7 @@ class StickerDialogue extends StatelessWidget {
       ),
       content: Text(
         'Select a photo with a clear subject to create sticker.',
-        style: GoogleFonts.inter(color: Colors.black54, fontSize: 16),
-        //  TextStyle(color: Colors.grey, fontSize: 16),
+        style: GoogleFonts.inter(color: Colors.black87, fontSize: 16),
       ),
       actions: [
         TextButton(
@@ -57,19 +56,40 @@ class StickerDialogue extends StatelessWidget {
           onPressed: onCancleTap,
           child: Text(
             'Cancle',
-            style: GoogleFonts.inter(color: Colors.black, fontSize: 14),
+            style: GoogleFonts.inter(
+              color: Colors.black,
+              fontSize: 14,
+              fontWeight: FontWeight.w500,
+            ),
           ),
         ),
         SizedBox(width: 4),
         TextButton(
           onPressed: onOpenGalleryTap,
           style: ButtonStyle(
-            backgroundColor: WidgetStatePropertyAll(Colors.grey.shade200),
+            backgroundColor: WidgetStatePropertyAll(Colors.amber.withAlpha(40)),
             overlayColor: WidgetStatePropertyAll(Colors.white70),
+            side: WidgetStatePropertyAll(
+              BorderSide(
+                color: Colors.grey,
+                width: 1.5,
+              ), // Border color & width
+            ),
+            shape: WidgetStatePropertyAll(
+              RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(
+                  30,
+                ), // Optional: rounded corners
+              ),
+            ),
           ),
           child: Text(
             'Open Gallery',
-            style: GoogleFonts.inter(color: Colors.black, fontSize: 14),
+            style: GoogleFonts.inter(
+              color: Colors.black,
+              fontSize: 14,
+              fontWeight: FontWeight.w500,
+            ),
           ),
         ),
       ],

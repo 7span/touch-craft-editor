@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_design_editor/src/constants/enums.dart';
 import 'package:flutter_design_editor/src/extensions/context_extension.dart';
 import 'package:flutter_design_editor/src/models/canvas_element.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:flutter_svg/svg.dart';
 
 /// A widget for displaying the top tools.
 ///
@@ -181,37 +181,34 @@ class TopToolsWidget extends StatelessWidget {
                     if (shouldShowDownloadButton) ...[
                       _TopToolBarIcon(
                         onTap: onDownloadTap,
-                        iconData: Icons.download_sharp,
+                        imagePath: 'assets/download.svg',
                       ),
                       Spacer(),
                     ],
                     if (shouldShowBackgroundGradientButton)
                       _TopToolBarIcon(
                         onTap: onPickerTap,
-                        gradient: LinearGradient(
-                          colors:
-                              selectedBackgroundGradientIndex == 0
-                                  ? [Colors.black26, Colors.black26]
-                                  : backgroundColorList[selectedBackgroundGradientIndex],
-                        ),
-                        iconData: Icons.auto_awesome,
+                        imagePath: 'assets/background.svg',
                       ),
                     if (shouldShowTextButton)
-                      _TopToolBarIcon(onTap: onScreenTap),
+                      _TopToolBarIcon(
+                        onTap: onScreenTap,
+                        imagePath: 'assets/text.svg',
+                      ),
                     if (shouldShowImageButton)
                       _TopToolBarIcon(
                         onTap: onImagePickerTap,
-                        iconData: Icons.photo_camera_back_outlined,
+                        imagePath: 'assets/gallery.svg',
                       ),
                     if (shouldShowGifButton)
                       _TopToolBarIcon(
                         onTap: onAddGiphyTap,
-                        iconData: Icons.gif,
+                        imagePath: 'assets/gif.svg',
                       ),
                     if (shouldShowStickerButton)
                       _TopToolBarIcon(
                         onTap: onCreateStickerTap,
-                        iconData: Icons.cut,
+                        imagePath: 'assets/sticker.svg',
                       ),
                   ],
                 ),
@@ -221,30 +218,30 @@ class TopToolsWidget extends StatelessWidget {
 }
 
 class _TopToolBarIcon extends StatelessWidget {
-  const _TopToolBarIcon({required this.onTap, this.iconData, this.gradient});
+  const _TopToolBarIcon({required this.onTap, required this.imagePath});
 
   final VoidCallback onTap;
-  final Gradient? gradient;
-  final IconData? iconData;
+  final String imagePath;
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        padding: EdgeInsets.all(2),
+        padding: EdgeInsets.all(8),
         height: 40,
         width: 40,
         decoration: BoxDecoration(
-          gradient: gradient,
-          color: gradient != null ? null : Colors.black38,
+          color: Colors.black38,
           borderRadius: BorderRadius.circular(32),
         ),
         child: Center(
-          child:
-              iconData != null
-                  ? Icon(iconData, color: Colors.white)
-                  : Text('Aa', style: GoogleFonts.ubuntu(color: Colors.white)),
+          child: SvgPicture.asset(
+            imagePath,
+            height: 19,
+            width: 19,
+            package: 'flutter_design_editor',
+          ),
         ),
       ),
     );

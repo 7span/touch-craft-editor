@@ -23,6 +23,7 @@ dependencies:
   screen_recorder: ^0.3.0
   connectivity_plus: ^6.1.4
   saver_gallery: ^4.0.1
+  flutter_svg: ^2.1.0
 
 dev_dependencies:
   flutter_test:

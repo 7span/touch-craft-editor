@@ -160,7 +160,7 @@ class _FlutterDesignEditorState extends State<FlutterDesignEditor> {
   int _selectedTextBackgroundGradient = 0;
 
   // The index of the currently selected background gradient.
-  int _selectedBackgroundGradient = 0;
+  int _selectedBackgroundGradient = 1;
 
   // The currently selected font size.
   double _selectedFontSize = 26;

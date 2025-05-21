@@ -38,7 +38,7 @@ class FooterToolsWidget extends StatelessWidget {
       height: context.bottomPadding + kToolbarHeight,
       alignment: Alignment.topCenter,
       child: Padding(
-        padding: const EdgeInsets.only(top: 4, right: 16),
+        padding: const EdgeInsets.only(right: 20),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
@@ -47,7 +47,7 @@ class FooterToolsWidget extends StatelessWidget {
               style: ButtonStyle(
                 shape: WidgetStateProperty.all(
                   const RoundedRectangleBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(18)),
+                    borderRadius: BorderRadius.all(Radius.circular(22)),
                   ),
                 ),
                 shadowColor: WidgetStateProperty.all(Colors.white),
