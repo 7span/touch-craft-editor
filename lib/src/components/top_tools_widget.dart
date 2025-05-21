@@ -66,6 +66,24 @@ class TopToolsWidget extends StatelessWidget {
   final bool shouldShowBackgroundGradientButton;
   final bool shouldShowDownloadButton;
 
+  /// The widget to display as the download button.
+  final Widget? downloadIconWidget;
+
+  /// The widget to display as the add backgrund color button.
+  final Widget? backgroundColorIconWidget;
+
+  /// The widget to display as the add text button.
+  final Widget? imageIconWidget;
+
+  /// The widget to display as the add image button.
+  final Widget? textIconWidget;
+
+  /// The widget to display as the add GIF button.
+  final Widget? gifIconWidget;
+
+  /// The widget to display as the add sticker button.
+  final Widget? stickerIconWidget;
+
   /// A callback function that is called when the add Giphy button is tapped
   /// Creates an instance of the widget.
   ///
@@ -94,6 +112,12 @@ class TopToolsWidget extends StatelessWidget {
     required this.shouldShowStickerButton,
     required this.shouldShowBackgroundGradientButton,
     required this.shouldShowDownloadButton,
+    this.downloadIconWidget,
+    this.backgroundColorIconWidget,
+    this.imageIconWidget,
+    this.textIconWidget,
+    this.gifIconWidget,
+    this.stickerIconWidget,
   });
 
   /// Describes the part of the user interface represented by this widget.
@@ -179,36 +203,48 @@ class TopToolsWidget extends StatelessWidget {
                   spacing: 8,
                   children: [
                     if (shouldShowDownloadButton) ...[
-                      _TopToolBarIcon(
+                      GestureDetector(
                         onTap: onDownloadTap,
-                        imagePath: 'assets/download.svg',
+                        child:
+                            downloadIconWidget ??
+                            _TopToolBarIcon(imagePath: 'assets/download.svg'),
                       ),
                       Spacer(),
                     ],
                     if (shouldShowBackgroundGradientButton)
-                      _TopToolBarIcon(
+                      GestureDetector(
                         onTap: onPickerTap,
-                        imagePath: 'assets/background.svg',
+                        child:
+                            backgroundColorIconWidget ??
+                            _TopToolBarIcon(imagePath: 'assets/background.svg'),
                       ),
                     if (shouldShowTextButton)
-                      _TopToolBarIcon(
+                      GestureDetector(
                         onTap: onScreenTap,
-                        imagePath: 'assets/text.svg',
+                        child:
+                            textIconWidget ??
+                            _TopToolBarIcon(imagePath: 'assets/text.svg'),
                       ),
                     if (shouldShowImageButton)
-                      _TopToolBarIcon(
+                      GestureDetector(
                         onTap: onImagePickerTap,
-                        imagePath: 'assets/gallery.svg',
+                        child:
+                            imageIconWidget ??
+                            _TopToolBarIcon(imagePath: 'assets/gallery.svg'),
                       ),
                     if (shouldShowGifButton)
-                      _TopToolBarIcon(
+                      GestureDetector(
                         onTap: onAddGiphyTap,
-                        imagePath: 'assets/gif.svg',
+                        child:
+                            gifIconWidget ??
+                            _TopToolBarIcon(imagePath: 'assets/gif.svg'),
                       ),
                     if (shouldShowStickerButton)
-                      _TopToolBarIcon(
+                      GestureDetector(
                         onTap: onCreateStickerTap,
-                        imagePath: 'assets/sticker.svg',
+                        child:
+                            stickerIconWidget ??
+                            _TopToolBarIcon(imagePath: 'assets/sticker.svg'),
                       ),
                   ],
                 ),
@@ -218,30 +254,26 @@ class TopToolsWidget extends StatelessWidget {
 }
 
 class _TopToolBarIcon extends StatelessWidget {
-  const _TopToolBarIcon({required this.onTap, required this.imagePath});
+  const _TopToolBarIcon({required this.imagePath});
 
-  final VoidCallback onTap;
   final String imagePath;
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        padding: EdgeInsets.all(8),
-        height: 40,
-        width: 40,
-        decoration: BoxDecoration(
-          color: Colors.black38,
-          borderRadius: BorderRadius.circular(32),
-        ),
-        child: Center(
-          child: SvgPicture.asset(
-            imagePath,
-            height: 19,
-            width: 19,
-            package: 'flutter_design_editor',
-          ),
+    return Container(
+      padding: EdgeInsets.all(8),
+      height: 40,
+      width: 40,
+      decoration: BoxDecoration(
+        color: Colors.black38,
+        borderRadius: BorderRadius.circular(32),
+      ),
+      child: Center(
+        child: SvgPicture.asset(
+          imagePath,
+          height: 19,
+          width: 19,
+          package: 'flutter_design_editor',
         ),
       ),
     );

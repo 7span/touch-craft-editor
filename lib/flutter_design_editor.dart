@@ -50,7 +50,6 @@ class FlutterDesignEditor extends StatefulWidget {
     super.key,
     required this.onDesignReady,
     this.animationsDuration = const Duration(milliseconds: 300),
-    this.doneButtonWidget,
     this.backgroundGradientColorList = gradientColors,
     this.fontFamilyList = googleFontFamilyList,
     this.fontColorList = defaultColors,
@@ -65,7 +64,14 @@ class FlutterDesignEditor extends StatefulWidget {
       title: 'Please Check Internet Connection',
     ),
     this.editDesignJson,
+    this.doneButtonWidget,
     this.primaryColor,
+    this.downloadIconWidget,
+    this.backgroundColorIconWidget,
+    this.imageIconWidget,
+    this.gifIconWidget,
+    this.stickerIconWidget,
+    this.textIconWidget,
   });
 
   /// The duration for all animated transitions within the widget.
@@ -73,6 +79,24 @@ class FlutterDesignEditor extends StatefulWidget {
 
   /// The widget to display as the "Done" button.
   final Widget? doneButtonWidget;
+
+  /// The widget to display as the download button.
+  final Widget? downloadIconWidget;
+
+  /// The widget to display as the add backgrund color button.
+  final Widget? backgroundColorIconWidget;
+
+  /// The widget to display as the add text button.
+  final Widget? imageIconWidget;
+
+  /// The widget to display as the add image button.
+  final Widget? textIconWidget;
+
+  /// The widget to display as the add GIF button.
+  final Widget? gifIconWidget;
+
+  /// The widget to display as the add sticker button.
+  final Widget? stickerIconWidget;
 
   // This parameters is used to enable text editor
   final bool enableTextEditor;
@@ -491,6 +515,13 @@ class _FlutterDesignEditorState extends State<FlutterDesignEditor> {
                         selectedBackgroundGradientIndex:
                             _selectedBackgroundGradient,
                         animationsDuration: widget.animationsDuration,
+                        backgroundColorIconWidget:
+                            widget.backgroundColorIconWidget,
+                        downloadIconWidget: widget.downloadIconWidget,
+                        gifIconWidget: widget.gifIconWidget,
+                        imageIconWidget: widget.imageIconWidget,
+                        stickerIconWidget: widget.stickerIconWidget,
+                        textIconWidget: widget.textIconWidget,
                         onPickerTap: _onToggleBackgroundGradientPicker,
                         onScreenTap: _showTextView,
                         selectedTextBackgroundGradientIndex:
