@@ -1013,6 +1013,9 @@ class _FlutterDesignEditorState extends State<FlutterDesignEditor> {
     required bool shouldSaveToGallery,
     required BuildContext buildContext,
   }) async {
+    if (_stackData.isEmpty) {
+      return;
+    }
     try {
       _isLoading = true;
       setState(() {});

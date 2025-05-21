@@ -178,13 +178,13 @@ class _GiphySheetState extends State<GiphySheet> {
             borderSide: BorderSide(color: Colors.black),
           ),
           focusColor: Colors.black,
-          suffix: PlatformIconButton(
-            icon: Icon(CommonPlatformIcons.clear),
-            onPressed: () {
-              _searchController.text = '';
-              _reload(_currentRequest.copyWithoutSearchQuery());
-            },
-          ),
+          // suffix: PlatformIconButton(
+          //   icon: Icon(CommonPlatformIcons.clear),
+          //   onPressed: () {
+          //     _searchController.text = '';
+          //     _reload(_currentRequest.copyWithoutSearchQuery());
+          //   },
+          // ),
           suffixIcon:
               defaultTargetPlatform == TargetPlatform.windows
                   ? PlatformIconButton(
@@ -198,7 +198,7 @@ class _GiphySheetState extends State<GiphySheet> {
 
   @override
   Widget build(BuildContext context) {
-    final attribution = widget.attribution ?? SizedBox();
+    final attribution = widget.attribution ?? SizedBox.shrink();
     return CustomScrollView(
       controller: widget.scrollController,
       slivers: [
@@ -394,12 +394,26 @@ class _GiphySheetState extends State<GiphySheet> {
           );
           _reload(request);
         },
+        borderColor: Colors.grey,
+        borderRadius: BorderRadius.circular(20),
+        selectedBorderColor: Colors.black,
+        disabledColor: Colors.white,
+        fillColor: Colors.blue,
         children:
             GiphyType.values
                 .map(
                   (type) => Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                    child: Text(_getHeaderText(type)),
+                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                    child: Text(
+                      _getHeaderText(type),
+                      style: TextStyle(
+                        color:
+                            type == _currentRequest.type
+                                ? Colors.white
+                                : Colors.black,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
                   ),
                 )
                 .toList(),

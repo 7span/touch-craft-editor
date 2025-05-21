@@ -51,7 +51,7 @@ class FooterToolsWidget extends StatelessWidget {
                   ),
                 ),
                 shadowColor: WidgetStateProperty.all(Colors.white),
-                backgroundColor: WidgetStateProperty.all(Colors.white),
+                backgroundColor: WidgetStateProperty.all(Colors.blue),
               ),
               child:
                   isLoading
@@ -66,14 +66,14 @@ class FooterToolsWidget extends StatelessWidget {
                                   Text(
                                     'Done',
                                     style: TextStyle(
-                                      color: Colors.black,
-                                      fontSize: 12,
+                                      color: Colors.white,
+                                      fontSize: 16,
                                     ),
                                   ),
                                   SizedBox(width: 4),
                                   Icon(
                                     CupertinoIcons.forward,
-                                    color: Colors.black,
+                                    color: Colors.white,
                                     size: 18,
                                   ),
                                 ],

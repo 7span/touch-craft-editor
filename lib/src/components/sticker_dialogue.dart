@@ -67,14 +67,8 @@ class StickerDialogue extends StatelessWidget {
         TextButton(
           onPressed: onOpenGalleryTap,
           style: ButtonStyle(
-            backgroundColor: WidgetStatePropertyAll(Colors.amber.withAlpha(40)),
+            backgroundColor: WidgetStatePropertyAll(Colors.blue),
             overlayColor: WidgetStatePropertyAll(Colors.white70),
-            side: WidgetStatePropertyAll(
-              BorderSide(
-                color: Colors.grey,
-                width: 1.5,
-              ), // Border color & width
-            ),
             shape: WidgetStatePropertyAll(
               RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(
@@ -86,7 +80,7 @@ class StickerDialogue extends StatelessWidget {
           child: Text(
             'Open Gallery',
             style: GoogleFonts.inter(
-              color: Colors.black,
+              color: Colors.white,
               fontSize: 14,
               fontWeight: FontWeight.w500,
             ),
