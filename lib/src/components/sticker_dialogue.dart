@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_design_editor/src/constants/primary_color.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 /// A widget that displays an alert dialog for sticker creation.
@@ -67,7 +68,7 @@ class StickerDialogue extends StatelessWidget {
         TextButton(
           onPressed: onOpenGalleryTap,
           style: ButtonStyle(
-            backgroundColor: WidgetStatePropertyAll(Colors.blue),
+            backgroundColor: WidgetStatePropertyAll(primaryThemeColor),
             overlayColor: WidgetStatePropertyAll(Colors.white70),
             shape: WidgetStatePropertyAll(
               RoundedRectangleBorder(

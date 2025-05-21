@@ -3,6 +3,7 @@ import 'package:enough_platform_widgets/enough_platform_widgets.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_design_editor/src/constants/primary_color.dart';
 import 'package:flutter_design_editor/src/gif/image_view.dart';
 
 import 'grid.dart';
@@ -398,7 +399,7 @@ class _GiphySheetState extends State<GiphySheet> {
         borderRadius: BorderRadius.circular(20),
         selectedBorderColor: Colors.black,
         disabledColor: Colors.white,
-        fillColor: Colors.blue,
+        fillColor: primaryThemeColor,
         children:
             GiphyType.values
                 .map(

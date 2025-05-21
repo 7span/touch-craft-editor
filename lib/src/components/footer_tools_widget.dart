@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_design_editor/src/constants/primary_color.dart';
 import 'package:flutter_design_editor/src/extensions/context_extension.dart';
 
 /// A widget for displaying footer tools.
@@ -51,7 +52,7 @@ class FooterToolsWidget extends StatelessWidget {
                   ),
                 ),
                 shadowColor: WidgetStateProperty.all(Colors.white),
-                backgroundColor: WidgetStateProperty.all(Colors.blue),
+                backgroundColor: WidgetStateProperty.all(primaryThemeColor),
               ),
               child:
                   isLoading

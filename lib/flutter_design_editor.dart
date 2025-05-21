@@ -13,6 +13,7 @@ import 'package:flutter_design_editor/src/components/no_internert_widget.dart';
 import 'package:flutter_design_editor/src/components/sticker_dialogue.dart';
 import 'package:flutter_design_editor/src/constants/font_styles.dart';
 import 'package:flutter_design_editor/src/constants/giphy_keys.dart';
+import 'package:flutter_design_editor/src/constants/primary_color.dart';
 import 'package:flutter_design_editor/src/gif/enough_giphy_flutter.dart';
 import 'package:flutter_design_editor/src/services/connectivity_service.dart';
 import 'package:image/image.dart' as img;
@@ -49,7 +50,7 @@ class FlutterDesignEditor extends StatefulWidget {
     super.key,
     required this.onDesignReady,
     this.animationsDuration = const Duration(milliseconds: 300),
-    this.doneButtonChild,
+    this.doneButtonWidget,
     this.backgroundGradientColorList = gradientColors,
     this.fontFamilyList = googleFontFamilyList,
     this.fontColorList = defaultColors,
@@ -64,13 +65,14 @@ class FlutterDesignEditor extends StatefulWidget {
       title: 'Please Check Internet Connection',
     ),
     this.editDesignJson,
+    this.primaryColor,
   });
 
   /// The duration for all animated transitions within the widget.
   final Duration animationsDuration;
 
   /// The widget to display as the "Done" button.
-  final Widget? doneButtonChild;
+  final Widget? doneButtonWidget;
 
   // This parameters is used to enable text editor
   final bool enableTextEditor;
@@ -117,6 +119,9 @@ class FlutterDesignEditor extends StatefulWidget {
   /// Map having info to re-edit the previous made design.
   /// Note : return [canvasDesignJson] which was previously returned on Done tap.
   final Map<String, dynamic>? editDesignJson;
+
+  /// Color apply to match theme of your application.
+  final Color? primaryColor;
 
   @override
   State<FlutterDesignEditor> createState() => _FlutterDesignEditorState();
@@ -232,6 +237,9 @@ class _FlutterDesignEditorState extends State<FlutterDesignEditor> {
     _familyPageController = PageController(viewportFraction: .125);
     _textColorsPageController = PageController(viewportFraction: .1);
     _gradientsPageController = PageController(viewportFraction: .175);
+    if (widget.primaryColor != null) {
+      primaryThemeColor = widget.primaryColor!;
+    }
     _connectivityService = ConnectivityService(
       noInternetWidget: widget.internetConnectionWidget,
     );
@@ -529,7 +537,7 @@ class _FlutterDesignEditorState extends State<FlutterDesignEditor> {
                                 buildContext: context,
                               );
                             },
-                            doneButtonChild: widget.doneButtonChild,
+                            doneButtonChild: widget.doneButtonWidget,
                             isLoading: _isLoading,
                           ),
                         ),
@@ -561,7 +569,7 @@ class _FlutterDesignEditorState extends State<FlutterDesignEditor> {
             style: TextStyle(color: Colors.white, fontSize: 16),
           ),
         ),
-        backgroundColor: Colors.blue.shade700,
+        backgroundColor: primaryThemeColor.withAlpha(128),
         behavior: SnackBarBehavior.floating,
       ),
     );
