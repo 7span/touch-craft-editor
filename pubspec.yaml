@@ -8,7 +8,7 @@ platforms:
   ios:
 
 screenshots:
-  - description : "Craft stunning visual editors with Flutter. 🎨 Add text, GIFs, stickers, gradients, and images — customize everything, export anywhere, and re-edit anytime."
+  - description : "Craft stunning visual editors with Flutter. Add text, GIFs, stickers, gradients, and images — customize everything, export anywhere, and re-edit anytime."
     path: touch_craft_editor.jpg
 
 
