@@ -3,6 +3,9 @@ description: "Craft stunning visual editors with Flutter. 🎨 Add text, GIFs, s
 version: 0.0.1
 repository: https://github.com/avni-7span/touch_craft_editor
 issue_tracker: https://github.com/avni-7span/touch_craft_editor/issues
+platforms:
+  android:
+  ios:
 
 screenshots:
   path: touch_craft_editor.jpg
