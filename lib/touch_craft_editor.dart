@@ -10,9 +10,8 @@ import 'package:touch_craft_editor/src/components/connectivity_wrapper.dart';
 import 'package:touch_craft_editor/src/components/cutout_image_overlay_widget.dart';
 import 'package:touch_craft_editor/src/components/image_crop_view.dart';
 import 'package:touch_craft_editor/src/components/no_internert_widget.dart';
-import 'package:touch_craft_editor/src/components/sticker_dialogue.dart';
+import 'package:touch_craft_editor/src/components/app_alert_dialogue.dart';
 import 'package:touch_craft_editor/src/constants/font_styles.dart';
-import 'package:touch_craft_editor/src/constants/giphy_keys.dart';
 import 'package:touch_craft_editor/src/constants/primary_color.dart';
 import 'package:touch_craft_editor/src/gif/enough_giphy_flutter.dart';
 import 'package:touch_craft_editor/src/services/connectivity_service.dart';
@@ -73,6 +72,7 @@ class TouchCraftEditor extends StatefulWidget {
     this.stickerIconWidget,
     this.textIconWidget,
     this.snackbarContent,
+    this.giphyApiKey,
   });
 
   /// The duration for all animated transitions within the widget.
@@ -149,6 +149,9 @@ class TouchCraftEditor extends StatefulWidget {
 
   /// Color apply to match theme of your application.
   final Color? primaryColor;
+
+  /// Pass Giphy API key for GIF editing feature.
+  final String? giphyApiKey;
 
   @override
   State<TouchCraftEditor> createState() => _TouchCraftEditorState();
@@ -999,15 +1002,33 @@ class _TouchCraftEditorState extends State<TouchCraftEditor> {
   /// if a gif is selected, it's added as an editable item to the stack data.
   /// Updates the state to reflect the new gif addition.
   void _onAddGifTap() async {
-    final gif = await Giphy.getGif(context: context, apiKey: giphyApiKey);
-    if (gif != null) {
-      setState(() {
-        _stackData.add(
-          CanvasElement()
-            ..type = ItemType.gif
-            ..giphyImage = gif,
-        );
-      });
+    if (widget.giphyApiKey != null && widget.giphyApiKey != '') {
+      showDialog(
+        context: context,
+        barrierDismissible: true,
+        builder: (context) => AppAlertDialogue(
+          title: 'Giphy API key is required',
+          description:
+              'Please provide api key for Giphy to use GIF editor feature',
+          continueButtonTitle: 'Ok',
+          shouldShowCancelButton: false,
+          onContinueTap: () {
+            Navigator.maybePop(context);
+          },
+        ),
+      );
+    } else {
+      final gif =
+          await Giphy.getGif(context: context, apiKey: widget.giphyApiKey!);
+      if (gif != null) {
+        setState(() {
+          _stackData.add(
+            CanvasElement()
+              ..type = ItemType.gif
+              ..giphyImage = gif,
+          );
+        });
+      }
     }
   }
 
@@ -1020,11 +1041,16 @@ class _TouchCraftEditorState extends State<TouchCraftEditor> {
     showDialog(
       context: context,
       barrierDismissible: false,
-      builder: (context) => StickerDialogue(
+      builder: (context) => AppAlertDialogue(
+        title: 'Create a cutout sticker',
+        description: 'Select a photo with a clear subject to create sticker.',
+        continueButtonTitle: 'Open Gallery',
+        cancelButtonTitle: 'Cancel',
+        shouldShowCancelButton: true,
         onCancleTap: () {
           Navigator.maybePop(context);
         },
-        onOpenGalleryTap: () async {
+        onContinueTap: () async {
           await [Permission.photos, Permission.storage].request();
           final picker = ImagePicker();
           final pickedFile = await picker.pickImage(

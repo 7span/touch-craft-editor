@@ -6,21 +6,35 @@ import 'package:google_fonts/google_fonts.dart';
 ///
 /// This dialog prompts the user to pick an image to create a cutout sticker.
 /// It offers two options: cancel or open the image gallery.
-class StickerDialogue extends StatelessWidget {
+class AppAlertDialogue extends StatelessWidget {
   /// Creates a [StickerDialogue] widget.
   ///
-  /// Requires [onCancleTap] and [onOpenGalleryTap] to handle user actions.
-  const StickerDialogue({
-    required this.onCancleTap,
-    required this.onOpenGalleryTap,
+  /// Requires [onCancleTap] and [onContinueTap] to handle user actions.
+  const AppAlertDialogue({
+    required this.onContinueTap,
+    required this.title,
+    required this.description,
+    required this.continueButtonTitle,
+    required this.shouldShowCancelButton,
+    this.cancelButtonTitle,
+    this.onCancleTap,
     super.key,
   });
 
   /// Callback triggered when the cancel button is tapped.
-  final VoidCallback onCancleTap;
+  final VoidCallback? onCancleTap;
 
   /// Callback triggered when the open gallery button is tapped.
-  final VoidCallback onOpenGalleryTap;
+  final VoidCallback onContinueTap;
+
+  // content, description, cancel and continue button title for dialogue.
+  final String title;
+  final String description;
+  final String continueButtonTitle;
+  final String? cancelButtonTitle;
+
+  // to show hide cancel button
+  final bool shouldShowCancelButton;
 
   /// Describes the part of the user interface represented by this widget.
   ///
@@ -30,7 +44,7 @@ class StickerDialogue extends StatelessWidget {
     return AlertDialog(
       backgroundColor: Colors.white,
       title: Text(
-        'Create a cutout sticker',
+        title,
         style: GoogleFonts.inter(
           color: Colors.black,
           fontSize: 18,
@@ -38,35 +52,37 @@ class StickerDialogue extends StatelessWidget {
         ),
       ),
       content: Text(
-        'Select a photo with a clear subject to create sticker.',
+        description,
         style: GoogleFonts.inter(color: Colors.black87, fontSize: 16),
       ),
       actions: [
-        TextButton(
-          style: ButtonStyle(
-            shape: WidgetStatePropertyAll(
-              RoundedRectangleBorder(
-                side: BorderSide(
-                  color: Colors.grey, // your color here
-                  width: 1,
+        if (shouldShowCancelButton) ...[
+          TextButton(
+            style: ButtonStyle(
+              shape: WidgetStatePropertyAll(
+                RoundedRectangleBorder(
+                  side: BorderSide(
+                    color: Colors.grey, // your color here
+                    width: 1,
+                  ),
+                  borderRadius: BorderRadius.circular(40),
                 ),
-                borderRadius: BorderRadius.circular(40),
+              ),
+            ),
+            onPressed: onCancleTap,
+            child: Text(
+              cancelButtonTitle ?? '',
+              style: GoogleFonts.inter(
+                color: Colors.black,
+                fontSize: 14,
+                fontWeight: FontWeight.w500,
               ),
             ),
           ),
-          onPressed: onCancleTap,
-          child: Text(
-            'Cancle',
-            style: GoogleFonts.inter(
-              color: Colors.black,
-              fontSize: 14,
-              fontWeight: FontWeight.w500,
-            ),
-          ),
-        ),
-        SizedBox(width: 4),
+          SizedBox(width: 4),
+        ],
         TextButton(
-          onPressed: onOpenGalleryTap,
+          onPressed: onContinueTap,
           style: ButtonStyle(
             backgroundColor: WidgetStatePropertyAll(primaryThemeColor),
             overlayColor: WidgetStatePropertyAll(Colors.white70),
@@ -79,7 +95,7 @@ class StickerDialogue extends StatelessWidget {
             ),
           ),
           child: Text(
-            'Open Gallery',
+            continueButtonTitle,
             style: GoogleFonts.inter(
               color: Colors.white,
               fontSize: 14,

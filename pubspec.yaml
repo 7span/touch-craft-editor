@@ -1,6 +1,6 @@
 name: touch_craft_editor
 description: "Craft stunning visual editors with Flutter. Add text, GIFs, stickers, gradients, and images — customize everything, export anywhere, and re-edit anytime."
-version: 0.0.1
+version: 0.0.2
 repository: https://github.com/avni-7span/touch_craft_editor
 issue_tracker: https://github.com/avni-7span/touch_craft_editor/issues
 platforms: 
