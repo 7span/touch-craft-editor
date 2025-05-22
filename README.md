@@ -6,9 +6,13 @@ Craft stunning visual editors with Flutter. 🎨 Add text, GIFs, stickers, gradi
 ![Dart](https://img.shields.io/badge/dart-%5E3.3.0-blue.svg)
 ![Version](https://img.shields.io/badge/version-0.0.1-success.svg)
 
-## Overview
+## 📸 Screenshots
 
-![flutter_package.mp4](flutter_package.mp4)
+<p align="center">
+  <img src="assets/screenshots/screen1.png" width="200"/>
+  <img src="assets/screenshots/screen2.png" width="200"/>
+  <img src="assets/screenshots/screen3.jpg" width="200"/>
+</p>
 
 ## Getting started
 
