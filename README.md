@@ -1,12 +1,11 @@
-#  TouchCraft Editor
+# **🎨 TouchCraft Editor ✨**
 
-Craft stunning visual editors with Flutter. 🎨 Add text, GIFs, stickers, gradients, and images — customize everything, export anywhere, and re-edit anytime.
+Build beautiful visual editors with Flutter! Create stunning designs with text, GIFs, stickers, gradients, and images. Customize everything, export anywhere, and re-edit anytime.
 
 ![Flutter](https://img.shields.io/badge/flutter-%3E%3D3.24.0-blue.svg)
 ![Dart](https://img.shields.io/badge/dart-%5E3.3.0-blue.svg)
-![Version](https://img.shields.io/badge/version-0.0.1-success.svg)
 
-## 📸 Screenshots
+## **📸 Screenshots**
 
 <p align="center">
   <img src="assets/screenshots/screen1.png" width="200"/>
@@ -14,7 +13,9 @@ Craft stunning visual editors with Flutter. 🎨 Add text, GIFs, stickers, gradi
   <img src="assets/screenshots/screen3.jpg" width="200"/>
 </p>
 
-## Getting started
+## **🚀 Quick Start**
+
+Get started with TouchCraft Editor in just a few lines of code:
 
 ```dart
 class EditorScreen extends StatelessWidget {
@@ -23,63 +24,90 @@ class EditorScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TouchCraftEditor(
-      onDesignReady:
-          (designFile, backgroundGradientColorList, canvasElementList) {},
+      onDesignReady: (designFile, backgroundGradientColorList, canvasElementList) {
+        // Handle your exported design here
+      },
     );
   }
 }
 ```
 
-## Note this :
+## **⚠️ Important Setup**
 
-To avoid build-time warnings follow this steps.
-1. Create proguard-rules.pro file at **your_application/android/app/proguard-rules.pro**.
-2. Add following line of code.
+### **Android Configuration**
+To avoid build-time warnings, follow these steps:
+
+1. Create `proguard-rules.pro` file at `your_application/android/app/proguard-rules.pro`
+2. Add the following line:
 ```
 -dontwarn org.tensorflow.lite.gpu.GpuDelegateFactory$Options
 ```
 
-If you are using the create sticker feature, you must include the required ML model.
-1. Download the model from this [link](https://github.com/dailystudio/ml/blob/master/deeplab/app/src/main/assets/deeplabv3_257_mv_gpu.tflite).
-2. Create a directory in your Flutter project: **assets/models/**.
-3. Move the downloaded deeplabv3_257_mv_gpu.tflite file into this directory.
+### **ML Model for Sticker Creation**
+If you're using the create sticker feature:
 
+1. Download the ML model from [this link](https://github.com/dailystudio/ml/blob/master/deeplab/app/src/main/assets/deeplabv3_257_mv_gpu.tflite)
+2. Create directory: `assets/models/` in your Flutter project
+3. Place the downloaded `deeplabv3_257_mv_gpu.tflite` file in this directory
 
+### **Giphy Api key for GIF ediitor**
+if you using GIF editor you have to provide Giphy Api key like this,
 
-## 🛠️ Core Features
-**Image Editing** : Add, crop, scale, rotate images
+```dart
+TouchCraftEditor(
+  giphyApiKey: "GIPHY_API_KEY",
+)
+```
+Note : To generate api key head over to this [guide](https://developers.giphy.com/).
 
-**Text Editing** : Customize background, text color, font size & style.
+## **✨ Core Features**
 
-**GIF Support** : Add GIFs via GIPHY.
+### **🖼️ Image Editing**
+Add, crop, scale, and rotate images with intuitive controls
 
-**Sticker Features** : Create custom stickers from gallery images.
+### **📝 Text Editing** 
+Customize background colors, text colors, font sizes, and styles
 
-**Backgrounds** : Apply solid colors or gradients.
+### **🎭 GIF Support**
+Seamlessly add animated GIFs via GIPHY integration
 
-**Re-Editable Designs** : Load and modify existing designs with full fidelity.
+### **🎪 Sticker Features**
+Create custom stickers from your gallery images
 
-**Layer-Based Design** : Move, stack, rotate, and scale elements like in design tools.
+### **🎨 Background Customization**
+Apply solid colors or beautiful gradient backgrounds
 
+### **🔄 Re-Editable Designs**
+Load and modify existing designs with full fidelity preservation
 
-## 🧩 Customization & Flexibility
+### **📚 Layer-Based Design**
+Professional-grade layer system - move, stack, rotate, and scale elements like in design tools
 
+## **🛠️ Customization & Flexibility**
 
-**Toggle Editing Features** : 
-- Choose which tools to expose (image, GIF, sticker, text, gradient).
+### **🎛️ Toggle Features**
+Choose exactly which editing tools to expose:
+- Image editing
+- GIF integration  
+- Sticker creation
+- Text editing
+- Gradient backgrounds
 
-**Customizable Theming Support** : 
-- Primary color configuration for quick minimal setup
-- Fully customizable UI to match your app’s design.
+### **🎨 Theming Support**
+- Quick setup with primary color configuration
+- Fully customizable UI to match your app's design
+- Complete control over icons, buttons, and widgets
 
-**Cross-Platform** :
-- 100% compatible with Android & iOS.
+### **📱 Cross-Platform**
+100% compatible with both Android & iOS
 
-**Export Options** : 
-- Save as PNG, JPG, or animated GIF.
+### **💾 Export Options**
+Save your creations as PNG, JPG, or animated GIF
 
-## Usage
-Provide TouchCraftEditor widget directly to screen.
+## **📖 Detailed Usage**
+
+### **Basic Implementation**
+
 ```dart
 class EditorScreen extends StatelessWidget {
   const EditorScreen({super.key});
@@ -87,128 +115,180 @@ class EditorScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TouchCraftEditor(
-      onDesignReady:
-          (designFile, backgroundGradientColorList, canvasElementList) {},
+      onDesignReady: (designFile, backgroundGradientColorList, canvasElementList) {
+        // Handle the exported design
+      },
     );
   }
 }
 ```
---- 
-**onDesignReady** is required method to be override. It returns following three items.
-1. **designFile** : A image in form of png or jpg or an GIF format as per provided.
-2. **backgroundGradientColorList** : if image or GIF contains background gradient then it is returned by this parameter.
-3. **canvasElementList** : The list of all CanvasElement models will be returned which was used in image/GIF. 
 
+### **Understanding onDesignReady Callback**
 
-```dart
-onDesignReady : (designFile , backgroundGradientColorList, canvasElementList) {},
-```
+The `onDesignReady` callback returns three important parameters:
 
-Note : Incase where you want to store image/GIF data in JSON formate or want to re-edit the same image to pass in **TouchCraftEditor** canvasElementList will come handy.
-
----
-
-Cutsomise the canvas editor as per your choice as you can enable ediiting features as per your app's requirement with following parameters.
-
-**Note : All parameters are set to true bydefault.**
+1. **`designFile`** - The final exported image (PNG/JPG) or animated GIF
+2. **`backgroundGradientColorList`** - Background gradient colors if applied
+3. **`canvasElementList`** - Complete list of all CanvasElement models used
 
 ```dart
-      TouchCraftEditor(
-        enableBackgroundGradientEditor: true,
-        enableGifEditor: true,
-        enableImageEditor: false,
-        enableStickerEditor: true,
-        enableTextEditor: false,
-        onDesignReady:
-            (designFile, backgroundGradientColorList, canvasElementList) {},
-      ),
+onDesignReady: (designFile, backgroundGradientColorList, canvasElementList) {
+  // Save designFile to gallery or cloud storage
+  // Store canvasElementList as JSON for re-editing capability
+},
 ```
----
 
-Use imageFormatType parameter to provide image type for exporting via **ImageFormatType** enum.
+> **💡 Pro Tip**: Store `canvasElementList` as JSON to enable re-editing functionality!
 
-```dart
-    TouchCraftEditor(
-        imageFormatType: ImageFormatType.jpg,
-        ...
-```
----
+### **Feature Configuration**
 
-Provide the duration for all animated transitions within the widget.
+Control which editing features are available (all are `true` by default):
 
-```dart
-    TouchCraftEditor(
-        animationsDuration: Duration(milliseconds: 500),
-        ...
-```
----
-
-Provide customised colors and google fontFamily list for font and background gradient customisation.
-
-```dart
-    TouchCraftEditor(
-        backgroundGradientColorList: [
-          [Color(0xFF2193b0), Color(0xFF6dd5ed)],
-          [Color(0xFFb92b27), Color(0xFF1565C0)],
-          [Color(0xFF373B44), Color(0xFF4286f4)],
-        ],
-        fontFamilyList: ['Lato', 'Montserrat', 'Lobster'],
-        fontColorList: [Colors.black, Colors.white, Colors.red],
-```
----
-Set primary color to match your app's theme
-
-```dart
-    TouchCraftEditor(
-      primaryColor: Colors.green,
-      ...
-    );
-```
---- 
-### Customize Editor UI
-
-- You can set your own widgets for icons, buttons, and actions using parameters like doneButtonChild, internetConnectionWidget.
-- This allows full control over the look and feel to match your app’s branding.
-
-Example 1: Custom "Done" Button
 ```dart
 TouchCraftEditor(
-  onDesignReady: (image) {
-    // Handle exported image
+  enableBackgroundGradientEditor: true,
+  enableGifEditor: true,
+  enableImageEditor: false,
+  enableStickerEditor: true,
+  enableTextEditor: false,
+  onDesignReady: (designFile, backgroundGradientColorList, canvasElementList) {},
+)
+```
+
+### **Export Format Configuration**
+
+Choose your preferred export format:
+
+```dart
+TouchCraftEditor(
+  imageFormatType: ImageFormatType.jpg, // or ImageFormatType.png
+  // ... other parameters
+)
+```
+
+### **Animation Duration**
+
+Customize transition animations:
+
+```dart
+TouchCraftEditor(
+  animationsDuration: Duration(milliseconds: 500),
+  // ... other parameters
+)
+```
+
+### **Color & Font Customization**
+
+Provide custom color palettes and font families:
+
+```dart
+TouchCraftEditor(
+  backgroundGradientColorList: [
+    [Color(0xFF2193b0), Color(0xFF6dd5ed)],
+    [Color(0xFFb92b27), Color(0xFF1565C0)],
+    [Color(0xFF373B44), Color(0xFF4286f4)],
+  ],
+  fontFamilyList: ['Lato', 'Montserrat', 'Lobster'],
+  fontColorList: [Colors.black, Colors.white, Colors.red],
+  // ... other parameters
+)
+```
+
+### **Theme Integration**
+
+Match your app's primary color:
+
+```dart
+TouchCraftEditor(
+  primaryColor: Colors.green,
+  // ... other parameters
+)
+```
+
+## **🎯 Advanced Customization**
+
+### **Custom UI Components**
+
+Take full control over the editor's appearance by providing custom widgets:
+
+#### **Custom Done Button**
+```dart
+TouchCraftEditor(
+  onDesignReady: (designFile, backgroundGradientColorList, canvasElementList) {
+    // Handle exported design
   },
-  doneButtonChild: ElevatedButton(
-    onPressed: () {
-      // Custom action
-    },
-    child: Text("Finish"),
+  doneButtonChild: Container(
+    padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+    decoration: BoxDecoration(
+      gradient: LinearGradient(colors: [Colors.blue, Colors.purple]),
+      borderRadius: BorderRadius.circular(25),
+    ),
+    child: Text(
+      "✨ Finish Design",
+      style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+    ),
   ),
 )
 ```
 
-Example 2: Custom "No Internet" Widget
-
+#### **Custom No Internet Widget**
 ```dart
 TouchCraftEditor(
-  onDesignReady: (image) {},
-  internetConnectionWidget: Center(
+  onDesignReady: (designFile, backgroundGradientColorList, canvasElementList) {},
+  internetConnectionWidget: Container(
+    padding: EdgeInsets.all(32),
     child: Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Icon(Icons.wifi_off, size: 48),
-        Text("Please check your internet connection"),
+        Icon(Icons.wifi_off, size: 64, color: Colors.grey),
+        SizedBox(height: 16),
+        Text(
+          "🌐 No Internet Connection",
+          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+        ),
+        SizedBox(height: 8),
+        Text(
+          "Please check your connection and try again",
+          textAlign: TextAlign.center,
+          style: TextStyle(color: Colors.grey[600]),
+        ),
       ],
     ),
   ),
 )
 ```
-# 🤝 Contribution
 
-Contributions are welcome! If you have suggestions, improvements, or bug fixes, please open an issue
-or submit a pull request.
+## **🤝 Contributing**
 
-1. Fork the repository.
-2. Create an issue for related changes.
-3. Create a new branch (feature-branch)
-4. Commit your changes.
-5. Push to the branch and submit a pull request.
+We welcome contributions! Help make TouchCraft Editor even better.
 
+### **How to Contribute**
+
+1. **Fork** the repository
+2. **Create an issue** describing your proposed changes
+3. **Create a feature branch** (`git checkout -b feature/amazing-feature`)
+4. **Commit your changes** (`git commit -m 'Add amazing feature'`)
+5. **Push to the branch** (`git push origin feature/amazing-feature`)
+6. **Submit a pull request**
+
+### **Contribution Guidelines**
+
+- Ensure your code follows the existing style
+- Add tests for new features
+- Update documentation as needed
+- Be descriptive in your commit messages
+
+## **📄 License**
+
+This project is licensed under the MIT License - see the LICENSE file for details.
+
+## **🆘 Support**
+
+Found a bug or need help? 
+
+- **Issues**: [Create an issue](https://github.com/your-repo/touchcraft-editor/issues)
+- **Discussions**: [Join the discussion](https://github.com/your-repo/touchcraft-editor/discussions)
+
+---
+
+**Made with ❤️ for the Flutter community**
