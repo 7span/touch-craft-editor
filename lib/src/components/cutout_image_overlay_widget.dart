@@ -2,8 +2,8 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_design_editor/src/components/background_remover.dart';
-import 'package:flutter_design_editor/src/extensions/context_extension.dart';
+import 'package:touch_craft_editor/src/components/background_remover.dart';
+import 'package:touch_craft_editor/src/extensions/context_extension.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image/image.dart' as img;
 import 'package:path_provider/path_provider.dart';

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_design_editor/src/constants/primary_color.dart';
+import 'package:touch_craft_editor/src/constants/primary_color.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 /// A widget that displays an alert dialog for sticker creation.

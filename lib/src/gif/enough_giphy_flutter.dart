@@ -2,7 +2,7 @@ import 'package:enough_giphy/enough_giphy.dart';
 import 'package:enough_platform_widgets/enough_platform_widgets.dart';
 import 'package:flutter/cupertino.dart' show showCupertinoModalPopup;
 import 'package:flutter/material.dart';
-import 'package:flutter_design_editor/src/gif/sheet.dart';
+import 'package:touch_craft_editor/src/gif/sheet.dart';
 
 export 'package:enough_giphy/enough_giphy.dart';
 
@@ -107,14 +107,12 @@ class Giphy {
       BuildContext context,
       GiphySource source,
       void Function(GiphyGif) onSelected,
-    )?
-    gridBuilder,
+    )? gridBuilder,
     Widget Function(
       BuildContext context,
       dynamic error,
       StackTrace? stackTrace,
-    )?
-    errorBuilder,
+    )? errorBuilder,
     bool usePlatformBottomSheet = true,
   }) async {
     final client = GiphyClient(apiKey: apiKey, randomId: userRandomId);
@@ -127,35 +125,34 @@ class Giphy {
     final result = await _showBottomSheet<GiphyGif>(
       context: context,
       usePlatformBottomSheet: usePlatformBottomSheet,
-      builder:
-          (context, scrollController) => Container(
-            color: Theme.of(context).canvasColor,
-            child: GiphySheet(
-              client: client,
-              request: request,
-              scrollController: scrollController,
-              showAttribution: showAttribution,
-              attribution: attribution,
-              showSearch: showSearch,
-              showTypeSwitcher: showTypeSwitcher,
-              showPreview: showPreview,
-              previewBorderRadius: previewBorderRadius,
-              keepState: keepState,
-              gridBuilder: gridBuilder,
-              errorBuilder: errorBuilder,
-              searchLabelText: searchLabelText,
-              searchHintText: searchHintText,
-              searchEmptyResultText: searchEmptyResultText,
-              searchCancelText: searchCancelText,
-              headerGifsText: headerGifsText,
-              headerStickersText: headerStickersText,
-              headerEmojiText: headerEmojiText,
-              gridSpacing: gridSpacing,
-              gridMinColumns: gridMinColumns,
-              gridBorderRadius: gridBorderRadius,
-              gridType: gridType,
-            ),
-          ),
+      builder: (context, scrollController) => Container(
+        color: Theme.of(context).canvasColor,
+        child: GiphySheet(
+          client: client,
+          request: request,
+          scrollController: scrollController,
+          showAttribution: showAttribution,
+          attribution: attribution,
+          showSearch: showSearch,
+          showTypeSwitcher: showTypeSwitcher,
+          showPreview: showPreview,
+          previewBorderRadius: previewBorderRadius,
+          keepState: keepState,
+          gridBuilder: gridBuilder,
+          errorBuilder: errorBuilder,
+          searchLabelText: searchLabelText,
+          searchHintText: searchHintText,
+          searchEmptyResultText: searchEmptyResultText,
+          searchCancelText: searchCancelText,
+          headerGifsText: headerGifsText,
+          headerStickersText: headerStickersText,
+          headerEmojiText: headerEmojiText,
+          gridSpacing: gridSpacing,
+          gridMinColumns: gridMinColumns,
+          gridBorderRadius: gridBorderRadius,
+          gridType: gridType,
+        ),
+      ),
     );
     client.close();
     return result;
@@ -175,13 +172,14 @@ class Giphy {
   static Future<T?> _showBottomSheetMaterial<T>(
     BuildContext context,
     Widget Function(BuildContext, ScrollController) builder,
-  ) => showModalBottomSheet<T?>(
-    context: context,
-    isScrollControlled: true,
-    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16.0)),
-    backgroundColor: Colors.transparent,
-    builder:
-        (context) => InkWell(
+  ) =>
+      showModalBottomSheet<T?>(
+        context: context,
+        isScrollControlled: true,
+        shape:
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(16.0)),
+        backgroundColor: Colors.transparent,
+        builder: (context) => InkWell(
           onTap: () => Navigator.of(context).pop(null),
           child: SizedBox.expand(
             child: DraggableScrollableSheet(
@@ -192,15 +190,15 @@ class Giphy {
             ),
           ),
         ),
-  );
+      );
 
   static Future<T?> _showBottomSheetCupertino<T>(
     BuildContext context,
     Widget Function(BuildContext, ScrollController) builder,
-  ) => showCupertinoModalPopup(
-    context: context,
-    builder:
-        (context) => SizedBox.expand(
+  ) =>
+      showCupertinoModalPopup(
+        context: context,
+        builder: (context) => SizedBox.expand(
           child: DraggableScrollableSheet(
             initialChildSize: 0.75,
             maxChildSize: 0.9,
@@ -208,5 +206,5 @@ class Giphy {
             builder: builder,
           ),
         ),
-  );
+      );
 }

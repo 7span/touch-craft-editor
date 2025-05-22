@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_design_editor/src/constants/primary_color.dart';
-import 'package:flutter_design_editor/src/extensions/context_extension.dart';
+import 'package:touch_craft_editor/src/constants/primary_color.dart';
+import 'package:touch_craft_editor/src/extensions/context_extension.dart';
 
 /// A widget for displaying footer tools.
 ///
@@ -54,33 +54,32 @@ class FooterToolsWidget extends StatelessWidget {
                 shadowColor: WidgetStateProperty.all(Colors.white),
                 backgroundColor: WidgetStateProperty.all(primaryThemeColor),
               ),
-              child:
-                  isLoading
-                      ? const CupertinoActivityIndicator()
-                      : doneButtonChild ??
-                          const Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
+              child: isLoading
+                  ? const CupertinoActivityIndicator()
+                  : doneButtonChild ??
+                      const Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Row(
                             children: [
-                              Row(
-                                children: [
-                                  SizedBox(width: 4),
-                                  Text(
-                                    'Done',
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 16,
-                                    ),
-                                  ),
-                                  SizedBox(width: 4),
-                                  Icon(
-                                    CupertinoIcons.forward,
-                                    color: Colors.white,
-                                    size: 18,
-                                  ),
-                                ],
+                              SizedBox(width: 4),
+                              Text(
+                                'Done',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 16,
+                                ),
+                              ),
+                              SizedBox(width: 4),
+                              Icon(
+                                CupertinoIcons.forward,
+                                color: Colors.white,
+                                size: 18,
                               ),
                             ],
                           ),
+                        ],
+                      ),
             ),
           ],
         ),

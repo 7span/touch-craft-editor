@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_design_editor/src/services/connectivity_service.dart';
+import 'package:touch_craft_editor/src/services/connectivity_service.dart';
 
 class ConnectivityWrapper extends StatefulWidget {
   const ConnectivityWrapper({

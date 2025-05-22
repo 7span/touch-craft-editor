@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_design_editor/src/extensions/context_extension.dart';
+import 'package:touch_craft_editor/src/extensions/context_extension.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 /// A widget for displaying a text field.

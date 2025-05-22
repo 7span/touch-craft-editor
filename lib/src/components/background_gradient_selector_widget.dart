@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_design_editor/src/extensions/context_extension.dart';
+import 'package:touch_craft_editor/src/extensions/context_extension.dart';
 
 /// A widget for selecting a background gradient.
 ///
@@ -97,30 +97,27 @@ class BackgroundGradientSelectorWidget extends StatelessWidget {
                       Radius.circular(context.width * .175),
                     ),
                     border: Border.all(
-                      color:
-                          (index == 0 || index == 1)
-                              ? Colors.grey
-                              : Colors.white,
+                      color: (index == 0 || index == 1)
+                          ? Colors.grey
+                          : Colors.white,
                     ),
                   ),
                   child: Center(
                     child: AnimatedSwitcher(
                       duration: animationsDuration,
-                      child:
-                          index == selectedGradientIndex
-                              ? Icon(
-                                CupertinoIcons.checkmark_alt,
-                                color:
-                                    selectedGradientIndex == 0
-                                        ? Colors.white
-                                        : backgroundColorList[selectedGradientIndex]
-                                                .last
-                                                .computeLuminance() >
-                                            0.5
-                                        ? Colors.black
-                                        : Colors.white,
-                              )
-                              : const SizedBox(),
+                      child: index == selectedGradientIndex
+                          ? Icon(
+                              CupertinoIcons.checkmark_alt,
+                              color: selectedGradientIndex == 0
+                                  ? Colors.white
+                                  : backgroundColorList[selectedGradientIndex]
+                                              .last
+                                              .computeLuminance() >
+                                          0.5
+                                      ? Colors.black
+                                      : Colors.white,
+                            )
+                          : const SizedBox(),
                     ),
                   ),
                 ),

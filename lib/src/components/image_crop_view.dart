@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'package:crop_image/crop_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_design_editor/src/extensions/context_extension.dart';
+import 'package:touch_craft_editor/src/extensions/context_extension.dart';
 
 /// A widget that displays an image crop view.
 ///

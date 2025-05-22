@@ -3,8 +3,8 @@ import 'package:enough_platform_widgets/enough_platform_widgets.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_design_editor/src/constants/primary_color.dart';
-import 'package:flutter_design_editor/src/gif/image_view.dart';
+import 'package:touch_craft_editor/src/constants/primary_color.dart';
+import 'package:touch_craft_editor/src/gif/image_view.dart';
 
 import 'grid.dart';
 
@@ -114,16 +114,14 @@ class GiphySheet extends StatefulWidget {
     BuildContext context,
     GiphySource source,
     void Function(GiphyGif) onSelected,
-  )?
-  gridBuilder;
+  )? gridBuilder;
 
   /// Sliver builder that is invoked when no GIFs could be loaded
   final Widget Function(
     BuildContext context,
     dynamic error,
     StackTrace? stackTrace,
-  )?
-  errorBuilder;
+  )? errorBuilder;
 
   /// When `true` the state is kept in a static variable to subsequent calls.
   ///
@@ -166,13 +164,11 @@ class _GiphySheetState extends State<GiphySheet> {
   @override
   void didChangeDependencies() {
     _loaderFuture = widget.client.request(_currentRequest);
-    _inputDecoration =
-        widget.searchInputDecoration ??
+    _inputDecoration = widget.searchInputDecoration ??
         InputDecoration(
-          prefixIcon:
-              defaultTargetPlatform == TargetPlatform.windows
-                  ? null
-                  : const Icon(Icons.search),
+          prefixIcon: defaultTargetPlatform == TargetPlatform.windows
+              ? null
+              : const Icon(Icons.search),
           hintText: widget.searchHintText ?? 'Search here',
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(16),
@@ -186,13 +182,12 @@ class _GiphySheetState extends State<GiphySheet> {
           //     _reload(_currentRequest.copyWithoutSearchQuery());
           //   },
           // ),
-          suffixIcon:
-              defaultTargetPlatform == TargetPlatform.windows
-                  ? PlatformIconButton(
-                    icon: const Icon(Icons.search),
-                    onPressed: () => _onSearchSubmitted(_searchController.text),
-                  )
-                  : null,
+          suffixIcon: defaultTargetPlatform == TargetPlatform.windows
+              ? PlatformIconButton(
+                  icon: const Icon(Icons.search),
+                  onPressed: () => _onSearchSubmitted(_searchController.text),
+                )
+              : null,
         );
     super.didChangeDependencies();
   }
@@ -356,10 +351,9 @@ class _GiphySheetState extends State<GiphySheet> {
   /// If [text] is empty, clears the search query.
   /// Otherwise, triggers a new request with the updated search query.
   void _onSearchSubmitted(String text) {
-    final request =
-        text.isEmpty
-            ? _currentRequest.copyWithoutSearchQuery()
-            : _currentRequest.copyWith(searchQuery: text);
+    final request = text.isEmpty
+        ? _currentRequest.copyWithoutSearchQuery()
+        : _currentRequest.copyWith(searchQuery: text);
     _reload(request);
   }
 
@@ -382,45 +376,42 @@ class _GiphySheetState extends State<GiphySheet> {
   /// Highlights the currently selected [GiphyType] and reloads results
   /// when a new type is selected.
   Widget _buildTypeSwitcher(BuildContext context) => Center(
-    child: Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: PlatformToggleButtons(
-        isSelected:
-            GiphyType.values
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: PlatformToggleButtons(
+            isSelected: GiphyType.values
                 .map((type) => type == _currentRequest.type)
                 .toList(),
-        onPressed: (index) {
-          final request = _currentRequest.copyWith(
-            type: GiphyType.values[index],
-          );
-          _reload(request);
-        },
-        borderColor: Colors.grey,
-        borderRadius: BorderRadius.circular(20),
-        selectedBorderColor: Colors.black,
-        disabledColor: Colors.white,
-        fillColor: primaryThemeColor,
-        children:
-            GiphyType.values
+            onPressed: (index) {
+              final request = _currentRequest.copyWith(
+                type: GiphyType.values[index],
+              );
+              _reload(request);
+            },
+            borderColor: Colors.grey,
+            borderRadius: BorderRadius.circular(20),
+            selectedBorderColor: Colors.black,
+            disabledColor: Colors.white,
+            fillColor: primaryThemeColor,
+            children: GiphyType.values
                 .map(
                   (type) => Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 16.0),
                     child: Text(
                       _getHeaderText(type),
                       style: TextStyle(
-                        color:
-                            type == _currentRequest.type
-                                ? Colors.white
-                                : Colors.black,
+                        color: type == _currentRequest.type
+                            ? Colors.white
+                            : Colors.black,
                         fontWeight: FontWeight.w500,
                       ),
                     ),
                   ),
                 )
                 .toList(),
-      ),
-    ),
-  );
+          ),
+        ),
+      );
 
   /// Displays a preview dialog for the selected [GiphyGif].
   ///
@@ -436,78 +427,75 @@ class _GiphySheetState extends State<GiphySheet> {
     if (radius != null) {
       giphy = ClipRRect(borderRadius: radius, child: giphy);
     }
-    final content =
-        (username == null || username.isEmpty)
-            ? giphy
-            : SingleChildScrollView(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  giphy,
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Container(
-                      color: Theme.of(context).canvasColor.withAlpha(128),
-                      child: PlatformTextButton(
-                        child: PlatformText('@${gif.username}'),
-                        onPressed: () {
-                          Navigator.of(context).pop(false);
-                          final query = '@${gif.username}';
-                          _searchController.text = query;
-                          final scrollController = widget.scrollController;
-                          if (scrollController != null) {
-                            scrollController.animateTo(
-                              0.0,
-                              duration: const Duration(milliseconds: 300),
-                              curve: Curves.easeInOut,
-                            );
-                          }
-                          _reload(_currentRequest.copyWith(searchQuery: query));
-                        },
-                      ),
+    final content = (username == null || username.isEmpty)
+        ? giphy
+        : SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                giphy,
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Container(
+                    color: Theme.of(context).canvasColor.withAlpha(128),
+                    child: PlatformTextButton(
+                      child: PlatformText('@${gif.username}'),
+                      onPressed: () {
+                        Navigator.of(context).pop(false);
+                        final query = '@${gif.username}';
+                        _searchController.text = query;
+                        final scrollController = widget.scrollController;
+                        if (scrollController != null) {
+                          scrollController.animateTo(
+                            0.0,
+                            duration: const Duration(milliseconds: 300),
+                            curve: Curves.easeInOut,
+                          );
+                        }
+                        _reload(_currentRequest.copyWith(searchQuery: query));
+                      },
                     ),
                   ),
-                ],
-              ),
-            );
-    if (PlatformInfo.isCupertino) {
-      return showCupertinoDialog<bool>(
-        context: context,
-        builder:
-            (context) => CupertinoAlertDialog(
-              title: titleWidget,
-              content: content,
-              actions: [
-                CupertinoButton(
-                  onPressed: () => Navigator.of(context).pop(false),
-                  child: const Icon(CupertinoIcons.clear_circled),
-                ),
-                CupertinoButton(
-                  onPressed: () => Navigator.of(context).pop(true),
-                  child: const Icon(CupertinoIcons.check_mark_circled),
                 ),
               ],
             ),
+          );
+    if (PlatformInfo.isCupertino) {
+      return showCupertinoDialog<bool>(
+        context: context,
+        builder: (context) => CupertinoAlertDialog(
+          title: titleWidget,
+          content: content,
+          actions: [
+            CupertinoButton(
+              onPressed: () => Navigator.of(context).pop(false),
+              child: const Icon(CupertinoIcons.clear_circled),
+            ),
+            CupertinoButton(
+              onPressed: () => Navigator.of(context).pop(true),
+              child: const Icon(CupertinoIcons.check_mark_circled),
+            ),
+          ],
+        ),
       );
     }
     final onSurfaceColor = Theme.of(context).colorScheme.onSurface;
     return showDialog<bool>(
       context: context,
-      builder:
-          (context) => AlertDialog(
-            title: titleWidget,
-            content: content,
-            actions: [
-              IconButton(
-                onPressed: () => Navigator.of(context).pop(false),
-                icon: Icon(Icons.clear, color: onSurfaceColor),
-              ),
-              IconButton(
-                onPressed: () => Navigator.of(context).pop(true),
-                icon: Icon(Icons.check, color: onSurfaceColor),
-              ),
-            ],
+      builder: (context) => AlertDialog(
+        title: titleWidget,
+        content: content,
+        actions: [
+          IconButton(
+            onPressed: () => Navigator.of(context).pop(false),
+            icon: Icon(Icons.clear, color: onSurfaceColor),
           ),
+          IconButton(
+            onPressed: () => Navigator.of(context).pop(true),
+            icon: Icon(Icons.check, color: onSurfaceColor),
+          ),
+        ],
+      ),
     );
   }
 

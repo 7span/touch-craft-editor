@@ -1,4 +1,4 @@
-import 'package:flutter_design_editor/flutter_design_editor.dart';
+import 'package:touch_craft_editor/touch_craft_editor.dart';
 
 ItemType stringToItemType(String value) {
   if (value == 'image') {

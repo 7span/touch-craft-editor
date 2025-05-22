@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_design_editor/src/extensions/context_extension.dart';
+import 'package:touch_craft_editor/src/extensions/context_extension.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 /// A widget for selecting a font family.
@@ -70,10 +70,9 @@ class FontFamilySelectWidget extends StatelessWidget {
                 alignment: Alignment.center,
                 margin: const EdgeInsets.all(2),
                 decoration: BoxDecoration(
-                  color:
-                      index == selectedFamilyIndex
-                          ? Colors.white
-                          : Colors.black.withValues(alpha: 0.4),
+                  color: index == selectedFamilyIndex
+                      ? Colors.white
+                      : Colors.black.withValues(alpha: 0.4),
                   borderRadius: const BorderRadius.all(Radius.circular(20)),
                   border: Border.all(color: Colors.white),
                 ),
@@ -81,10 +80,9 @@ class FontFamilySelectWidget extends StatelessWidget {
                   child: Text(
                     'Aa',
                     style: GoogleFonts.getFont(fontFamilyList[index]).copyWith(
-                      color:
-                          index == selectedFamilyIndex
-                              ? Colors.red
-                              : Colors.white,
+                      color: index == selectedFamilyIndex
+                          ? Colors.red
+                          : Colors.white,
                       fontWeight: FontWeight.bold,
                     ),
                   ),

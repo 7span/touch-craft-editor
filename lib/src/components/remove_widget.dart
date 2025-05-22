@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_design_editor/src/extensions/context_extension.dart';
-import 'package:flutter_design_editor/src/models/canvas_element.dart';
+import 'package:touch_craft_editor/src/extensions/context_extension.dart';
+import 'package:touch_craft_editor/src/models/canvas_element.dart';
 
 /// A widget for removing an item.
 ///
@@ -18,8 +18,8 @@ class RemoveWidget extends StatelessWidget {
     required shouldShowDeleteButton,
     required this.isDeletePosition,
     required this.animationsDuration,
-  }) : _activeItem = activeItem,
-       _shouldShowDeleteButton = shouldShowDeleteButton;
+  })  : _activeItem = activeItem,
+        _shouldShowDeleteButton = shouldShowDeleteButton;
 
   /// The active item that can be removed.
   final CanvasElement? _activeItem;
@@ -44,33 +44,32 @@ class RemoveWidget extends StatelessWidget {
         bottom: 80 + context.bottomPadding,
         child: AnimatedSwitcher(
           duration: animationsDuration,
-          child:
-              _activeItem == null
-                  ? const SizedBox()
-                  : AnimatedSize(
-                    duration: animationsDuration,
-                    child: SizedBox(
-                      width: context.width,
-                      child: Center(
-                        child: AnimatedContainer(
-                          duration: animationsDuration,
-                          height: !isDeletePosition ? 60.0 : 72,
-                          width: !isDeletePosition ? 60.0 : 72,
-                          decoration: BoxDecoration(
-                            color: Colors.black.withValues(alpha: 0.5),
-                            borderRadius: BorderRadius.all(
-                              Radius.circular(!isDeletePosition ? 30 : 38),
-                            ),
+          child: _activeItem == null
+              ? const SizedBox()
+              : AnimatedSize(
+                  duration: animationsDuration,
+                  child: SizedBox(
+                    width: context.width,
+                    child: Center(
+                      child: AnimatedContainer(
+                        duration: animationsDuration,
+                        height: !isDeletePosition ? 60.0 : 72,
+                        width: !isDeletePosition ? 60.0 : 72,
+                        decoration: BoxDecoration(
+                          color: Colors.black.withValues(alpha: 0.5),
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(!isDeletePosition ? 30 : 38),
                           ),
-                          child: const Icon(
-                            Icons.delete,
-                            color: Colors.white,
-                            size: 32,
-                          ),
+                        ),
+                        child: const Icon(
+                          Icons.delete,
+                          color: Colors.white,
+                          size: 32,
                         ),
                       ),
                     ),
                   ),
+                ),
         ),
       ),
     );

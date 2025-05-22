@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_design_editor/src/constants/enums.dart';
-import 'package:flutter_design_editor/src/extensions/context_extension.dart';
-import 'package:flutter_design_editor/src/models/canvas_element.dart';
+import 'package:touch_craft_editor/src/constants/enums.dart';
+import 'package:touch_craft_editor/src/extensions/context_extension.dart';
+import 'package:touch_craft_editor/src/models/canvas_element.dart';
 import 'package:flutter_svg/svg.dart';
 
 /// A widget for displaying the top tools.
@@ -148,8 +148,8 @@ class TopToolsWidget extends StatelessWidget {
                     gradient: LinearGradient(
                       begin: FractionalOffset.topLeft,
                       end: FractionalOffset.bottomRight,
-                      colors:
-                          backgroundColorList[selectedTextBackgroundGradientIndex],
+                      colors: backgroundColorList[
+                          selectedTextBackgroundGradientIndex],
                     ),
                     borderRadius: const BorderRadius.all(Radius.circular(4)),
                   ),
@@ -195,59 +195,52 @@ class TopToolsWidget extends StatelessWidget {
       left: 20,
       child: AnimatedSwitcher(
         duration: animationsDuration,
-        child:
-            activeItem != null
-                ? const SizedBox()
-                : Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  spacing: 8,
-                  children: [
-                    if (shouldShowDownloadButton) ...[
-                      GestureDetector(
-                        onTap: onDownloadTap,
-                        child:
-                            downloadIconWidget ??
-                            _TopToolBarIcon(imagePath: 'assets/download.svg'),
-                      ),
-                      Spacer(),
-                    ],
-                    if (shouldShowBackgroundGradientButton)
-                      GestureDetector(
-                        onTap: onPickerTap,
-                        child:
-                            backgroundColorIconWidget ??
-                            _TopToolBarIcon(imagePath: 'assets/background.svg'),
-                      ),
-                    if (shouldShowTextButton)
-                      GestureDetector(
-                        onTap: onScreenTap,
-                        child:
-                            textIconWidget ??
-                            _TopToolBarIcon(imagePath: 'assets/text.svg'),
-                      ),
-                    if (shouldShowImageButton)
-                      GestureDetector(
-                        onTap: onImagePickerTap,
-                        child:
-                            imageIconWidget ??
-                            _TopToolBarIcon(imagePath: 'assets/gallery.svg'),
-                      ),
-                    if (shouldShowGifButton)
-                      GestureDetector(
-                        onTap: onAddGiphyTap,
-                        child:
-                            gifIconWidget ??
-                            _TopToolBarIcon(imagePath: 'assets/gif.svg'),
-                      ),
-                    if (shouldShowStickerButton)
-                      GestureDetector(
-                        onTap: onCreateStickerTap,
-                        child:
-                            stickerIconWidget ??
-                            _TopToolBarIcon(imagePath: 'assets/sticker.svg'),
-                      ),
+        child: activeItem != null
+            ? const SizedBox()
+            : Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                spacing: 8,
+                children: [
+                  if (shouldShowDownloadButton) ...[
+                    GestureDetector(
+                      onTap: onDownloadTap,
+                      child: downloadIconWidget ??
+                          _TopToolBarIcon(imagePath: 'assets/download.svg'),
+                    ),
+                    Spacer(),
                   ],
-                ),
+                  if (shouldShowBackgroundGradientButton)
+                    GestureDetector(
+                      onTap: onPickerTap,
+                      child: backgroundColorIconWidget ??
+                          _TopToolBarIcon(imagePath: 'assets/background.svg'),
+                    ),
+                  if (shouldShowTextButton)
+                    GestureDetector(
+                      onTap: onScreenTap,
+                      child: textIconWidget ??
+                          _TopToolBarIcon(imagePath: 'assets/text.svg'),
+                    ),
+                  if (shouldShowImageButton)
+                    GestureDetector(
+                      onTap: onImagePickerTap,
+                      child: imageIconWidget ??
+                          _TopToolBarIcon(imagePath: 'assets/gallery.svg'),
+                    ),
+                  if (shouldShowGifButton)
+                    GestureDetector(
+                      onTap: onAddGiphyTap,
+                      child: gifIconWidget ??
+                          _TopToolBarIcon(imagePath: 'assets/gif.svg'),
+                    ),
+                  if (shouldShowStickerButton)
+                    GestureDetector(
+                      onTap: onCreateStickerTap,
+                      child: stickerIconWidget ??
+                          _TopToolBarIcon(imagePath: 'assets/sticker.svg'),
+                    ),
+                ],
+              ),
       ),
     );
   }
@@ -273,7 +266,7 @@ class _TopToolBarIcon extends StatelessWidget {
           imagePath,
           height: 19,
           width: 19,
-          package: 'flutter_design_editor',
+          package: 'touch_craft_editor',
         ),
       ),
     );

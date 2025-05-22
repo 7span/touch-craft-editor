@@ -1,6 +1,6 @@
 import 'package:enough_giphy/enough_giphy.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_design_editor/src/gif/transparent_image.dart';
+import 'package:touch_craft_editor/src/gif/transparent_image.dart';
 
 /// Displays a single GIPHY image
 class GiphyImageView extends StatelessWidget {
@@ -169,10 +169,9 @@ class GiphyImageView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final imageData =
-        isShownInGrid
-            ? gif.recommendedMobileKeyboard
-            : gif.recommendedMobileSend;
+    final imageData = isShownInGrid
+        ? gif.recommendedMobileKeyboard
+        : gif.recommendedMobileSend;
     final w = width;
     final h = height;
     final image = FadeInImage.memoryNetwork(

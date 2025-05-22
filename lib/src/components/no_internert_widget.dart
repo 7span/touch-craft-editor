@@ -33,7 +33,7 @@ class NoInternetWidget extends StatelessWidget {
                     'assets/no_internet_connection.png',
                     width: 140,
                     height: 140,
-                    package: 'flutter_design_editor',
+                    package: 'touch_craft_editor',
                   ),
                   Text(
                     title,
