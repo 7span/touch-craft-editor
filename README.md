@@ -6,6 +6,8 @@ Build beautiful visual editors with Flutter! Create stunning designs with text, 
 
 ![Flutter](https://img.shields.io/badge/flutter-%3E%3D3.24.0-blue.svg)
 ![Dart](https://img.shields.io/badge/dart-%5E3.3.0-blue.svg)
+![MIT](https://img.shields.io/badge/license-MIT-purple.svg)
+
 
 ## **📸 Screenshots**
 
@@ -291,5 +293,9 @@ Found a bug or need help?
 - **Issues**: [Create an issue](https://github.com/avni-7span/touch_craft_editor/issues)
 
 ---
+
+## Maintainers
+
+- [Avni Prajapati](https://github.com/avni-7span)
 
 **Made with ❤️ for the Flutter community**
