@@ -292,9 +292,9 @@ Found a bug or need help?
 
 - **Issues**: [Create an issue](https://github.com/avni-7span/touch_craft_editor/issues)
 
-# **👥 Maintainers**
+## **👥 Maintainers**
 
-  - [Avni Prajapati](https://github.com/avni-7span)
+- [Avni Prajapati](https://github.com/avni-7span)
 ---
 
 **Made with ❤️ for the Flutter community**
