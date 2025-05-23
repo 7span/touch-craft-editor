@@ -1,4 +1,4 @@
-## 0.0.2
+## 0.0.3
 ## 📋 Documentation
 - Updated readme GIFs for showcasing editing features
 
