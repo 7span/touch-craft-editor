@@ -1,5 +1,7 @@
 # **🎨 TouchCraft Editor ✨**
 
+![Touch craft editor](touch_craft_editor_banner.webp)
+
 Build beautiful visual editors with Flutter! Create stunning designs with text, GIFs, stickers, gradients, and images. Customize everything, export anywhere, and re-edit anytime.
 
 ![Flutter](https://img.shields.io/badge/flutter-%3E%3D3.24.0-blue.svg)
@@ -286,8 +288,7 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 Found a bug or need help? 
 
-- **Issues**: [Create an issue](https://github.com/your-repo/touchcraft-editor/issues)
-- **Discussions**: [Join the discussion](https://github.com/your-repo/touchcraft-editor/discussions)
+- **Issues**: [Create an issue](https://github.com/avni-7span/touch_craft_editor/issues)
 
 ---
 
