@@ -66,20 +66,15 @@ Note : To generate api key head over to this [guide](https://developers.giphy.co
 
 ## **✨ Core Features**
 
-### **🖼️ Image Editing**
-Add, crop, scale, and rotate images with intuitive controls
+| **🖼️ Image Editing**| **📝 Text Editing** | **🎭 GIF Support** |
+|:----------------|:----------------|:----------------|
+| Add, crop, scale, and rotate images with intuitive controls | Customize background colors, text colors, font sizes, and styles | Seamlessly add animated GIFs via GIPHY integration |
+| ![Image editor demo](image.gif) | ![Text editor demo](text.gif) | ![GIF editor demo](giphy.gif) |
 
-### **📝 Text Editing** 
-Customize background colors, text colors, font sizes, and styles
-
-### **🎭 GIF Support**
-Seamlessly add animated GIFs via GIPHY integration
-
-### **🎪 Sticker Features**
-Create custom stickers from your gallery images
-
-### **🎨 Background Customization**
-Apply solid colors or beautiful gradient backgrounds
+| **🎪 Sticker Features**| **🎨 Background Customization** | **🖌️ Create design** |
+|:----------------|:----------------|:----------------|
+|Create custom stickers from your gallery images|Apply solid colors or beautiful gradient backgrounds| That's it GO Creative! |
+|![Sticker editor demo](sticker.gif)|![Background editor demo](background.gif)| ![Go creative](final_edit.gif) |
 
 ### **🔄 Re-Editable Designs**
 Load and modify existing designs with full fidelity preservation

@@ -1,4 +1,8 @@
 ## 0.0.2
+## 📋 Documentation
+- Updated readme GIFs for showcasing editing features
+
+## 0.0.2
 ## 🐞 BugFixes
 - Added banner in the readme
 - Updated the issues link in the readme
