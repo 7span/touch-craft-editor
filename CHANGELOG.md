@@ -1,3 +1,7 @@
+## 0.0.4
+## 📋 Documentation 
+- Updated GIF to showcase features in README.md file
+
 ## 0.0.3
 ## 📋 Documentation
 - Updated readme GIFs for showcasing editing features

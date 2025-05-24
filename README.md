@@ -8,14 +8,23 @@ Build beautiful visual editors with Flutter! Create stunning designs with text, 
 ![Dart](https://img.shields.io/badge/dart-%5E3.3.0-blue.svg)
 ![MIT](https://img.shields.io/badge/license-MIT-purple.svg)
 
+## **✨ Core Features**
 
-## **📸 Screenshots**
+| **🖼️ Image Editing**| **📝 Text Editing** | **🎭 GIF Support** |
+|:----------------|:----------------|:----------------|
+| Add, crop, scale, and rotate images with intuitive controls | Customize background colors, text colors, font sizes, and styles | Seamlessly add animated GIFs via GIPHY integration |
+| ![Image editor demo](image.gif) | ![Text editor demo](text.gif) | ![GIF editor demo](giphy.gif) |
 
-<p align="center">
-  <img src="assets/screenshots/screen1.png" width="200"/>
-  <img src="assets/screenshots/screen2.png" width="200"/>
-  <img src="assets/screenshots/screen3.jpg" width="200"/>
-</p>
+| **🎪 Sticker Features**| **🎨 Background Customization** | **🖌️ Create design** |
+|:----------------|:----------------|:----------------|
+|Create custom stickers from your gallery images|Apply solid colors or beautiful gradient backgrounds| That's it GO Creative! |
+|![Sticker editor demo](sticker.gif)|![Background editor demo](background.gif)| ![Go creative](final_edit.gif) |
+
+### **🔄 Re-Editable Designs**
+Load and modify existing designs with full fidelity preservation
+
+### **📚 Layer-Based Design**
+Professional-grade layer system - move, stack, rotate, and scale elements like in design tools
 
 ## **🚀 Quick Start**
 
@@ -63,24 +72,6 @@ TouchCraftEditor(
 )
 ```
 Note : To generate api key head over to this [guide](https://developers.giphy.com/).
-
-## **✨ Core Features**
-
-| **🖼️ Image Editing**| **📝 Text Editing** | **🎭 GIF Support** |
-|:----------------|:----------------|:----------------|
-| Add, crop, scale, and rotate images with intuitive controls | Customize background colors, text colors, font sizes, and styles | Seamlessly add animated GIFs via GIPHY integration |
-| ![Image editor demo](image.gif) | ![Text editor demo](text.gif) | ![GIF editor demo](giphy.gif) |
-
-| **🎪 Sticker Features**| **🎨 Background Customization** | **🖌️ Create design** |
-|:----------------|:----------------|:----------------|
-|Create custom stickers from your gallery images|Apply solid colors or beautiful gradient backgrounds| That's it GO Creative! |
-|![Sticker editor demo](sticker.gif)|![Background editor demo](background.gif)| ![Go creative](final_edit.gif) |
-
-### **🔄 Re-Editable Designs**
-Load and modify existing designs with full fidelity preservation
-
-### **📚 Layer-Based Design**
-Professional-grade layer system - move, stack, rotate, and scale elements like in design tools
 
 ## **🛠️ Customization & Flexibility**
 
