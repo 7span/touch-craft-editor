@@ -1,3 +1,7 @@
+## 0.0.5
+## 📋 Documentation 
+- Updated README.md and pubspec.yaml file to have updated github url
+
 ## 0.0.4
 ## 📋 Documentation 
 - Updated GIF to showcase features in README.md file
