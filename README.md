@@ -276,7 +276,7 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 Found a bug or need help? 
 
-- **Issues**: [Create an issue](https://github.com/avni-7span/touch_craft_editor/issues)
+- **Issues**: [Create an issue](https://github.com/7span/touch-craft-editor/issues)
 
 ## **👥 Maintainers**
 
