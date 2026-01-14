@@ -21,7 +21,7 @@ dependencies:
     sdk: flutter
   
   path_provider: ^2.1.5
-  google_fonts: ^6.2.1
+  google_fonts: ">=6.2.1 <8.0.0"
   image_picker: ^1.1.2
   permission_handler: ^12.0.0+1
   crop_image: ^1.0.16
